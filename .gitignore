@@ -1,0 +1,11 @@
+#*#
+*.f90~
+*.dat
+*.dat~
+*.data
+*.datt
+*.txt~
+*.scd
+*.plt~
+#*#
+*~

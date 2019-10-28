@@ -1,0 +1,7 @@
+Any publication for which one of the following libraries are used has to
+acknowledge the use of the openMMF library. 
+
+                 Copyright openMMF 2019
+  Distributed under the ALPS Library License, Version 1.0.
+      (See accompanying file LICENSE.txt or copy at
+          http://alps.comp-phys.org/)
