@@ -1,10 +1,10 @@
-set label "B_{DC,z} = 2.75 G" at 2.266,0.7
-set label "B_{DC,z} = 2.72 G" at 2.266,1.7
-set label "B_{DC,z} = 2.69 G" at 2.266,2.7
-set label "B_{DC,z} = 2.66 G" at 2.266,3.7
-set label "B_{DC,z} = 2.63 G" at 2.266,4.7
-set xrange [2.265:2.283]
-set xtics 2.265,0.003
+!set label "B_{DC,z} = 2.75 G" at 2.266,0.7
+!set label "B_{DC,z} = 2.72 G" at 2.266,1.7
+!set label "B_{DC,z} = 2.69 G" at 2.266,2.7
+!set label "B_{DC,z} = 2.66 G" at 2.266,3.7
+!set label "B_{DC,z} = 2.63 G" at 2.266,4.7
+!set xrange [2.265:2.283]
+!set xtics 2.265,0.003
 !plot "datos_BdcX.dat" i 0 u 2:3 w lp lt 1 lw 2 , "" i 0 u 2:4 w lp lt 2 lw 2, "" i 0 u 2:5 w lp lt 3 lw 2, "" i 1 u 2:($3+1) w lp lt 1 lw 2, "" i 1 u 2:($4+1) w lp lt 2 lw 2, "" i 1 u 2:($5+1) w lp lt 3 lw 2,"" i 2 u 2:($3+2) w lp lt 1 lw 2, "" i 2 u 2:($4+2) w lp lt 2 lw 2, "" i 2 u 2:($5+2) w lp lt 3 lw 2,"" i 3 u 2:($3+3) w lp lt 1 lw 2, "" i 3 u 2:($4+3) w lp lt 2 lw 2, "" i 3 u 2:($5+3) w lp lt 3 lw 2,"" i 4 u 2:($3+4) w lp lt 1 lw 2, "" i 4 u 2:($4+4) w lp lt 2 lw 2, "" i 4 u 2:($5+4) w lp lt 3 lw 2,
 
 
