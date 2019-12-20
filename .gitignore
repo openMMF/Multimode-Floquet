@@ -7,5 +7,9 @@
 *.txt~
 *.scd
 *.plt~
+*.aux
+*.bbl
+*.log
+*.blg	
 #*#
 *~

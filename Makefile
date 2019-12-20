@@ -1,7 +1,7 @@
 #export LD_LIBRARY_PATH="/opt/intel/compilers_and_libraries_2017/linux/mkl/lib/intel64"
 # SET FORTRAN AND CPP COMPILERS
-CPP = g++-4.9
-CC  = gcc-4.9
+CPP = g++
+CC  = gcc
 GF  = gfortran
 AR  = ar 
 RANLIB = ranlib
@@ -245,4 +245,4 @@ build/MultimodeFloquet.o:src/MultimodeFloquet.f90
 ############################
 
 clean:
-	rm build/*.o ./*mod  include/*.mod lib/*.a include/MultimodeFloquet.h
+	rm build/*.o ./*mod  include/*.mod lib/*.a 

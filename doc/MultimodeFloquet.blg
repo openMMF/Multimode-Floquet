@@ -3,46 +3,48 @@ Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
 The top-level auxiliary file: MultimodeFloquet.aux
 The style file: unsrt.bst
 Database file #1: LibraryBib.bib
+Warning--entry type for "oak" isn't style-file defined
+--line 482 of file LibraryBib.bib
 Warning--empty journal in chu1985recent
-You've used 4 entries,
+You've used 5 entries,
             1791 wiz_defined-function locations,
-            480 strings with 4220 characters,
-and the built_in function-call counts, 939 in all, are:
-= -- 88
-> -- 30
+            485 strings with 4337 characters,
+and the built_in function-call counts, 1053 in all, are:
+= -- 95
+> -- 34
 < -- 0
-+ -- 12
-- -- 8
++ -- 14
+- -- 9
 * -- 74
-:= -- 154
-add.period$ -- 12
-call.type$ -- 4
-change.case$ -- 4
+:= -- 170
+add.period$ -- 14
+call.type$ -- 5
+change.case$ -- 5
 chr.to.int$ -- 0
-cite$ -- 5
-duplicate$ -- 36
-empty$ -- 94
-format.name$ -- 8
-if$ -- 198
+cite$ -- 6
+duplicate$ -- 41
+empty$ -- 112
+format.name$ -- 9
+if$ -- 225
 int.to.chr$ -- 0
-int.to.str$ -- 4
+int.to.str$ -- 5
 missing$ -- 4
-newline$ -- 23
-num.names$ -- 4
-pop$ -- 6
+newline$ -- 27
+num.names$ -- 5
+pop$ -- 11
 preamble$ -- 1
 purify$ -- 0
 quote$ -- 0
-skip$ -- 12
+skip$ -- 19
 stack$ -- 0
 substring$ -- 93
-swap$ -- 3
+swap$ -- 4
 text.length$ -- 0
 text.prefix$ -- 0
 top$ -- 0
 type$ -- 0
 warning$ -- 1
-while$ -- 11
-width$ -- 5
-write$ -- 45
-(There was 1 warning)
+while$ -- 12
+width$ -- 6
+write$ -- 52
+(There were 2 warnings)
