@@ -35,8 +35,8 @@ PROGRAM MULTIMODEFLOQUET
   INTEGER,    DIMENSION(:), ALLOCATABLE :: ROW_INDEX,COLUMN
   COMPLEX*16, DIMENSION(:), ALLOCATABLE :: VALUES
 
-  !OPEN(UNIT=3,file="qubit_bareoscillation_SP.dat", action="write")
-  !OPEN(UNIT=4,file="qubit_dressedoscillation_SP.dat", action="write")
+  OPEN(UNIT=3,file="qubit_bareoscillation_SP.dat", action="write")
+  OPEN(UNIT=4,file="qubit_dressedoscillation_SP.dat", action="write")
 
 
   INFO = 0
@@ -72,14 +72,14 @@ PROGRAM MULTIMODEFLOQUET
   FIELDS(1)%omega     = 0.0
   FIELDS(1)%N_Floquet = 0
 
-  FIELDS(2)%X         = 0.125
+  FIELDS(2)%X         = 0.125/2.0
   FIELDS(2)%Y         = 0.0
   FIELDS(2)%Z         = 0.0
   FIELDS(2)%phi_x     = 0.0
   FIELDS(2)%phi_y     = 0.0
   FIELDS(2)%phi_z     = 0.0
   FIELDS(2)%omega     = 1.0
-  FIELDS(2)%N_Floquet = 9
+  FIELDS(2)%N_Floquet = 5
   
   FIELDS(3)%X         = 0.125*FIELDS(2)%X/2.0
   FIELDS(3)%Y         = 0.0
@@ -158,19 +158,23 @@ PROGRAM MULTIMODEFLOQUET
   !   CALL WRITE_MATRIX(REAL(FIELDS(m)%V))
   !END DO
 
+
+  DO r=1,64,4
+
 !!$!========= FIND THE MULTIMODE FLOQUET SPECTRUM 
-  DO r=1,1!64
-     FIELDS(3)%omega     = FIELDS(2)%X/4.0 + (r-1)*FIELDS(2)%X/64
+
+
+     FIELDS(3)%omega     = FIELDS(1)%Z - FIELDS(2)%X + 2.0*(r-1)*FIELDS(2)%X/64
      CALL MULTIMODEFLOQUETMATRIX_SP(ID,SIZE(MODES_NUM,1),total_frequencies,MODES_NUM,FIELDS,VALUES,ROW_INDEX,COLUMN,INFO)
-     DO m=1,size(values,1)
-        write(*,*) REAL(values(m))!,AIMAG(values(m))
-     END DO
-     DO m=1,size(row_index,1)
-        write(*,*) row_index(m)
-     END DO
-     DO m=1,size(column,1)
-        write(*,*) column(m)
-     END DO
+!!$     DO m=1,size(values,1)
+!!$        write(*,*) REAL(values(m))!,AIMAG(values(m))
+!!$     END DO
+!!$     DO m=1,size(row_index,1)
+!!$        write(*,*) row_index(m)
+!!$     END DO
+!!$     DO m=1,size(column,1)
+!!$        write(*,*) column(m)
+!!$     END DO
 
      E_L = -100.0
      E_R =  100.0
@@ -180,11 +184,11 @@ PROGRAM MULTIMODEFLOQUET
      END IF
      E_FLOQUET = 0.0
      U_F = 0.0
-!     CALL MKLSPARSE_FULLEIGENVALUES(D_MULTIFLOQUET,SIZE(VALUES,1),VALUES,ROW_INDEX,COLUMN,E_L,E_R,E_FLOQUET,U_F,INFO)
-     T1 = 0.0
+     CALL MKLSPARSE_FULLEIGENVALUES(D_MULTIFLOQUET,SIZE(VALUES,1),VALUES,ROW_INDEX,COLUMN,E_L,E_R,E_FLOQUET,U_F,INFO)
 
-     DO m=1,128,127         
-        T2 = (m-1)*16.0*100.0/128
+     T1 = 0.0
+     DO m=1,512,4
+        T2 = (m-1)*16.0*200.0/128
         
         ! ===== EVALUATE TIME-EVOLUTION OPERATOR  IN THE BARE BASIS
         CALL MULTIMODETIMEEVOLUTINOPERATOR(SIZE(U_F,1),SIZE(MODES_NUM,1),MODES_NUM,U_F,E_FLOQUET,ID%D_BARE,FIELDS,T1,T2,U_AUX,INFO) 

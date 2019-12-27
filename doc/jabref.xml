@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE preferences SYSTEM "http://java.sun.com/dtd/preferences.dtd">
+<preferences EXTERNAL_XML_VERSION="1.0">
+  <root type="user">
+    <map/>
+    <node name="net">
+      <map/>
+      <node name="sf">
+        <map/>
+        <node name="jabref">
+          <map>
+            <entry key="KeyPatternRegex" value=""/>
+            <entry key="KeyPatternReplacement" value=""/>
+            <entry key="abbrAuthorNames" value="true"/>
+            <entry key="activeFieldEditorBackgroundColor" value="220:220:255"/>
+            <entry key="allowFileAutoOpenBrowse" value="true"/>
+            <entry key="allowTableEditing" value="false"/>
+            <entry key="arxivColumn" value="false"/>
+            <entry key="autoAssignGroup" value="true"/>
+            <entry key="autoCompFF" value="false"/>
+            <entry key="autoCompFirstNameMode" value="both"/>
+            <entry key="autoCompLF" value="false"/>
+            <entry key="autoComplete" value="true"/>
+            <entry key="autoCompleteFields" value="author;editor;title;journal;publisher;keywords;crossref"/>
+            <entry key="autoDoubleBraces" value="false"/>
+            <entry key="autoOpenForm" value="true"/>
+            <entry key="autoResizeMode" value="4"/>
+            <entry key="autoSave" value="true"/>
+            <entry key="autoSaveInterval" value="5"/>
+            <entry key="autolinkExactKeyOnly" value="true"/>
+            <entry key="avoidOverwritingKey" value="false"/>
+            <entry key="backup" value="true"/>
+            <entry key="bibLocAsPrimaryDir" value="false"/>
+            <entry key="bibLocationAsFileDir" value="true"/>
+            <entry key="biblatexMode" value="false"/>
+            <entry key="caseSensitiveSearch" value="false"/>
+            <entry key="confirmDelete" value="true"/>
+            <entry key="connectToOO3" value="true"/>
+            <entry key="ctrlClick" value="true"/>
+            <entry key="defaultEncoding" value="ISO8859_1"/>
+            <entry key="defaultLabelPattern" value="[auth][year]"/>
+            <entry key="defaultOwner" value="gs249"/>
+            <entry key="defaultShowSource" value="true"/>
+            <entry key="dialogWarningForDuplicateKey" value="true"/>
+            <entry key="dialogWarningForEmptyKey" value="true"/>
+            <entry key="disableOnMultipleSelection" value="false"/>
+            <entry key="doNotResolveStringsFor" value="url"/>
+            <entry key="emailSubject" value="References"/>
+            <entry key="enforceLegalBibtexKey" value="true"/>
+            <entry key="entryEditorHeight" value="298"/>
+            <entry key="exportInOriginalOrder" value="false"/>
+            <entry key="exportInSpecifiedOrder" value="true"/>
+            <entry key="exportInStandardOrder" value="true"/>
+            <entry key="exportInTitleOrder" value="false"/>
+            <entry key="exportPriDescending" value="false"/>
+            <entry key="exportPriSort" value="author"/>
+            <entry key="exportSecDescending" value="false"/>
+            <entry key="exportSecSort" value="editor"/>
+            <entry key="exportTerDescending" value="false"/>
+            <entry key="exportTerSort" value="year"/>
+            <entry key="fieldEditorTextColor" value="0:0:0"/>
+            <entry key="fileColumn" value="true"/>
+            <entry key="fileDirectory" value=""/>
+            <entry key="filechooserDisableRename" value="true"/>
+            <entry key="floatMarkedEntries" value="true"/>
+            <entry key="floatSearch" value="false"/>
+            <entry key="fontFamily" value="SansSerif"/>
+            <entry key="fontSize" value="13"/>
+            <entry key="fontStyle" value="0"/>
+            <entry key="generateKeysAfterInspection" value="true"/>
+            <entry key="generateKeysBeforeSaving" value="false"/>
+            <entry key="grayOutNonHits" value="false"/>
+            <entry key="gridColor" value="210:210:210"/>
+            <entry key="groupAutoHide" value="true"/>
+            <entry key="groupAutoShow" value="true"/>
+            <entry key="groupExpandTree" value="true"/>
+            <entry key="groupIntersectSelections" value="true"/>
+            <entry key="groupInvertSelections" value="false"/>
+            <entry key="groupKeywordSeparator" value=", "/>
+            <entry key="groupSelectMatches" value="false"/>
+            <entry key="groupShowDynamic" value="true"/>
+            <entry key="groupShowIcons" value="true"/>
+            <entry key="groupShowNumberOfElements" value="false"/>
+            <entry key="groupShowOverlapping" value="true"/>
+            <entry key="groupsDefaultField" value="keywords"/>
+            <entry key="groupsVisibleRows" value="9"/>
+            <entry key="highLightWords" value="true"/>
+            <entry key="highlightGroupsMatchingAll" value="false"/>
+            <entry key="highlightGroupsMatchingAny" value="false"/>
+            <entry key="importAlwaysUsePDFImportStyle" value="false"/>
+            <entry key="importDefaultPDFimportStyle" value="2"/>
+            <entry key="importFileNamePattern" value="\bibtexkey"/>
+            <entry key="includeEmptyFields" value="false"/>
+            <entry key="incompleteEntryBackground" value="250:175:175"/>
+            <entry key="incrementS" value="false"/>
+            <entry key="invalidFieldBackgroundColor" value="255:0:0"/>
+            <entry key="keyGenAlwaysAddLetter" value="false"/>
+            <entry key="keyGenFirstLetterA" value="true"/>
+            <entry key="lastEdited" value="/home/german/Programs/MultimodeFloquet-master/doc/LibraryBib.bib;/home/german/Dropbox/Programs/MultimodeFloquet/doc/apssamp.bib;/home/german/Dropbox/Programs/MultimodeFloquet/doc/LibraryBib.bib;/home/german/Dropbox/Documents/QuantumML;/home/german/Dropbox/Programs/MultimodeFloquet/BalancingRFDressedPotential/doc/MWRFPaper.bib"/>
+            <entry key="lookAndFeel" value="com.jgoodies.plaf.plastic.Plastic3DLookAndFeel"/>
+            <entry key="markImportedEntries" value="true"/>
+            <entry key="markedEntryBackground0" value="255:255:180"/>
+            <entry key="markedEntryBackground1" value="255:220:180"/>
+            <entry key="markedEntryBackground2" value="255:180:160"/>
+            <entry key="markedEntryBackground3" value="255:120:120"/>
+            <entry key="markedEntryBackground4" value="255:75:75"/>
+            <entry key="markedEntryBackground5" value="220:255:220"/>
+            <entry key="memoryStickMode" value="true"/>
+            <entry key="namesAsIs" value="false"/>
+            <entry key="namesFf" value="false"/>
+            <entry key="namesLastOnly" value="false"/>
+            <entry key="namesNatbib" value="true"/>
+            <entry key="ooExecutablePath" value="/usr/lib/libreoffice/program/soffice"/>
+            <entry key="ooJarsPath" value="/usr/lib/libreoffice/"/>
+            <entry key="ooJurtPath" value="/usr/lib/ure/share/java"/>
+            <entry key="ooPath" value="/opt/openoffice.org3"/>
+            <entry key="ooUnoilPath" value="/usr/lib/libreoffice/program/classes"/>
+            <entry key="openFoldersOfAttachedFiles" value="false"/>
+            <entry key="openLastEdited" value="true"/>
+            <entry key="overrideDefaultFonts" value="false"/>
+            <entry key="overwriteOwner" value="false"/>
+            <entry key="overwriteTimeStamp" value="false"/>
+            <entry key="pdfColumn" value="false"/>
+            <entry key="pdfDirectory" value=""/>
+            <entry key="pdfPreview" value="false"/>
+            <entry key="posX" value="0"/>
+            <entry key="posY" value="0"/>
+            <entry key="preferUrlDoi" value="false"/>
+            <entry key="preview0" value="&lt;font face=&quot;arial&quot;&gt;&lt;b&gt;&lt;i&gt;\bibtextype&lt;/i&gt;&lt;a name=&quot;\bibtexkey&quot;&gt;\begin{bibtexkey} (\bibtexkey)&lt;/a&gt;\end{bibtexkey}&lt;/b&gt;&lt;br&gt;__NEWLINE__\begin{author} \format[Authors(LastFirst,Initials,Semicolon,Amp),HTMLChars]{\author}&lt;BR&gt;\end{author}__NEWLINE__\begin{editor} \format[Authors(LastFirst,Initials,Semicolon,Amp),HTMLChars]{\editor} &lt;i&gt;(\format[IfPlural(Eds.,Ed.)]{\editor})&lt;/i&gt;&lt;BR&gt;\end{editor}__NEWLINE__\begin{title} \format[HTMLChars]{\title} \end{title}&lt;BR&gt;__NEWLINE__\begin{chapter} \format[HTMLChars]{\chapter}&lt;BR&gt;\end{chapter}__NEWLINE__\begin{journal} &lt;em&gt;\format[HTMLChars]{\journal}, &lt;/em&gt;\end{journal}__NEWLINE__\begin{booktitle} &lt;em&gt;\format[HTMLChars]{\booktitle}, &lt;/em&gt;\end{booktitle}__NEWLINE__\begin{school} &lt;em&gt;\format[HTMLChars]{\school}, &lt;/em&gt;\end{school}__NEWLINE__\begin{institution} &lt;em&gt;\format[HTMLChars]{\institution}, &lt;/em&gt;\end{institution}__NEWLINE__\begin{publisher} &lt;em&gt;\format[HTMLChars]{\publisher}, &lt;/em&gt;\end{publisher}__NEWLINE__\begin{year}&lt;b&gt;\year&lt;/b&gt;\end{year}\begin{volume}&lt;i&gt;, \volume&lt;/i&gt;\end{volume}\begin{pages}, \format[FormatPagesForHTML]{\pages} \end{pages}__NEWLINE__\begin{abstract}&lt;BR&gt;&lt;BR&gt;&lt;b&gt;Abstract: &lt;/b&gt; \format[HTMLChars]{\abstract} \end{abstract}__NEWLINE__\begin{review}&lt;BR&gt;&lt;BR&gt;&lt;b&gt;Review: &lt;/b&gt; \format[HTMLChars]{\review} \end{review}&lt;/dd&gt;__NEWLINE__&lt;p&gt;&lt;/p&gt;&lt;/font&gt;"/>
+            <entry key="preview1" value="&lt;font face=&quot;arial&quot;&gt;&lt;b&gt;&lt;i&gt;\bibtextype&lt;/i&gt;&lt;a name=&quot;\bibtexkey&quot;&gt;\begin{bibtexkey} (\bibtexkey)&lt;/a&gt;\end{bibtexkey}&lt;/b&gt;&lt;br&gt;__NEWLINE__\begin{author} \format[Authors(LastFirst,Initials,Semicolon,Amp),HTMLChars]{\author}&lt;BR&gt;\end{author}__NEWLINE__\begin{editor} \format[Authors(LastFirst,Initials,Semicolon,Amp),HTMLChars]{\editor} &lt;i&gt;(\format[IfPlural(Eds.,Ed.)]{\editor})&lt;/i&gt;&lt;BR&gt;\end{editor}__NEWLINE__\begin{title} \format[HTMLChars]{\title} \end{title}&lt;BR&gt;__NEWLINE__\begin{chapter} \format[HTMLChars]{\chapter}&lt;BR&gt;\end{chapter}__NEWLINE__\begin{journal} &lt;em&gt;\format[HTMLChars]{\journal}, &lt;/em&gt;\end{journal}__NEWLINE__\begin{booktitle} &lt;em&gt;\format[HTMLChars]{\booktitle}, &lt;/em&gt;\end{booktitle}__NEWLINE__\begin{school} &lt;em&gt;\format[HTMLChars]{\school}, &lt;/em&gt;\end{school}__NEWLINE__\begin{institution} &lt;em&gt;\format[HTMLChars]{\institution}, &lt;/em&gt;\end{institution}__NEWLINE__\begin{publisher} &lt;em&gt;\format[HTMLChars]{\publisher}, &lt;/em&gt;\end{publisher}__NEWLINE__\begin{year}&lt;b&gt;\year&lt;/b&gt;\end{year}\begin{volume}&lt;i&gt;, \volume&lt;/i&gt;\end{volume}\begin{pages}, \format[FormatPagesForHTML]{\pages} \end{pages}&lt;/dd&gt;__NEWLINE__&lt;p&gt;&lt;/p&gt;&lt;/font&gt;"/>
+            <entry key="previewEnabled" value="true"/>
+            <entry key="previewPanelHeight" value="208"/>
+            <entry key="priDescending" value="false"/>
+            <entry key="priSort" value="year"/>
+            <entry key="promptBeforeUsingAutosave" value="true"/>
+            <entry key="proxyHostname" value="my proxy host"/>
+            <entry key="proxyPort" value="my proxy port"/>
+            <entry key="psDirectory" value=""/>
+            <entry key="pushToApplication" value="Insert selected citations into TeXstudio"/>
+            <entry key="recentFiles" value="/home/g/gs/gs249/Dropbox/Programs/Lattice/MicrowaveDressing/doc/SiteAddressingReferences.bib;/home/german/Dropbox/Programs/Lattice/MicrowaveDressing/doc/SiteAddressingReferences.bib;/home/g/gs/gs249/Dropbox/Papers/LatticeIdeas/PapersBib.bib;/home/german/Dropbox/Documents/doc/extended/Bibliography/extended_B_paper.bib;/home/german/Dropbox/Programs/MultimodeFloquet/doc/apssamp.bib;/home/german/Dropbox/Programs/MultimodeFloquet/doc/LibraryBib.bib;/home/german/Dropbox/Documents/QuantumML;/home/german/Dropbox/Programs/MultimodeFloquet/BalancingRFDressedPotential/doc/MWRFPaper.bib"/>
+            <entry key="regExpSearch" value="true"/>
+            <entry key="resolveStringsAllFields" value="false"/>
+            <entry key="runAutomaticFileSearch" value="false"/>
+            <entry key="saveInOriginalOrder" value="false"/>
+            <entry key="saveInSpecifiedOrder" value="true"/>
+            <entry key="saveInStandardOrder" value="true"/>
+            <entry key="saveInTitleOrder" value="false"/>
+            <entry key="savePriDescending" value="false"/>
+            <entry key="savePriSort" value="author"/>
+            <entry key="saveSecDescending" value="false"/>
+            <entry key="saveSecSort" value="editor"/>
+            <entry key="saveTerDescending" value="false"/>
+            <entry key="saveTerSort" value="year"/>
+            <entry key="searchAll" value="false"/>
+            <entry key="searchAllBases" value="false"/>
+            <entry key="searchGen" value="true"/>
+            <entry key="searchOpt" value="true"/>
+            <entry key="searchPanelVisible" value="false"/>
+            <entry key="searchReq" value="true"/>
+            <entry key="secDescending" value="false"/>
+            <entry key="secSort" value=""/>
+            <entry key="selectS" value="false"/>
+            <entry key="shortestToComplete" value="2"/>
+            <entry key="showOOPanel" value="true"/>
+            <entry key="showOneLetterHeadingForIconColumns" value="false"/>
+            <entry key="showSearchInDialog" value="false"/>
+            <entry key="showSource" value="true"/>
+            <entry key="sidePaneWidth" value="160"/>
+            <entry key="sizeX" value="1352"/>
+            <entry key="sizeY" value="740"/>
+            <entry key="stringsPosX" value="660"/>
+            <entry key="stringsPosY" value="338"/>
+            <entry key="stringsSizeX" value="600"/>
+            <entry key="stringsSizeY" value="400"/>
+            <entry key="tableBackground" value="255:255:255"/>
+            <entry key="tableColorCodesOn" value="true"/>
+            <entry key="tableOptFieldBackground" value="230:255:230"/>
+            <entry key="tableReqFieldBackground" value="230:235:255"/>
+            <entry key="tableText" value="0:0:0"/>
+            <entry key="terDescending" value="false"/>
+            <entry key="terSort" value=""/>
+            <entry key="timeStampField" value="timestamp"/>
+            <entry key="timeStampFormat" value="yyyy.MM.dd"/>
+            <entry key="toolbarVisible" value="true"/>
+            <entry key="unmarkAllEntriesBeforeImporting" value="true"/>
+            <entry key="updateTimestamp" value="false"/>
+            <entry key="urlColumn" value="true"/>
+            <entry key="useCaseKeeperOnSearch" value="true"/>
+            <entry key="useConvertToEquation" value="false"/>
+            <entry key="useDefaultLookAndFeel" value="true"/>
+            <entry key="useIEEEAbrv" value="true"/>
+            <entry key="useImportInspectionDialog" value="true"/>
+            <entry key="useImportInspectionDialogForSingle" value="true"/>
+            <entry key="useNativeFileDialogOnMac" value="false"/>
+            <entry key="useOwner" value="true"/>
+            <entry key="useProxy" value="false"/>
+            <entry key="useRegExpSearch" value="false"/>
+            <entry key="useRemoteServer" value="false"/>
+            <entry key="useTimeStamp" value="true"/>
+            <entry key="useUnitFormatterOnSearch" value="true"/>
+            <entry key="useXmpPrivacyFilter" value="false"/>
+            <entry key="validFieldBackgroundColor" value="255:255:255"/>
+            <entry key="valueDelimiters" value="1"/>
+            <entry key="warnAboutDuplicatesInInspection" value="true"/>
+            <entry key="warnBeforeOverwritingKey" value="true"/>
+            <entry key="windowMaximised" value="false"/>
+            <entry key="workingDirectory" value="/home/german/Dropbox/Programs/MultimodeFloquet/BalancingRFDressedPotential/doc/MWRFPaper.bib"/>
+            <entry key="writeFieldAddSpaces" value="true"/>
+            <entry key="writeFieldCamelCase" value="true"/>
+          </map>
+          <node name="labelPattern">
+            <map/>
+          </node>
+        </node>
+      </node>
+    </node>
+  </root>
+</preferences>

@@ -1,3 +1,4 @@
+
 PROGRAM MULTIMODEFLOQUET
 
   USE ATOMIC_PROPERTIES
@@ -6,6 +7,7 @@ PROGRAM MULTIMODEFLOQUET
   USE SUBINTERFACE_LAPACK
   USE ARRAYS 
   USE FLOQUETINITINTERFACE
+
 
   IMPLICIT NONE
   TYPE(ATOM)                                       ID
@@ -78,14 +80,14 @@ PROGRAM MULTIMODEFLOQUET
   FIELDS(2)%omega     = 1.0
   FIELDS(2)%N_Floquet = 5
   
-  FIELDS(3)%X         = 0.2*FIELDS(2)%X
+  FIELDS(3)%X         = 0.125*FIELDS(2)%X/2.0
   FIELDS(3)%Y         = 0.0
-  FIELDS(3)%Z         = FIELDS(2)%X
+  FIELDS(3)%Z         = 0.125*FIELDS(2)%X/2.0
   FIELDS(3)%phi_x     = 0.0
   FIELDS(3)%phi_y     = 0.0
   FIELDS(3)%phi_z     = 0.0
   FIELDS(3)%omega     = FIELDS(2)%X/2.0
-  FIELDS(3)%N_Floquet = 5
+  FIELDS(3)%N_Floquet = 7
 
   D_MULTIFLOQUET = ID%D_BARE
   DO r=1,TOTAL_FREQUENCIES
@@ -143,7 +145,7 @@ PROGRAM MULTIMODEFLOQUET
   ALLOCATE(U_F2_red(ID%D_BARE,ID%D_BARE))
 
 
-  DO r=1,64
+  DO r=1,64,4
 
 !!$!========= FIND THE MULTIMODE FLOQUET SPECTRUM 
       
@@ -160,8 +162,8 @@ PROGRAM MULTIMODEFLOQUET
      ! ===== EVALUATE TIME-EVOLUTION OPERATOR 
 
      T1 = 0.0
-     DO m=1,512
-        T2 = (m-1)*16.0*20.0/128.0
+     DO m=1,512,4
+        T2 = (m-1)*16.0*100.0/128.0
 
 
         

@@ -1,8 +1,8 @@
 #export LD_LIBRARY_PATH="/opt/intel/compilers_and_libraries_2017/linux/mkl/lib/intel64"
 # SET FORTRAN AND CPP COMPILERS
-CPP = g++
-CC  = gcc
-GF  = gfortran
+CPP = g++-8
+CC  = gcc-8
+GF  = gfortran-8
 AR  = ar 
 RANLIB = ranlib
 
