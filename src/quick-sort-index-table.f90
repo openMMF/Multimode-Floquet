@@ -1,181 +1,212 @@
-!!$PROGRAM SORTING
-!!$
-!!$  INTEGER, PARAMETER :: N = 4
-!!$  DOUBLE PRECISION   :: V(N)
-!!$  INTEGER            :: INDEX_T(N)
-!!$
-!!$  DO I = 1,N
-!!$     INDEX_T(I) = I
-!!$     V(I) = 1.0*ran()
-!!$     write(*,*) V(i)
-!!$  END DO
-!!$
-!!$  
-!!$  CALL QUICK_SORT_I_T(v,INDEX_T,N)
-!!$
-!!$  write(*,*) 
-!!$  DO I = 1,N
-!!$     write(*,*) V(i),INDEX_T(i),V(INDEX_T(i))
-!!$  END DO
-!!$END PROGRAM
-
-SUBROUTINE QUICK_SORT_I_T(v,index_t,N)
+SUBROUTINE QUICK_SORT_INTEGERS(x,ind,N)
 
   IMPLICIT NONE
   INTEGER, INTENT(IN) :: N
-  
-  !INTEGER, DIMENSION(N),INTENT(INOUT) :: v
-  DOUBLE PRECISION, DIMENSION(N),INTENT(INOUT) :: v
-  INTEGER, DIMENSION(N),INTENT(INOUT) :: index_t
+  INTEGER, DIMENSION(N),INTENT(INOUT) :: x
+  INTEGER, DIMENSION(N),INTENT(INOUT) :: ind
 
-  INTEGER, PARAMETER :: NN=2500, NSTACK=500
-  real :: a, cpu
-  integer :: trial
-  INTEGER :: k,i,j,jstack,l,r,istack(NSTACK),indice
-  
-  jstack=0
-  l=1
-  r=n
-  do
-     if (r-l < NN) then
-        do j=l+1,r
-           indice = index_t(j)
-           a=v(j)
-           do i=j-1,l,-1
-              if (v(index_t(i)) <= a) exit
-              index_t(i+1) = index_t(i)
-           end do
-           index_t(i+1) = indice
-        end do
-        if (jstack == 0) exit
-        r=istack(jstack)
-        l=istack(jstack-1)
-        jstack=jstack-2
-     else
-        k=(l+r)/2
-        call swap(index_t(k),index_t(l+1))
-        if (v(index_t(l)) > v(index_t(r))) call swap(index_t(l),index_t(r))
-        if (v(index_t(l+1))>v(index_t(r))) call swap(index_t(l+1),index_t(r))        
-        if (v(index_t(l))>v(index_t(l+1))) call swap(index_t(l),index_t(l+1))
-        
-        i=l+1
-        j=r
-        indice = index_t(l+1)
-        a=v(indice)
-        do
-           do
-              i=i+1
-              if (v(index_t(i)) >= a) exit
-           end do
-           do
-              j=j-1
-              if (v(index_t(j)) <= a) exit
-           end do
-           if (j < i) exit
-           call swap(index_t(i),index_t(j))
-        end do
-        index_t(l+1)=index_t(j)
-        index_t(j)=indice
-        jstack=jstack+2
-        if (jstack > NSTACK) then
-           print *, "NSTACK too small", jstack
-        end if
-        if (r-i+1 >= j-l) then
-           istack(jstack)=r
-           istack(jstack-1)=i
-           r=j-1
-        else
-           istack(jstack)=j-1
-           istack(jstack-1)=l
-           l=i
-        end if
-     end if
-  end do
-  
-END SUBROUTINE QUICK_SORT_I_T
+!SUBROUTINE qsortd(x,ind,n)
+ 
+! Code converted using TO_F90 by Alan Miller
+! Date: 2002-12-18  Time: 11:55:47
 
-SUBROUTINE QUICK_SORT_INTEGERS(v,index_t,N)
+!IMPLICIT NONE
+!INTEGER, PARAMETER  :: dp = SELECTED_REAL_KIND(12, 60)
 
-  IMPLICIT NONE
-  INTEGER, INTENT(IN) :: N
-  INTEGER, DIMENSION(N),INTENT(INOUT) :: v
-  INTEGER, DIMENSION(N),INTENT(INOUT) :: index_t
+!REAL (dp), INTENT(IN)  :: x(:)
+!INTEGER, INTENT(OUT)   :: ind(:)
+!INTEGER, INTENT(IN)    :: n
 
-  INTEGER, PARAMETER :: NN=10000, NSTACK=8000
-  real :: a, cpu
-  integer :: trial
-  INTEGER :: k,i,j,jstack,l,r,istack(NSTACK),indice
+!***************************************************************************
 
-  DO j=1,N
-     index_t(j) = j
-  END DO
-  
-  jstack=0
-  l=1
-  r=n
-  do
-     if (r-l < NN) then
-        do j=l+1,r
-           indice = index_t(j)
-           a=v(j)
-           do i=j-1,l,-1
-              if (v(index_t(i)) <= a) exit
-              index_t(i+1) = index_t(i)
-           end do
-           index_t(i+1) = indice
-        end do
-        if (jstack == 0) exit
-        r=istack(jstack)
-        l=istack(jstack-1)
-        jstack=jstack-2
-     else
-        k=(l+r)/2
-        call swap(index_t(k),index_t(l+1))
-        if (v(index_t(l)) > v(index_t(r))) call swap(index_t(l),index_t(r))
-        if (v(index_t(l+1))>v(index_t(r))) call swap(index_t(l+1),index_t(r))        
-        if (v(index_t(l))>v(index_t(l+1))) call swap(index_t(l),index_t(l+1))
-        
-        i=l+1
-        j=r
-        indice = index_t(l+1)
-        a=v(indice)
-        do
-           do
-              i=i+1
-              if (v(index_t(i)) >= a) exit
-           end do
-           do
-              j=j-1
-              if (v(index_t(j)) <= a) exit
-           end do
-           if (j < i) exit
-           call swap(index_t(i),index_t(j))
-        end do
-        index_t(l+1)=index_t(j)
-        index_t(j)=indice
-        jstack=jstack+2
-        if (jstack > NSTACK) then
-           print *, "NSTACK too small", jstack
-        end if
-        if (r-i+1 >= j-l) then
-           istack(jstack)=r
-           istack(jstack-1)=i
-           r=j-1
-        else
-           istack(jstack)=j-1
-           istack(jstack-1)=l
-           l=i
-        end if
-     end if
-  end do
-  
+!                                                         ROBERT RENKA
+!                                                 OAK RIDGE NATL. LAB.
+
+!   THIS SUBROUTINE USES AN ORDER N*LOG(N) QUICK SORT TO SORT A REAL (dp)
+! ARRAY X INTO INCREASING ORDER.  THE ALGORITHM IS AS FOLLOWS.  IND IS
+! INITIALIZED TO THE ORDERED SEQUENCE OF INDICES 1,...,N, AND ALL INTERCHANGES
+! ARE APPLIED TO IND.  X IS DIVIDED INTO TWO PORTIONS BY PICKING A CENTRAL
+! ELEMENT T.  THE FIRST AND LAST ELEMENTS ARE COMPARED WITH T, AND
+! INTERCHANGES ARE APPLIED AS NECESSARY SO THAT THE THREE VALUES ARE IN
+! ASCENDING ORDER.  INTERCHANGES ARE THEN APPLIED SO THAT ALL ELEMENTS
+! GREATER THAN T ARE IN THE UPPER PORTION OF THE ARRAY AND ALL ELEMENTS
+! LESS THAN T ARE IN THE LOWER PORTION.  THE UPPER AND LOWER INDICES OF ONE
+! OF THE PORTIONS ARE SAVED IN LOCAL ARRAYS, AND THE PROCESS IS REPEATED
+! ITERATIVELY ON THE OTHER PORTION.  WHEN A PORTION IS COMPLETELY SORTED,
+! THE PROCESS BEGINS AGAIN BY RETRIEVING THE INDICES BOUNDING ANOTHER
+! UNSORTED PORTION.
+
+! INPUT PARAMETERS -   N - LENGTH OF THE ARRAY X.
+
+!                      X - VECTOR OF LENGTH N TO BE SORTED.
+
+!                    IND - VECTOR OF LENGTH >= N.
+
+! N AND X ARE NOT ALTERED BY THIS ROUTINE.
+
+! OUTPUT PARAMETER - IND - SEQUENCE OF INDICES 1,...,N PERMUTED IN THE SAME
+!                          FASHION AS X WOULD BE.  THUS, THE ORDERING ON
+!                          X IS DEFINED BY Y(I) = X(IND(I)).
+
+!*********************************************************************
+
+! NOTE -- IU AND IL MUST BE DIMENSIONED >= LOG(N) WHERE LOG HAS BASE 2.
+
+!*********************************************************************
+
+INTEGER   :: iu(21), il(21)
+INTEGER   :: m, i, j, k, l, ij, it, itt, indx
+REAL      :: r
+INTEGER   :: t
+!REAL (dp) :: t
+
+! LOCAL PARAMETERS -
+
+! IU,IL =  TEMPORARY STORAGE FOR THE UPPER AND LOWER
+!            INDICES OF PORTIONS OF THE ARRAY X
+! M =      INDEX FOR IU AND IL
+! I,J =    LOWER AND UPPER INDICES OF A PORTION OF X
+! K,L =    INDICES IN THE RANGE I,...,J
+! IJ =     RANDOMLY CHOSEN INDEX BETWEEN I AND J
+! IT,ITT = TEMPORARY STORAGE FOR INTERCHANGES IN IND
+! INDX =   TEMPORARY INDEX FOR X
+! R =      PSEUDO RANDOM NUMBER FOR GENERATING IJ
+! T =      CENTRAL ELEMENT OF X
+
+IF (n <= 0) RETURN
+
+! INITIALIZE IND, M, I, J, AND R
+
+DO  i = 1, n
+  ind(i) = i
+END DO
+m = 1
+i = 1
+j = n
+r = .375
+
+! TOP OF LOOP
+
+20 IF (i >= j) GO TO 70
+IF (r <= .5898437) THEN
+  r = r + .0390625
+ELSE
+  r = r - .21875
+END IF
+
+! INITIALIZE K
+
+30 k = i
+
+! SELECT A CENTRAL ELEMENT OF X AND SAVE IT IN T
+
+ij = i + r*(j-i)
+it = ind(ij)
+t = x(it)
+
+! IF THE FIRST ELEMENT OF THE ARRAY IS GREATER THAN T,
+!   INTERCHANGE IT WITH T
+
+indx = ind(i)
+IF (x(indx) > t) THEN
+  ind(ij) = indx
+  ind(i) = it
+  it = indx
+  t = x(it)
+END IF
+
+! INITIALIZE L
+
+l = j
+
+! IF THE LAST ELEMENT OF THE ARRAY IS LESS THAN T,
+!   INTERCHANGE IT WITH T
+
+indx = ind(j)
+IF (x(indx) >= t) GO TO 50
+ind(ij) = indx
+ind(j) = it
+it = indx
+t = x(it)
+
+! IF THE FIRST ELEMENT OF THE ARRAY IS GREATER THAN T,
+!   INTERCHANGE IT WITH T
+
+indx = ind(i)
+IF (x(indx) <= t) GO TO 50
+ind(ij) = indx
+ind(i) = it
+it = indx
+t = x(it)
+GO TO 50
+
+! INTERCHANGE ELEMENTS K AND L
+
+40 itt = ind(l)
+ind(l) = ind(k)
+ind(k) = itt
+
+! FIND AN ELEMENT IN THE UPPER PART OF THE ARRAY WHICH IS
+!   NOT LARGER THAN T
+
+50 l = l - 1
+indx = ind(l)
+IF (x(indx) > t) GO TO 50
+
+! FIND AN ELEMENT IN THE LOWER PART OF THE ARRAY WHCIH IS NOT SMALLER THAN T
+
+60 k = k + 1
+indx = ind(k)
+IF (x(indx) < t) GO TO 60
+
+! IF K <= L, INTERCHANGE ELEMENTS K AND L
+
+IF (k <= l) GO TO 40
+
+! SAVE THE UPPER AND LOWER SUBSCRIPTS OF THE PORTION OF THE
+!   ARRAY YET TO BE SORTED
+
+IF (l-i > j-k) THEN
+  il(m) = i
+  iu(m) = l
+  i = k
+  m = m + 1
+  GO TO 80
+END IF
+
+il(m) = k
+iu(m) = j
+j = l
+m = m + 1
+GO TO 80
+
+! BEGIN AGAIN ON ANOTHER UNSORTED PORTION OF THE ARRAY
+
+70 m = m - 1
+IF (m == 0) RETURN
+i = il(m)
+j = iu(m)
+
+80 IF (j-i >= 11) GO TO 30
+IF (i == 1) GO TO 20
+i = i - 1
+
+! SORT ELEMENTS I+1,...,J.  NOTE THAT 1 <= I < J AND J-I < 11.
+
+90 i = i + 1
+IF (i == j) GO TO 70
+indx = ind(i+1)
+t = x(indx)
+it = indx
+indx = ind(i)
+IF (x(indx) <= t) GO TO 90
+k = i
+
+100 ind(k+1) = ind(k)
+k = k - 1
+indx = ind(k)
+IF (t < x(indx)) GO TO 100
+
+ind(k+1) = it
+GO TO 90
 END SUBROUTINE QUICK_SORT_INTEGERS
-
-subroutine swap(a,b)
-  !real, intent(inout) :: a, b
-  !real :: c
-  integer, intent(inout) :: a,b
-  integer :: c
-  c = a; a = b; b = c
-end subroutine swap
-

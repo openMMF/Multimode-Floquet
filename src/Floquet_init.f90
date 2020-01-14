@@ -47,7 +47,7 @@ SUBROUTINE SET_ATOMIC_PARAMETERS(ATOMICSPECIE,MANIFOLD,JTOTAL_,ID,INFO)
         a_s     = a_s_6Li
         alpha_E = alpha_E_6Li
         Fup     = Fup_6Li
-        Fdown   = Fdown_87Rb     
+        Fdown   = Fdown_6Li     
         INFO    = 1  ! ITS AN ATOM
         ID_name = ID_name_6Li
 !        write(*,*) "# 6Li"

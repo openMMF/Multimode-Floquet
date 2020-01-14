@@ -13,6 +13,7 @@ SUBROUTINE MULTIMODEFLOQUETMATRIX_SP(ATOM__,NM,NF,MODES_NUM,FIELDS,VALUES_,ROW_I
 
   USE TYPES         !(modes.f90)
   USE MERGINGARRAYS !(utils.f90)
+  USE QUICKSORTINTERFACE !(Modules.f90)
 
   IMPLICIT NONE
   INTEGER                  ,            INTENT(IN)    :: NM,NF
@@ -27,7 +28,7 @@ SUBROUTINE MULTIMODEFLOQUETMATRIX_SP(ATOM__,NM,NF,MODES_NUM,FIELDS,VALUES_,ROW_I
 
   COMPLEX*16,       DIMENSION(:,:), ALLOCATABLE :: V_AUX
   COMPLEX*16,       DIMENSION(:),   ALLOCATABLE :: VALUES,ARRAY_AUX,VALUES_OLD,VALUES_OLD_
-  INTEGER,          DIMENSION(:),   ALLOCATABLE :: ROW,COLUMN,ARRAYI_AUX,ROW_OLD,COLUMN_OLD,ROW_INDEX,INDEX_ORDERROW
+  INTEGER,          DIMENSION(:),   ALLOCATABLE :: ROW,COLUMN,ARRAYI_AUX,ROW_OLD,COLUMN_OLD,ROW_INDEX,INDEX_ORDERROW,INDEX_ORDERROW_
   INTEGER,          DIMENSION(NM)               :: N_FLOQUET
   DOUBLE PRECISION, DIMENSION(NM)               :: OMEGA
 
@@ -49,7 +50,7 @@ SUBROUTINE MULTIMODEFLOQUETMATRIX_SP(ATOM__,NM,NF,MODES_NUM,FIELDS,VALUES_,ROW_I
 
   INFO       = 0
   N_FLOQUET  = 0
-
+  counter    = 1
   !write(*,*) N_MODES,D_BARE,INFO,N_FLOQUET
   ALLOCATE(VALUES(D_bare*D_bare))
   ALLOCATE(ROW(D_bare*D_bare))
@@ -244,14 +245,11 @@ SUBROUTINE MULTIMODEFLOQUETMATRIX_SP(ATOM__,NM,NF,MODES_NUM,FIELDS,VALUES_,ROW_I
      DEALLOCATE(ROW_OLD)
      DEALLOCATE(COLUMN_OLD)
 
-     IF(info.eq.6) THEN
+     IF(info.eq.6) THEN ! values, row, column representation of the H matrix
         VALUES_    = VALUES
         ROW_INDEX_ = ROW
         COLUMN_    = COLUMN
      ELSE
-
-
-
      ! BUILDING THE VARIATION CRS PACKING OF THE MULTIMODE HAMILTONIAN MATRIX, USING THE COORDINATE PACKING
 
      !  DO r=1,size(VALUES,1)
@@ -265,6 +263,10 @@ SUBROUTINE MULTIMODEFLOQUETMATRIX_SP(ATOM__,NM,NF,MODES_NUM,FIELDS,VALUES_,ROW_I
 
         ALLOCATE(INDEX_ORDERROW(SIZE(ROW,1)))
         CALL QUICK_SORT_INTEGERS(ROW,INDEX_ORDERROW,SIZE(ROW,1))
+        !write(*,*) ROW
+        !write(*,*) INDEX_ORDERROW
+        !write(*,*) ROW(INDEX_ORDERROW)
+
         ROW    = ROW(INDEX_ORDERROW)
         COLUMN = COLUMN(INDEX_ORDERROW)
         VALUES = VALUES(INDEX_ORDERROW)
@@ -299,7 +301,22 @@ SUBROUTINE MULTIMODEFLOQUETMATRIX_SP(ATOM__,NM,NF,MODES_NUM,FIELDS,VALUES_,ROW_I
               counter = 1
            END IF
         END DO
-        !     write(*,*) row_index(1:10)
+        m = 1
+        do r=2,size(row_index,1)
+           counter = row_index(r)-row_index(r-1)-1
+
+!           write(*,*) row_index(r)-row_index(r-1),m,m+counter
+           ALLOCATE(INDEX_ORDERROW_(counter+1))           
+!           write(*,*) INDEX_ORDERROW(m:m+counter)
+           CALL QUICK_SORT_INTEGERS(INDEX_ORDERROW(m:m+counter),INDEX_ORDERROW_,counter+1)
+           INDEX_ORDERROW(m:m+counter) = INDEX_ORDERROW((m-1)+INDEX_ORDERROW_)
+           COLUMN(m:m+counter)         = COLUMN((m-1)+INDEX_ORDERROW_)
+           m = m + counter + 1
+           DEALLOCATE(INDEX_ORDERROW_)
+        end do
+!        write(*,*) INDEX_ORDERROW
+!        write(*,*) COLUMN
+        
         !  WRITE(*,*) D_MULTIFLOQUET,nf
         !E_L = -60.0
         !E_R =  60.0

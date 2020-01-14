@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configurationDescriptor version="100">
+  <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
+    <df root="." name="0">
+      <df name="build">
+      </df>
+      <df name="doc">
+      </df>
+      <df name="examples">
+        <df name="CPP">
+          <in>MultimodeFloquet.h</in>
+          <in>main_DressedQubit.cpp</in>
+          <in>main_DressedQubitV2.cpp</in>
+          <in>main_DressedQubit_SP.cpp</in>
+          <in>main_qubit.cpp</in>
+          <in>main_qubit_inspection.cpp</in>
+          <in>main_qubit_sp.cpp</in>
+          <in>main_release.cpp</in>
+        </df>
+        <df name="FORTRAN">
+          <in>DoublePeakSearch.f90</in>
+          <in>main_87Rb_RFMW_DRIVER.f90</in>
+          <in>main_87Rb_RF_DRIVER.f90</in>
+          <in>main_DressedQubit.f90</in>
+          <in>main_DressedQubitV2.f90</in>
+          <in>main_DressedQubit_DRIVER.f90</in>
+          <in>main_DressedQubit_SP.f90</in>
+          <in>main_KitaevChain.f90</in>
+          <in>main_MKL_SP.f90</in>
+          <in>main_QuantumInterference.f90</in>
+          <in>main_Release.f90</in>
+          <in>main_halfspin_DRIVER.f90</in>
+          <in>main_lattice.f90</in>
+          <in>main_qubit.f90</in>
+          <in>main_qubitLattice.f90</in>
+          <in>main_qubitLattice_DRIVER.f90</in>
+          <in>main_qubitLattice_SP.f90</in>
+          <in>main_qubit_DRIVER.f90</in>
+          <in>main_qubit_SP.f90</in>
+          <in>main_qubit_SP_TEST.f90</in>
+          <in>main_qubit_Shirley.f90</in>
+          <in>main_qubit_noise_SP.f90</in>
+          <in>main_spin_DRIVER.f90</in>
+          <in>main_threesiteslattice.f90</in>
+        </df>
+      </df>
+      <df name="include">
+        <in>arrays.mod</in>
+        <in>atomic_properties.mod</in>
+        <in>feast.mod</in>
+        <in>floquetinitinterface.mod</in>
+        <in>funciones.mod</in>
+        <in>mergingarrays.mod</in>
+        <in>mergingarrays_c.mod</in>
+        <in>modes_4f.mod</in>
+        <in>passing2c.mod</in>
+        <in>physical_constants.mod</in>
+        <in>quicksortinterface.mod</in>
+        <in>sparse_interface.mod</in>
+        <in>subinterface.mod</in>
+        <in>subinterface_lapack.mod</in>
+        <in>types.mod</in>
+        <in>types_c.mod</in>
+      </df>
+      <df name="lib">
+      </df>
+      <df name="src">
+        <in>AlkaliAtoms_parameters.f90</in>
+        <in>F_representation.f90</in>
+        <in>Floquet_init.f90</in>
+        <in>Floquet_init_C.f90</in>
+        <in>I_and_J_representations.f90</in>
+        <in>LapackEigenValues.f90</in>
+        <in>LapackEigenValues_C.f90</in>
+        <in>MKLSparseEigenvalues.f90</in>
+        <in>MKLSparseEigenvalues_C.f90</in>
+        <in>Modules.f90</in>
+        <in>MultimodeDressedBasis.f90</in>
+        <in>MultimodeDressedBasis_C.f90</in>
+        <in>MultimodeDressedBasis_SP.f90</in>
+        <in>MultimodeDressedBasis_SP_C.f90</in>
+        <in>MultimodeFloquet.h</in>
+        <in>MultimodeFloquetTE.f90</in>
+        <in>MultimodeFloquetTE_C.f90</in>
+        <in>MultimodeFloquetTE_DRIVER.f90</in>
+        <in>MultimodeFloquetTE_DRIVER_C.f90</in>
+        <in>MultimodeHamiltonian.f90</in>
+        <in>MultimodeHamiltonian_C.f90</in>
+        <in>MultimodeHamiltonian_SP.f90</in>
+        <in>MultimodeHamiltonian_SP_C.f90</in>
+        <in>MultimodeMicroMotion.f90</in>
+        <in>MultimodeMicroMotionDressedBasis.f90</in>
+        <in>MultimodeMicroMotionDressedBasis_C.f90</in>
+        <in>MultimodeMicroMotion_C.f90</in>
+        <in>MultimodeTransitionAVG.f90</in>
+        <in>MultimodeTransitionAVG_C.f90</in>
+        <in>Runge-Kutta4thorder.f90</in>
+        <in>TestingUnitarity.f90</in>
+        <in>VarCRSPacking.f90</in>
+        <in>delta_kr.f90</in>
+        <in>main_qubit_SP.f90</in>
+        <in>modes.f90</in>
+        <in>modes_C.f90</in>
+        <in>quick-sort-index-table.f90</in>
+        <in>sparse_utils.f90</in>
+        <in>util.f90</in>
+        <in>util_c.f90</in>
+      </df>
+      <df name="unsupported">
+        <in>EvolutionOperator_RWA.f90</in>
+        <in>FFTW_SUBROUTINE.f90</in>
+        <in>Floquet.f90</in>
+        <in>IJtoF_TransformationMatrix.f90</in>
+        <in>Modules_release.f90</in>
+        <in>MultimodeFloquet_C.f90</in>
+      </df>
+      <in>arrays.mod</in>
+      <in>atomic_properties.mod</in>
+      <in>feast.mod</in>
+      <in>floquetinitinterface.mod</in>
+      <in>funciones.mod</in>
+      <in>mergingarrays.mod</in>
+      <in>mergingarrays_c.mod</in>
+      <in>modes_4f.mod</in>
+      <in>passing2c.mod</in>
+      <in>physical_constants.mod</in>
+      <in>qsortd.f90</in>
+      <in>quick-sort-index-table.f90</in>
+      <in>quick-sort-index-table_Recipies.f90</in>
+      <in>quicksortinterface.mod</in>
+      <in>subinterface.mod</in>
+      <in>subinterface_lapack.mod</in>
+      <in>types.mod</in>
+      <in>types_c.mod</in>
+    </df>
+    <df root="src" name="1">
+    </df>
+  </logicalFolder>
+  <projectmakefile>Makefile</projectmakefile>
+  <confs>
+    <conf name="Default" type="0">
+      <toolsSet>
+        <developmentServer>localhost</developmentServer>
+        <platform>2</platform>
+      </toolsSet>
+      <compile>
+        <compiledirpicklist>
+          <compiledirpicklistitem>.</compiledirpicklistitem>
+          <compiledirpicklistitem>${AUTO_FOLDER}</compiledirpicklistitem>
+        </compiledirpicklist>
+        <compiledir>${AUTO_FOLDER}</compiledir>
+        <compilecommandpicklist>
+          <compilecommandpicklistitem>${MAKE} ${ITEM_NAME}.o</compilecommandpicklistitem>
+          <compilecommandpicklistitem>${AUTO_COMPILE}</compilecommandpicklistitem>
+        </compilecommandpicklist>
+        <compilecommand>${AUTO_COMPILE}</compilecommand>
+      </compile>
+      <dbx_gdbdebugger version="1">
+        <gdb_pathmaps>
+        </gdb_pathmaps>
+        <gdb_interceptlist>
+          <gdbinterceptoptions gdb_all="false" gdb_unhandled="true" gdb_unexpected="true"/>
+        </gdb_interceptlist>
+        <gdb_signals>
+        </gdb_signals>
+        <gdb_options>
+          <DebugOptions>
+          </DebugOptions>
+        </gdb_options>
+        <gdb_buildfirst gdb_buildfirst_overriden="false" gdb_buildfirst_old="false"/>
+      </dbx_gdbdebugger>
+      <nativedebugger version="1">
+        <engine>gdb</engine>
+      </nativedebugger>
+      <runprofile version="9">
+        <runcommandpicklist>
+          <runcommandpicklistitem>"${OUTPUT_PATH}"</runcommandpicklistitem>
+        </runcommandpicklist>
+        <runcommand>"${OUTPUT_PATH}"</runcommand>
+        <rundir>.</rundir>
+        <buildfirst>false</buildfirst>
+        <terminal-type>0</terminal-type>
+        <remove-instrumentation>0</remove-instrumentation>
+        <environment>
+        </environment>
+      </runprofile>
+    </conf>
+  </confs>
+</configurationDescriptor>

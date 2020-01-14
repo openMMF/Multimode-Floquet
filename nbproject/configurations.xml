@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configurationDescriptor version="100">
+  <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
+    <df root="." name="0">
+      <df name="examples">
+        <df name="CPP">
+          <in>main_DressedQubit.cpp</in>
+          <in>main_qubit.cpp</in>
+        </df>
+      </df>
+      <df name="src">
+        <in>AlkaliAtoms_parameters.f90</in>
+        <in>F_representation.f90</in>
+        <in>Floquet_init.f90</in>
+        <in>Floquet_init_C.f90</in>
+        <in>I_and_J_representations.f90</in>
+        <in>LapackEigenValues.f90</in>
+        <in>LapackEigenValues_C.f90</in>
+        <in>MKLSparseEigenvalues.f90</in>
+        <in>MKLSparseEigenvalues_C.f90</in>
+        <in>Modules.f90</in>
+        <in>MultimodeDressedBasis.f90</in>
+        <in>MultimodeDressedBasis_C.f90</in>
+        <in>MultimodeDressedBasis_SP.f90</in>
+        <in>MultimodeDressedBasis_SP_C.f90</in>
+        <in>MultimodeFloquetTE.f90</in>
+        <in>MultimodeFloquetTE_C.f90</in>
+        <in>MultimodeFloquetTE_DRIVER.f90</in>
+        <in>MultimodeFloquetTE_DRIVER_C.f90</in>
+        <in>MultimodeHamiltonian.f90</in>
+        <in>MultimodeHamiltonian_C.f90</in>
+        <in>MultimodeHamiltonian_SP.f90</in>
+        <in>MultimodeHamiltonian_SP_C.f90</in>
+        <in>MultimodeMicroMotion.f90</in>
+        <in>MultimodeMicroMotionDressedBasis.f90</in>
+        <in>MultimodeMicroMotionDressedBasis_C.f90</in>
+        <in>MultimodeMicroMotion_C.f90</in>
+        <in>MultimodeTransitionAVG.f90</in>
+        <in>MultimodeTransitionAVG_C.f90</in>
+        <in>VarCRSPacking.f90</in>
+        <in>delta_kr.f90</in>
+        <in>main_qubit_SP.f90</in>
+        <in>modes.f90</in>
+        <in>modes_C.f90</in>
+        <in>quick-sort-index-table.f90</in>
+        <in>sparse_utils.f90</in>
+        <in>util.f90</in>
+        <in>util_c.f90</in>
+      </df>
+    </df>
+    <df root="src" name="1">
+    </df>
+    <logicalFolder name="ExternalFiles"
+                   displayName="Important Files"
+                   projectFiles="false"
+                   kind="IMPORTANT_FILES_FOLDER">
+      <itemPath>Makefile</itemPath>
+      <itemPath>nbproject/private/launcher.properties</itemPath>
+    </logicalFolder>
+  </logicalFolder>
+  <sourceFolderFilter>^(nbproject)$</sourceFolderFilter>
+  <sourceRootList>
+    <Elem>.</Elem>
+  </sourceRootList>
+  <projectmakefile>Makefile</projectmakefile>
+  <confs>
+    <conf name="Default" type="0">
+      <toolsSet>
+        <compilerSet>default</compilerSet>
+        <dependencyChecking>false</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <flagsDictionary>
+        <element flagsID="0"
+                 commonFlags="-mtune=generic -march=x86-64 -fstack-protector"/>
+      </flagsDictionary>
+      <codeAssistance>
+      </codeAssistance>
+      <makefileType>
+        <makeTool>
+          <buildCommandWorkingDir>.</buildCommandWorkingDir>
+          <buildCommand>${MAKE} -f Makefile</buildCommand>
+          <cleanCommand>${MAKE} -f Makefile clean</cleanCommand>
+          <executablePath>qubit_sp</executablePath>
+          <ccTool>
+            <incDir>
+              <pElem>examples/CPP</pElem>
+              <pElem>.</pElem>
+            </incDir>
+          </ccTool>
+        </makeTool>
+        <preBuild>
+          <preBuildCommandWorkingDir>.</preBuildCommandWorkingDir>
+          <preBuildCommand></preBuildCommand>
+        </preBuild>
+      </makefileType>
+      <item path="examples/CPP/main_DressedQubit.cpp" ex="false" tool="1" flavor2="4">
+        <ccTool flags="0">
+        </ccTool>
+      </item>
+      <item path="examples/CPP/main_qubit.cpp" ex="false" tool="1" flavor2="4">
+        <ccTool flags="0">
+        </ccTool>
+      </item>
+      <item path="src/AlkaliAtoms_parameters.f90" ex="false" tool="2" flavor2="7">
+      </item>
+      <item path="src/F_representation.f90" ex="false" tool="2" flavor2="7">
+      </item>
+      <item path="src/Floquet_init.f90" ex="false" tool="2" flavor2="7">
+      </item>
+      <item path="src/Floquet_init_C.f90" ex="false" tool="2" flavor2="7">
+      </item>
+      <item path="src/I_and_J_representations.f90" ex="false" tool="2" flavor2="7">
+      </item>
+      <item path="src/LapackEigenValues.f90" ex="false" tool="2" flavor2="7">
+      </item>
+      <item path="src/LapackEigenValues_C.f90" ex="false" tool="2" flavor2="7">
+      </item>
+      <item path="src/MKLSparseEigenvalues.f90" ex="false" tool="2" flavor2="7">
+      </item>
+      <item path="src/MKLSparseEigenvalues_C.f90" ex="false" tool="2" flavor2="7">
+      </item>
+      <item path="src/Modules.f90" ex="false" tool="2" flavor2="7">
+      </item>
+      <item path="src/MultimodeDressedBasis.f90" ex="false" tool="2" flavor2="7">
+      </item>
+      <item path="src/MultimodeDressedBasis_C.f90" ex="false" tool="2" flavor2="7">
+      </item>
+      <item path="src/MultimodeDressedBasis_SP.f90" ex="false" tool="2" flavor2="7">
+      </item>
+      <item path="src/MultimodeDressedBasis_SP_C.f90" ex="false" tool="2" flavor2="7">
+      </item>
+      <item path="src/MultimodeFloquetTE.f90" ex="false" tool="2" flavor2="7">
+      </item>
+      <item path="src/MultimodeFloquetTE_C.f90" ex="false" tool="2" flavor2="7">
+      </item>
+      <item path="src/MultimodeFloquetTE_DRIVER.f90" ex="false" tool="2" flavor2="7">
+      </item>
+      <item path="src/MultimodeFloquetTE_DRIVER_C.f90"
+            ex="false"
+            tool="2"
+            flavor2="7">
+      </item>
+      <item path="src/MultimodeHamiltonian.f90" ex="false" tool="2" flavor2="7">
+      </item>
+      <item path="src/MultimodeHamiltonian_C.f90" ex="false" tool="2" flavor2="7">
+      </item>
+      <item path="src/MultimodeHamiltonian_SP.f90" ex="false" tool="2" flavor2="7">
+      </item>
+      <item path="src/MultimodeHamiltonian_SP_C.f90" ex="false" tool="2" flavor2="7">
+      </item>
+      <item path="src/MultimodeMicroMotion.f90" ex="false" tool="2" flavor2="7">
+      </item>
+      <item path="src/MultimodeMicroMotionDressedBasis.f90"
+            ex="false"
+            tool="2"
+            flavor2="7">
+      </item>
+      <item path="src/MultimodeMicroMotionDressedBasis_C.f90"
+            ex="false"
+            tool="2"
+            flavor2="7">
+      </item>
+      <item path="src/MultimodeMicroMotion_C.f90" ex="false" tool="2" flavor2="7">
+      </item>
+      <item path="src/MultimodeTransitionAVG.f90" ex="false" tool="2" flavor2="7">
+      </item>
+      <item path="src/MultimodeTransitionAVG_C.f90" ex="false" tool="2" flavor2="7">
+      </item>
+      <item path="src/VarCRSPacking.f90" ex="false" tool="2" flavor2="7">
+      </item>
+      <item path="src/delta_kr.f90" ex="false" tool="2" flavor2="7">
+      </item>
+      <item path="src/main_qubit_SP.f90" ex="false" tool="2" flavor2="7">
+      </item>
+      <item path="src/modes.f90" ex="false" tool="2" flavor2="7">
+      </item>
+      <item path="src/modes_C.f90" ex="false" tool="2" flavor2="7">
+      </item>
+      <item path="src/quick-sort-index-table.f90" ex="false" tool="2" flavor2="7">
+      </item>
+      <item path="src/sparse_utils.f90" ex="false" tool="2" flavor2="0">
+      </item>
+      <item path="src/util.f90" ex="false" tool="2" flavor2="7">
+      </item>
+      <item path="src/util_c.f90" ex="false" tool="2" flavor2="7">
+      </item>
+    </conf>
+  </confs>
+</configurationDescriptor>

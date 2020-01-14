@@ -169,3 +169,54 @@ MODULE SUBINTERFACE_LAPACK
 END MODULE SUBINTERFACE_LAPACK
 
 
+MODULE QUICKSORTINTERFACE
+  IMPLICIT NONE
+  PUBLIC
+  INTERFACE
+     recursive subroutine QUICK_SORT_I_T(a,idx_a,na)
+       implicit none 
+       
+       ! DUMMY ARGUMENTS
+       integer,                         intent(in)    :: na       ! nr or items to sort
+       DOUBLE PRECISION, dimension(nA), intent(inout) :: a     ! vector to be sorted
+       integer,          dimension(nA), intent(inout) :: idx_a ! sorted indecies of a
+     end subroutine QUICK_SORT_I_T
+     
+!     recursive subroutine QUICK_SORT_INTEGERS(a,idx_a,na)
+!     implicit none 
+
+     ! DUMMY ARGUMENTS
+!     integer,                intent(in) :: na       ! nr or items to sort
+!     integer, dimension(nA), intent(inout) :: a     ! vector to be sorted
+!     integer, dimension(nA), intent(inout) :: idx_a ! sorted indecies of a
+     
+!     end subroutine quick_sort_integers
+ 
+     subroutine InsertionSort_I(a,idx_a,na)
+
+     !use sangoma_base, only: REALPREC, INTPREC
+ 
+     implicit none
+
+     ! DUMMY ARGUMENTS
+     integer,                         intent(in)    :: na
+     integer, dimension(nA), intent(inout) :: a
+     integer,          dimension(nA), intent(inout) :: idx_a
+     end subroutine InsertionSort_I
+     
+     subroutine InsertionSort_d(a,idx_a,na)
+
+     !use sangoma_base, only: REALPREC, INTPREC
+ 
+     implicit none
+
+     ! DUMMY ARGUMENTS
+     integer,                         intent(in)    :: na
+     double precision, dimension(nA), intent(inout) :: a
+     integer,          dimension(nA), intent(inout) :: idx_a
+    
+     end subroutine InsertionSort_d
+ 
+
+  END INTERFACE
+END MODULE QUICKSORTINTERFACE

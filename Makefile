@@ -1,16 +1,17 @@
 #export LD_LIBRARY_PATH="/opt/intel/compilers_and_libraries_2017/linux/mkl/lib/intel64"
 # SET FORTRAN AND CPP COMPILERS
-CPP = g++-8
-CC  = gcc-8
-GF  = gfortran-8
+CPP = g++-4.9
+CC  = gcc-4.9
+GF  = gfortran-4.9
 AR  = ar 
 RANLIB = ranlib
 
 # SET REQUIRED FLAGS
 GFFLAGS    =  -llapack -lblas -g
-GFFLAGS_SP =  -m64  -w -fno-second-underscore -x f77-cpp-input  -lpthread -lm -ldl  -llapack -lblas 
+GFFLAGS_SP =  -m64  -w -fno-second-underscore -x f77-cpp-input  -lpthread -lm -ldl  -llapack -lblas -g
 MKLFLAGS   =  -lmkl_gf_lp64 -lmkl_sequential -lmkl_core
 CFLAGS     =  -static
+BARRYFLAGS =  -g
 
 #SET MKL-intel LIBRARY PATH
 MKLLIBS = /opt/intel/compilers_and_libraries/linux/mkl/lib/intel64

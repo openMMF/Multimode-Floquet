@@ -166,16 +166,21 @@ V^{\ell,n} = e^{\phi_x} X S_x + e^{\phi_y} Y S_y + e^{\phi_z} Z S_z
 where $S_i$ is the angular momentum operator. Therefore, we need only six parameters (three phases and three amplitudes) to define the coupling matrices. 
 
 These six parameters should be declared explicitly for each one of the the driving modes, along with the frequency ( \verb omega  )  and the corresponding number of modes to be included in the Fourier expansion of the evolution operator (\verb N_Floquet ). The values of these parameters are initialised as follows:
-\begin{verbatim}
-  FIELDS(1)%X         = 0.0
-  FIELDS(1)%Y         = 0.0
-  FIELDS(1)%Z         = 1.0
-  FIELDS(1)%phi_x     = 0.0
-  FIELDS(1)%phi_y     = 0.0
-  FIELDS(1)%phi_z     = 0.0
-  FIELDS(1)%omega     = 0.0
-  FIELDS(1)%N_Floquet = 0
-\end{verbatim}
+\begin{center}
+  \begin{tabular}{ |l | c | }
+    \hline
+    Source code & Parameter in Eq. (\ref{eq:Vspinparametrisation}) \\ \hline
+    \verb FIELDS(1)%X=0.0 & $X$ \\ \hline
+    \verb FIELDS(1)%Y=0.0 & $Y$ \\ \hline
+    \verb FIELDS(1)%Z=1.0 & $Z$ \\ \hline
+    \verb FIELDS(1)%phi_x=0.0 & $\phi_z$ \\ \hline
+    \verb FIELDS(1)%phi_y=0.0 & $\phi_z$ \\ \hline
+    \verb FIELDS(1)%phi_z=0.0 & $\phi_z$ \\ \hline
+    \verb FIELDS(1)%omega=0.0 & $\omega$ \\ \hline
+    \verb FIELDS(1)%N_Floquet = 0   & $N$ \\ 
+    \hline
+  \end{tabular}
+\end{center}
 where we have a direct correspondence with Eq. (\ref{eq:Vspinparametrisation}). This set of instructions is repeated for each one of the driving fields, as can be seen in the source code.
 
 \subsection{Hamiltonian components}
@@ -226,7 +231,7 @@ MKL:
 In both cases, the eigenvalues are stored in the array \verb E_FLOQUET   and the eigenvectors are stored as columns of the matrix \verb U_F. Remember that these eigenvectors correspond to the coefficients of the multimode Fourier decomposition of the micromotion operator Eq. (\ref{eq:micromotionexpansion}). Invoking the MKL subroutine requires two additional parameter \verb E_L  and \verb E_R  : the lower and upper bounds of the interval to be searched for eigenvalues, respectively. The user is responsible to set meaningful values of both parameters. 
 
 
-The MKL sparse solvers requires the use of the variation of the Compressed sparse row (CSR) representation of the matrix, which is produced by sorting the array of ROW position, in such a way that all non-zero values of a given row become stored consecutively. This sorting is done using a \verb QUICK_SORT  algorithm of the Rosetta project modified by the GHER group of the University of Liège for the Ocean Assimilation Kit \cite{oak}.   Alternatively, calling the function \verb MULTIMODEFLOQUETMATRIX_SP with the variable \verb INFO=6  , the user obtains the extended Hamiltonian represented by the three arrays of  \verb value, \verb column, \verb row, which can be used with a different eigenvalue solver for sparse matrices.
+The MKL sparse solvers requires the use of the variation of the Compressed sparse row (CSR) representation of the matrix, which is produced by sorting the array of ROW position, in such a way that all non-zero values of a given row become stored consecutively. This sorting is done using a \verb QUICK_SORT  algorithm by Robert Renka (OAK Ridge Natl. Lab, US) accessible from the  Alan Miller's Fortran Software website \cite{MillerSoftware}.  Alternatively, calling the function \verb MULTIMODEFLOQUETMATRIX_SP with the variable \verb INFO=6  , the user obtains the extended Hamiltonian represented by the three arrays of  \verb value, \verb column, \verb row, which can be used with a different eigenvalue solver for sparse matrices.
 
 \subsection{Time-evolution operator}
 
