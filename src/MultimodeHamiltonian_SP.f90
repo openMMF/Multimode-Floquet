@@ -223,7 +223,7 @@ SUBROUTINE MULTIMODEFLOQUETMATRIX_SP(ATOM__,NM,NF,MODES_NUM,FIELDS,VALUES_,ROW_I
            END DO
            FIELD_INDEX = FIELD_INDEX + 1
         END DO
-        !     WRITE(*,*) REAL(VALUES)
+        !WRITE(*,*) REAL(VALUES)
         !     WRITE(*,*) ROW
 
         D = D*(2*N_FLOQUET(m)+1)
@@ -256,7 +256,7 @@ SUBROUTINE MULTIMODEFLOQUETMATRIX_SP(ATOM__,NM,NF,MODES_NUM,FIELDS,VALUES_,ROW_I
      !     WRITE(*,*) r,ROW(r),COLUMN(r),REAL(VALUES(r))
      !  END DO
      !    WRITE(*,*) SIZE(VALUES,1)
-     !    WRITE(*,*) REAL(VALUES)
+!        WRITE(*,*) REAL(VALUES)
 !     WRITE(*,*) ROW
      !WRITE(*,*) COLUMN
 !     WRITE(*,*) 
@@ -269,10 +269,9 @@ SUBROUTINE MULTIMODEFLOQUETMATRIX_SP(ATOM__,NM,NF,MODES_NUM,FIELDS,VALUES_,ROW_I
 
         ROW    = ROW(INDEX_ORDERROW)
         COLUMN = COLUMN(INDEX_ORDERROW)
-        VALUES = VALUES(INDEX_ORDERROW)
         
         !     write(*,*) index_orderrow
-        !     write(*,*)
+        !write(*,*) real(values)
         !     write(*,*) row
         !WRITE(*,*)
         !WRITE(*,*)
@@ -314,8 +313,10 @@ SUBROUTINE MULTIMODEFLOQUETMATRIX_SP(ATOM__,NM,NF,MODES_NUM,FIELDS,VALUES_,ROW_I
            m = m + counter + 1
            DEALLOCATE(INDEX_ORDERROW_)
         end do
-!        write(*,*) INDEX_ORDERROW
-!        write(*,*) COLUMN
+        VALUES = VALUES(INDEX_ORDERROW)
+ 
+        !write(*,*) INDEX_ORDERROW
+        !write(*,*) COLUMN
         
         !  WRITE(*,*) D_MULTIFLOQUET,nf
         !E_L = -60.0
