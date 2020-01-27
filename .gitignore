@@ -1,6 +1,6 @@
 #*#
 *.f90~
-*.dat
+*.dat  
 *.dat~
 *.data
 *.datt
