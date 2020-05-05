@@ -44,14 +44,14 @@ SUBROUTINE MKLSPARSE_FULLEIGENVALUES(D,DV,VALUES,ROW_INDEX,COLUMN,E_L,E_R,E_FLOQ
   Emin = E_L!-15.0 ! SEARCH INTERVAL: LOWER BOUND
   Emax = E_R! 15.0 ! SEARCH INTERVAL: UPPER BOUND
   UPLO = 'F'
- ! write(*,*) values
+  !write(*,*) values
   !WRITE(*,*) '#MKL Sparse Eigenvalue, matrix dimension:',D
-!  WRITE(*,*) D,SIZE(VALUES,1),SIZE(ROW_INDEX,1),SIZE(COLUMN,1),SIZE(FPM,1),Emin,Emax,M0,M1
+  !WRITE(*,*) D,SIZE(VALUES,1),SIZE(ROW_INDEX,1),SIZE(COLUMN,1),SIZE(FPM,1),Emin,Emax,M0,M1
   !WRITE(*,*) UPLO,D,SIZE(VALUES,1),SIZE(ROW_INDEX,1),SIZE(COLUMN,1),fpm,epsout,loop, &
   !     &   Emin,Emax,M0,SIZE(E,1),SIZE(X,1),SIZE(X,2),M1,SIZE(res,1),info_FEAST
-  !write(*,*) VALUES
-  !WRITE(*,*) COLUMN
-  !WRITE(*,*) ROW_INDEX
+  !write(*,*) size(VALUES)
+  !WRITE(*,*) size(COLUMN)
+  !WRITE(*,*) size(ROW_INDEX)
   CALL zfeast_hcsrev(UPLO,D,VALUES,ROW_INDEX,COLUMN,fpm,epsout,loop, &
        &   Emin,Emax,M0,E,X,M1,res,info_FEAST)
   IF(info.EQ.1) THEN

@@ -96,7 +96,7 @@ int main(){
   fields[4].phi_y = 0.0;
   fields[4].phi_z = 0.0;
   fields[4].omega = 20.0;
-  fields[4].N_Floquet = 1;
+  fields[4].N_Floquet = 4;
 
   //printf("%i %i \n",d_bare,total_frequencies);
 

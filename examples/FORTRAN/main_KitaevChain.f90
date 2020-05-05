@@ -31,8 +31,8 @@ PROGRAM MULTIMODEFLOQUET
 
 
   INFO = 0
-  D_BARE = 50
-  CALL FLOQUETINIT(ID,'lattice',INFO)  
+  D_BARE = 5
+  CALL FLOQUETINIT(ID,'lattice',0.1d1*D_BARE,INFO)
 
   ALLOCATE(E_BARE(D_BARE))
   ALLOCATE(H_BARE(D_BARE,D_BARE))
@@ -131,25 +131,16 @@ PROGRAM MULTIMODEFLOQUET
 !  write(*,*)
   
   CALL WRITE_MATRIX(REAL(FIELDS(2)%V))
-
   DO m=1,256
      ! --- SET DRIVING PARAMETERS 
      FIELDS(2)%omega = 0.2 + (m-1.0)*0.6/256.0
      !write(*,*) total_frequencies,ID%ID_SYSTEM
      !--- FIND THE MULTIMODE FLOQUET SPECTRUM 
      CALL MULTIMODEFLOQUETMATRIX(ID,size(modes_num,1),total_frequencies,MODES_NUM,FIELDS,INFO)
-     write(*,*)
-!     write(*,*)
 
-     !call write_matrix(real(h_floquet))
      ALLOCATE(E_FLOQUET(SIZE(H_FLOQUET,1)))
      ALLOCATE(U_F(SIZE(H_FLOQUET,1),SIZE(H_FLOQUET,1)))
      E_FLOQUET = 0.0   
-!     DO r=1,SIZE(H_FLOQUET,1)
-!        write(*,*) real(H_FLOQUET(r,r))
-!     END DO
-!     write(*,*)
-!     write(*,*)
 
      CALL LAPACK_FULLEIGENVALUES(H_FLOQUET,SIZE(H_FLOQUET,1),E_FLOQUET,INFO)
      U_F = H_FLOQUET ! FOURIER DECOMPOSITION OF THE STATES DRESSED BY MODE NUMBER 

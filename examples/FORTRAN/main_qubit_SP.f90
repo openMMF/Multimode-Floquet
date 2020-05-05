@@ -47,11 +47,11 @@ PROGRAM MULTIMODEFLOQUET
   DEALLOCATE(ENERGY)
   
   
-  ALLOCATE(MODES_NUM(2))
+  ALLOCATE(MODES_NUM(3))
 
   MODES_NUM(1) = 1 !(STATIC FIELD)
-  MODES_NUM(2) = 1 !(DRIVING BY fundamental frequency omega)  
-!  MODES_NUM(3) = 1 !(DRIVING BY first HARMONIC (2*omega))
+  MODES_NUM(2) = 2 !(DRIVING BY fundamental frequency omega)  
+  MODES_NUM(3) = 1 !(DRIVING BY first HARMONIC (2*omega))
 
   
   TOTAL_FREQUENCIES = SUM(MODES_NUM,1)
@@ -76,16 +76,26 @@ PROGRAM MULTIMODEFLOQUET
   FIELDS(2)%phi_y = 0.0
   FIELDS(2)%phi_z = 0.0
   FIELDS(2)%omega = 1.0
-  FIELDS(2)%N_Floquet = 1
+  FIELDS(2)%N_Floquet = 2
 
-!  FIELDS(3)%X     = 2.0
-!  FIELDS(3)%Y     = 0.0
-!  FIELDS(3)%Z     = 0.0
-!  FIELDS(3)%phi_x = 0.0
-!  FIELDS(3)%phi_y = 0.0
-!  FIELDS(3)%phi_z = 0.0
-!  FIELDS(3)%omega = 1.0
-!  FIELDS(3)%N_Floquet = 8
+  FIELDS(3)%X     = 2.0
+  FIELDS(3)%Y     = 1.0
+  FIELDS(3)%Z     = 3.0
+  FIELDS(3)%phi_x = 1.0
+  FIELDS(3)%phi_y = 0.0
+  FIELDS(3)%phi_z = 0.0
+  FIELDS(3)%omega = 1.0
+  FIELDS(3)%N_Floquet = 2
+
+  FIELDS(4)%X     = 2.0
+  FIELDS(4)%Y     = 0.0
+  FIELDS(4)%Z     = 0.0
+  FIELDS(4)%phi_x = 0.0
+  FIELDS(4)%phi_y = 0.0
+  FIELDS(4)%phi_z = 0.0
+  FIELDS(4)%omega = 1.0
+  FIELDS(4)%N_Floquet = 2
+
 
   D_MULTIFLOQUET = ID%D_BARE
   DO r=1,TOTAL_FREQUENCIES

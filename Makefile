@@ -1,8 +1,8 @@
 #export LD_LIBRARY_PATH="/opt/intel/compilers_and_libraries_2017/linux/mkl/lib/intel64"
 # SET FORTRAN AND CPP COMPILERS
-CPP = g++
-CC  = gcc
-GF  = gfortran
+CPP = g++-4.9
+CC  = gcc-4.9
+GF  = gfortran-4.9
 AR  = ar 
 RANLIB = ranlib
 
@@ -85,40 +85,40 @@ build/util_c.o: build/util.o build/modes.o src/util_c.f90
 	$(GF) $(BARRYFLAGS) -c -o $@ build/modes.o build/util.o src/util_c.f90 
 
 build/modes_C.o: build/modes.o src/modes_C.f90
-	$(GF) $(BARRYFLAGS) -c -o $@ build/modes.o src/modes_C.f90  
+	$(GF) $(BARRYFLAGS) -c -o $@ src/modes_C.f90  
 
 build/Floquet_init_C.o: build/modes.o build/modes_C.o src/Floquet_init_C.f90
-	$(GF) $(BARRYFLAGS) -c -o $@ build/modes.o build/modes_C.o src/Floquet_init_C.f90  
+	$(GF) $(BARRYFLAGS) -c -o $@  src/Floquet_init_C.f90  
 
 build/MultimodeHamiltonian_SP_C.o: build/MultimodeHamiltonian_SP.o src/MultimodeHamiltonian_SP_C.f90
 	$(GF) $(BARRYFLAGS) -c -o $@  src/MultimodeHamiltonian_SP_C.f90 
 
 build/MultimodeHamiltonian_C.o: build/MultimodeHamiltonian.o src/MultimodeHamiltonian_C.f90
-	$(GF) $(BARRYFLAGS) -c -o $@  build/MultimodeHamiltonian.o src/MultimodeHamiltonian_C.f90  
+	$(GF) $(BARRYFLAGS) -c -o $@  src/MultimodeHamiltonian_C.f90  
 
 build/LapackEigenValues_C.o: build/Modules.o build/LapackEigenValues.o src/LapackEigenValues_C.f90
-	$(GF) $(BARRYFLAGS) -c -o $@ build/Modules.o build/LapackEigenValues.o src/LapackEigenValues_C.f90  
+	$(GF) $(BARRYFLAGS) -c -o $@ src/LapackEigenValues_C.f90  
 
 build/MultimodeTransitionAVG_C.o: build/modes_C.o build/MultimodeTransitionAVG.o src/MultimodeTransitionAVG_C.f90
-	$(GF) $(BARRYFLAGS) -c -o $@  build/modes_C.o build/MultimodeTransitionAVG.o src/MultimodeTransitionAVG_C.f90  
+	$(GF) $(BARRYFLAGS) -c -o $@   src/MultimodeTransitionAVG_C.f90  
 
 build/MultimodeMicroMotion_C.o: build/modes_C.o build/MultimodeMicroMotion.o src/MultimodeMicroMotion_C.f90
-	$(GF) $(BARRYFLAGS) -c -o $@  build/modes_C.o build/MultimodeMicroMotion.o src/MultimodeMicroMotion_C.f90  
+	$(GF) $(BARRYFLAGS) -c -o $@   src/MultimodeMicroMotion_C.f90  
 
 build/MultimodeMicroMotionDressedBasis_C.o: build/modes_C.o build/MultimodeMicroMotionDressedBasis.o src/MultimodeMicroMotionDressedBasis_C.f90
-	$(GF) $(BARRYFLAGS) -c -o $@  build/modes_C.o build/MultimodeMicroMotionDressedBasis.o src/MultimodeMicroMotionDressedBasis_C.f90  
+	$(GF) $(BARRYFLAGS) -c -o $@   src/MultimodeMicroMotionDressedBasis_C.f90  
 
 build/MultimodeFloquetTE_DRIVER_C.o: build/modes_C.o build/MultimodeFloquetTE_DRIVER.o src/MultimodeFloquetTE_DRIVER_C.f90
-	$(GF) $(BARRYFLAGS) -c -o $@  build/modes_C.o build/MultimodeFloquetTE_DRIVER.o src/MultimodeFloquetTE_DRIVER_C.f90  
+	$(GF) $(BARRYFLAGS) -c -o $@   src/MultimodeFloquetTE_DRIVER_C.f90  
 
 build/MultimodeFloquetTE_C.o: build/modes_C.o build/MultimodeFloquetTE.o src/MultimodeFloquetTE_C.f90
-	$(GF) $(BARRYFLAGS) -c -o $@  build/modes_C.o build/MultimodeFloquetTE.o src/MultimodeFloquetTE_C.f90  
+	$(GF) $(BARRYFLAGS) -c -o $@   src/MultimodeFloquetTE_C.f90  
 
 build/MultimodeDressedBasis_C.o: build/modes_C.o  build/MultimodeDressedBasis.o src/MultimodeDressedBasis_C.f90
-	$(GF) $(BARRYFLAGS) -o $@ -c build/modes_C.o  build/MultimodeDressedBasis.o src/MultimodeDressedBasis_C.f90  
+	$(GF) $(BARRYFLAGS) -o $@ -c  src/MultimodeDressedBasis_C.f90  
 
 build/MultimodeDressedBasis_SP_C.o: build/modes_C.o  build/MultimodeDressedBasis_SP.o src/MultimodeDressedBasis_SP_C.f90
-	$(GF) $(BARRYFLAGS) -o $@ -c build/modes_C.o  build/MultimodeDressedBasis_SP.o src/MultimodeDressedBasis_SP_C.f90  
+	$(GF) $(BARRYFLAGS) -o $@ -c  src/MultimodeDressedBasis_SP_C.f90  
 
 build/MKLSparseEigenValues_C.o: build/MKLSparseEigenValues.o src/MKLSparseEigenvalues_C.f90
 	$(GF) $(BARRYFLAGS) -c -o $@ src/MKLSparseEigenvalues_C.f90  
@@ -192,10 +192,10 @@ build/MultimodeHamiltonian.o:src/MultimodeHamiltonian.f90
 	$(GF) $(BARRYFLAGS) -o $@ -c src/MultimodeHamiltonian.f90 
 
 build/MultimodeFloquetTE.o: build/MultimodeHamiltonian.o src/MultimodeFloquetTE.f90
-	$(GF) $(BARRYFLAGS) -o $@ -c build/MultimodeHamiltonian.o src/MultimodeFloquetTE.f90 
+	$(GF) $(BARRYFLAGS) -o $@ -c  src/MultimodeFloquetTE.f90 
 
 build/MultimodeFloquetTE_DRIVER.o: build/MultimodeHamiltonian.o src/MultimodeFloquetTE_DRIVER.f90
-	$(GF) $(BARRYFLAGS) -o $@ -c build/MultimodeHamiltonian.o src/MultimodeFloquetTE_DRIVER.f90  
+	$(GF) $(BARRYFLAGS) -o $@ -c src/MultimodeFloquetTE_DRIVER.f90  
 
 build/MultimodeMicroMotion.o:src/MultimodeMicroMotion.f90
 	$(GF) $(BARRYFLAGS) -o $@ -c src/MultimodeMicroMotion.f90  

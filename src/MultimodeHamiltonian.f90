@@ -95,8 +95,8 @@ SUBROUTINE MULTIMODEFLOQUETMATRIX(ATOM_,NM,NF,MODES_NUM,FIELD,INFO)
         END DO
         FIELD_INDEX =2+SUM(MODES_NUM(2:n-1))
 
-!        write(*,*) n,N_FLOQUET(n),field_index,field(field_index)%omega
-        !        write(*,*) n,FIELD_INDEX,N_Floquet(n),FIELD(FIELD_INDEX)%OMEGA
+        !write(*,*) n,N_FLOQUET(n),field_index,field(field_index)%omega,D
+        !write(*,*) n,FIELD_INDEX,N_Floquet(n),FIELD(FIELD_INDEX)%OMEGA
         D_OLD = D
         D     = D*(2*N_FLOQUET(n)+1)
         ALLOCATE(H_FLOQUET(D,D))
