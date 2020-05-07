@@ -50,8 +50,8 @@ PROGRAM MULTIMODEFLOQUET
   ALLOCATE(MODES_NUM(3))
 
   MODES_NUM(1) = 1 !(STATIC FIELD)
-  MODES_NUM(2) = 1 !(DRIVING BY TWO HARMONICS)
-  MODES_NUM(3) = 2 !NOISY FIELD COMPONENTS
+  MODES_NUM(2) = 2 !(DRIVING BY TWO HARMONICS)
+  MODES_NUM(3) = 3 !NOISY FIELD COMPONENTS
 
   
   TOTAL_FREQUENCIES = SUM(MODES_NUM,1)
@@ -87,30 +87,39 @@ PROGRAM MULTIMODEFLOQUET
   FIELDS(3)%omega = 1.0
   FIELDS(3)%N_Floquet = 2
 
-  FIELDS(4)%X     = 2.0
-  FIELDS(4)%Y     = 1.0
-  FIELDS(4)%Z     = 0.0
-  FIELDS(4)%phi_x = 0.0
-  FIELDS(4)%phi_y = 0.0
-  FIELDS(4)%phi_z = 0.0
-  FIELDS(4)%omega = 1.0
-  FIELDS(4)%N_Floquet = 2
+!!$  FIELDS(4)%X     = 2.0
+!!$  FIELDS(4)%Y     = 1.0
+!!$  FIELDS(4)%Z     = 0.0
+!!$  FIELDS(4)%phi_x = 0.0
+!!$  FIELDS(4)%phi_y = 0.0
+!!$  FIELDS(4)%phi_z = 0.0
+!!$  FIELDS(4)%omega = 1.0
+!!$  FIELDS(4)%N_Floquet = 2
+!!$
+!!$  FIELDS(5)%X     = 2.0
+!!$  FIELDS(5)%Y     = 1.0
+!!$  FIELDS(5)%Z     = 0.0
+!!$  FIELDS(5)%phi_x = 0.0
+!!$  FIELDS(5)%phi_y = 0.0
+!!$  FIELDS(5)%phi_z = 0.0
+!!$  FIELDS(5)%omega = 1.0
+!!$  FIELDS(5)%N_Floquet = 2
+!!$
 
-!!$
-!!$
-!!$  DO m=1,MODES_NUM(3)
-!!$!     CALL RANDOM_NUMBER(NoisyField)
-!!$     write(*,*) m+2
-!!$     FIELDS(int(m+2))%X     = 1.0!NoisyField
-!!$     FIELDS(int(m+2))%Y     = 0.0
-!!$     FIELDS(int(m+2))%Z     = 0.0
-!!$     FIELDS(int(m+2))%phi_x = 0.0
-!!$     FIELDS(int(m+2))%phi_y = 0.0
-!!$     FIELDS(int(m+2))%phi_z = 0.0
-!!$     FIELDS(int(m+2))%omega = 1.0!m*0.25/MODES_NUM(3)
-!!$     FIELDS(int(m+2))%N_Floquet = 2
-!!$  END DO
-!!$  
+
+  DO m=1,MODES_NUM(3)
+     CALL RANDOM_NUMBER(NoisyField)
+     !write(*,*) m+2
+     FIELDS(int(m+3))%X     = NoisyField
+     FIELDS(int(m+3))%Y     = 0.0
+     FIELDS(int(m+3))%Z     = 0.0
+     FIELDS(int(m+3))%phi_x = 0.0
+     FIELDS(int(m+3))%phi_y = 0.0
+     FIELDS(int(m+3))%phi_z = 0.0
+     FIELDS(int(m+3))%omega = m*0.25/MODES_NUM(3)
+     FIELDS(int(m+3))%N_Floquet = 2
+  END DO
+  
   D_MULTIFLOQUET = ID%D_BARE
   DO r=1,TOTAL_FREQUENCIES
      D_MULTIFLOQUET = D_MULTIFLOQUET*(2*FIELDS(r)%N_Floquet+1)
