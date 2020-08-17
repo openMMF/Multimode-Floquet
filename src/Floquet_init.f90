@@ -229,7 +229,7 @@ END SUBROUTINE DEALLOCATEALL
 
 MODULE FLOQUETINITINTERFACE
   INTERFACE FLOQUETINIT
-     MODULE PROCEDURE FLOQUETINIT_QUBIT, FLOQUETINIT_SPIN,FLOQUETINIT_ALKALI
+     MODULE PROCEDURE FLOQUETINIT_QUBIT, FLOQUETINIT_SPIN,FLOQUETINIT_ALKALI,FLOQUETINIT_MBH
   END INTERFACE FLOQUETINIT
 contains
   SUBROUTINE FLOQUETINIT_QUBIT(ID,atomicspecie,INFO)
@@ -327,6 +327,47 @@ SUBROUTINE FLOQUETINIT_SPIN(ID,atomicspecie,jtotal,info)
   END IF
 
 END SUBROUTINE FLOQUETINIT_SPIN
+
+SUBROUTINE FLOQUETINIT_MBH(ID,atomicspecie,NP,L_,stats,info)
+  ! ATOMICSPECIE: 87Rb,6Li,Cs,41K,qubit,lattice, SPIN
+  ! MANIFOLD : "U" UPPER HYPERFINE MANIFOLD, "L" LOWER HYPERFIND MANIFOLD, "B" BOTH
+  ! JTOTAL   :  IF ATOMICSPECIE .EQ. SPIN THEN JTOTAL IS THE TOTAL ANGULAR MOMENTUM OF THE SPIN
+  !             IF ATOMICSPECIE .EQ. LATTICE, THEN JTOTAL IS THE NUMBER OF SITES
+
+
+  ! calculate the dimenson of the Hilbert space
+  ! initialize all the matrices required for a full Floquet calcuations
+  ! Calculate the nuclear, electron and total angular momentum operators
+
+  USE physical_constants ! Standard Module with constants
+  USE ATOMIC_PROPERTIES  ! gF, F , etc. factors for several species
+  USE subinterface       ! To ubroutines for representation of I and J operators
+  USE ARRAYS
+  USE SUBINTERFACE_LAPACK
+  USE TYPES
+  IMPLICIT NONE
+
+  TYPE(ATOM),        INTENT(INOUT) :: ID
+  CHARACTER (LEN=*), INTENT(IN)    :: ATOMICSPECIE
+  INTEGER,           intent(in)    :: NP,L_ ! 
+  CHARACTER (LEN=*), INTENT(IN)    :: stats
+  INTEGER,           INTENT(INOUT) :: INFO
+  
+  INTEGER  r,D_F2,P,r_,p_
+  DOUBLE PRECISION, DIMENSION(:),ALLOCATABLE:: Energy
+
+!  write(*,*) atomicspecie
+  INFO = 6
+  
+  TOTAL_STATES_LSI =  1.0!D_H(L_,NP,stats)
+  CALL SET_ATOMIC_PARAMETERS('lattice','B',1.0D0*total_states_lsi,ID,INFO)
+
+  !------ ALLOCATE NEEDED ARRAYS: Hamiltonian and Lapack
+  ALLOCATE(Energy(TOTAL_STATES_LSI))
+  ALLOCATE(HAMILTONIAN(Total_states_LSI,Total_states_LSI))
+
+END SUBROUTINE FLOQUETINIT_MBH
+
 
 SUBROUTINE FLOQUETINIT_ALKALI(ID,atomicspecie,manifold,info)
   ! ATOMICSPECIE: 87Rb,6Li,Cs,41K,qubit,lattice, SPIN
