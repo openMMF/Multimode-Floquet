@@ -26,7 +26,7 @@ MMFINC = ../../include/
 # MAKE CPP EXAMPLES
 ###################################
 
-all: ManybodyHubbard #Example_lib_f Example_lib_f_sp
+all: Example_lib_f Example_lib_f_sp
 	$(GF) -o ManybodyHubbard   ~/ManybodyHubbard/main_MBH.f90        -I$(MMFINC) -L$(MMFLIB) -lmultimodefloquet  $(GFFLAGS) 
 
 qubit_sp_test: ../../src/*.f90 main_qubit_noise_SP.f90

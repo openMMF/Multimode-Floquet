@@ -1,8 +1,8 @@
 #export LD_LIBRARY_PATH="/opt/intel/compilers_and_libraries_2017/linux/mkl/lib/intel64"
 # SET FORTRAN AND CPP COMPILERS
-CPP = g++-4.9
-CC  = gcc-4.9
-GF  = gfortran-4.9
+CPP = g++
+CC  = gcc
+GF  = gfortran
 AR  = ar 
 RANLIB = ranlib
 
@@ -11,7 +11,7 @@ GFFLAGS    =  -llapack -lblas -g
 GFFLAGS_SP =  -m64  -w -fno-second-underscore -x f77-cpp-input  -lpthread -lm -ldl  -llapack -lblas -g
 MKLFLAGS   =  -lmkl_gf_lp64 -lmkl_sequential -lmkl_core
 CFLAGS     =  -static
-BARRYFLAGS =  -g
+BARRYFLAGS =  -g -fPIC
 
 #SET MKL-intel LIBRARY PATH
 MKLLIBS = /opt/intel/compilers_and_libraries/linux/mkl/lib/intel64
@@ -43,19 +43,20 @@ lib:build/modes.o build/Modules.o build/Modules_release.o build/delta_kr.o build
 	cp *.mod ./include/
 #	cp src/*.h ./include
 
+#build/VarCRSPacking.o build/sparse_utils.o
 lib_lapack :build/modes.o build/Modules.o build/Modules_release.o build/delta_kr.o build/Floquet.o \
  build/I_and_J_representations.o build/F_representation.o build/LapackEigenValues.o \
- build/util.o build/quick-sort-index-table.o build/VarCRSPacking.o \
- build/sparse_utils.o build/MultimodeHamiltonian.o \
+ build/util.o build/quick-sort-index-table.o  build/MultimodeHamiltonian.o \
  build/MultimodeFloquetTE.o build/MultimodeFloquetTE_DRIVER.o build/MultimodeMicroMotion.o \
  build/MultimodeMicroMotionDressedBasis.o build/MultimodeMicroMotionDressedBasis_C.o \
  build/MultimodeTransitionAVG.o build/MultimodeDressedBasis.o \
  build/util_c.o build/modes_C.o build/Floquet_init_C.o \
  build/MultimodeHamiltonian_C.o build/LapackEigenValues_C.o build/MultimodeTransitionAVG_C.o \
  build/MultimodeMicroMotion_C.o build/MultimodeFloquetTE_DRIVER_C.o build/MultimodeFloquetTE_C.o \
- build/MultimodeDressedBasis_C.o  build/MKLSparseEigenValues_C.o 
+ build/MultimodeDressedBasis_C.o  #build/MKLSparseEigenValues_C.o 
 	$(AR) -urv lib/libmultimodefloquet.a build/*.o
 	$(RANLIB) lib/libmultimodefloquet.a
+	$(GF) -shared -fPIC build/*.o -o lib/libmultimodefloquet.so
 	cp *.mod ./include/
 #	cp src/*.h ./include
 
