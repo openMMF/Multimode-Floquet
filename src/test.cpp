@@ -3,46 +3,33 @@
 #include <stdio.h>
 #include <math.h>
 #include <string.h>
-/*
-extern "C" {
-int myFunction(int num) { 
 
-  int a;
-  if (num == 0){    
-    // if number is 0, do not perform any operation. 
-    return 0; 
-  }
-  else{
-    // if number is power of 2, return 1 else return 0 
-    
-    (num & (num - 1)) == 0 ? a=1 : a=0 ; 
-    return a;
-  }
-  
-} 
-}
 
-/*
-*/
-/*
-int square(int i) {
-	return i * i;
-}
-
-*/
 using namespace std;
 typedef std::complex<double> dcmplx;
-/*
-//#include "MultimodeFloquet.h"
-
-//extern "C" int h_floquet_size;
-
-
-*/
 
 
 extern "C" {
   
+
+  int h_floquet_size;
+
+  int myFunction(int num) { 
+    
+    int a;
+    if (num == 0){    
+      // if number is 0, do not perform any operation. 
+      return 0; 
+    }
+    else{
+      // if number is power of 2, return 1 else return 0 
+      
+      (num & (num - 1)) == 0 ? a=1 : a=0 ; 
+      return a;
+    }
+    
+  } 
+
   struct mode_c{
     double omega;
     dcmplx x,y,z;
@@ -78,16 +65,34 @@ extern "C" {
     //return i;   
  }
 
+  //sethamiltoniancomponents_c_(id,ctypes.byref(nm),ctypes.byref(total_frequencies),modes_num.ctypes.data_as(POINTER(c_int)),fields,ctypes.byref(info))
 
-  //void  sethamiltoniancomponents_c_(atom_c *id,int * nm, int * total_frequencies,int * modes_num,mode_c * fields,int * info){
+  void  sethamiltoniancomponents_c_(atom_c *id,int * nm, int * total_frequencies,int * modes_num,mode_c * fields,int * info){
   //void  sethamiltoniancomponents_c_(atom_c *id,int * nm, int * total_frequencies,int * modes_num,int * info){
   //void  sethamiltoniancomponents_c_(atom_c *id,int * nm, int * total_frequencies,int * info){
-  void  sethamiltoniancomponents_c_(int * modes_num,int  info){
-	
+  //int  sethamiltoniancomponents_c_(atom_c * id,int * modes_num,int  info){
+  //void  sethamiltoniancomponents_c_(int * modes_num,int  info){
+
+    int c ;
+    dcmplx d;
     printf("\n modes_num[0]: %d \n",modes_num[0]);
     printf("\n modes_num[1]: %d \n",modes_num[1]);
     printf("\n modes_num[2]: %d \n",modes_num[2]);
-    printf("\n info: %d \n", info);
+    printf("\n info: %d \n", *info);
+    printf("\n id.id_system: %d \n", id->id_system);
+    printf("\n id.d_bare: %d \n", id->d_bare);
+    printf("\n field1: %f  \n", (fields)->omega);
+    printf("\n field1: %f  \n", (fields+1)->omega);
+    printf("\n field1: %f  \n", (fields+2)->omega);
+    d = (fields+1)->x;
+    printf("\n field[1].x : %f \n",d.real());
+    d = (fields+2)->x;
+    printf("\n field[2].x : %f \n",d.real());
+    //printf("\n field1: %f  \n", (fields+3)->omega);
+    //c = id->id_system + id->d_bare;
+    //return c;
+
+    //printf("\n id.d_bare: %d \n", id.d_bare);
   }
 
  /*

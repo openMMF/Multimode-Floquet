@@ -19,7 +19,9 @@ from numpy import empty
 #     return mesh
 # =============================================================================
 
+! rm *.so
 !gfortran -shared -fPIC test.f90 -o libtestF.so
+
 class atom_c_T(ctypes.Structure):
     _fields = [
                 ("id_system", c_int),
@@ -78,27 +80,23 @@ class mode_c_T(ctypes.Structure):
                 ("N_Floquet", c_int)
             ]
 
-       
-class mode_c_array_T(ctypes.Structure):
-    _fields_ = [
-#            c_mode_c_T = mode_c_T()
-                ("field1", mode_c_T*3)
-                #("field2", mode_c_T),
-                #("field3", mode_c_T)
-            
-            ]
-    
 class atom_c_T(ctypes.Structure):
     _fields_ = [
                 ("id_system", c_int),
                 ("d_bare", c_int)            
             ]
+       
+class mode_c_array_T(ctypes.Structure):
+    _fields_ = [
+                ("field1", mode_c_T*3)            
+            ]
+    
 !rm *.so
 !g++  -fPIC -shared -o libtestC.so test.cpp
 !pwd
 
-openmmfC = ctypes.CDLL('./libtestC.so')
-#openmmfC = ctypes.CDLL('../lib/libmultimodefloquet.so')
+#openmmfC = ctypes.CDLL('./libtestC.so')
+openmmfC = ctypes.CDLL('../lib/libmultimodefloquet.so')
 
 
 #c_double_p = ctypes.POINTER(ctypes.c_double)
@@ -106,10 +104,9 @@ openmmfC = ctypes.CDLL('./libtestC.so')
 #c_char_p   = ctypes.POINTER(ctypes.c_char)
 
 id  = atom_c_T()
+id_p = ctypes.pointer(id)
 #id.id_system = ctypes.c_int(6)
-#id.d_bare =  ctypes.c_int(3)
-
-id2 = atom_c_T()
+#id.d_bare =  ctypes.c_int(30)
 
 name   = 'qubit'
 name2  = 'qubit2'#c_char_p()
@@ -121,22 +118,22 @@ atomicSpecie = ctypes.c_char_p()#'qubit'
 atomicSpecie.value = b'qubit'
 print(atomicSpecie.value)
 info = c_int(0)
-#name2 = []
-#openmmfC.floquetinit_qubit_c_(ctypes.byref(id),ctypes.byref(lenght_name),atomicSpecie,ctypes.byref(info))
+openmmfC.floquetinit_qubit_c_(id_p,ctypes.byref(lenght_name),atomicSpecie,ctypes.byref(info))
 #openmmfC.floquetinit_qubit_c_(ctypes.byref(id),ctypes.byref(c_int(len(name))),atomicSpecie,ctypes.byref(info))
 
-modes_num         = ctypes.c_int*3
-N = 3
-mesh = np.array([2,7,3],dtype=np.int)#empty(N, dtype="int")
-#mesh[0]=1
-#mesh[1]=7
-#mesh[2]=13
+modes_num   = np.array([1,1,1],dtype=np.int32)
+modes_num_p = modes_num.ctypes.data_as(POINTER(c_int))
 
-modes_num(1,1,1)
-nm =  c_int(3)
-total_frequencies = c_int(3)
+nm                =  c_int(modes_num.size)
+total_frequencies = c_int(np.sum(modes_num))
 
-fields = mode_c_array_T()#mode_c_T()#*total_frequencies
+class mode_c_array_T(ctypes.Structure):
+    _fields_ = [
+                ("field1", mode_c_T*3)            
+            ]
+fields   = mode_c_array_T()
+fields_p = ctypes.pointer(fields)
+
 fields.field1[0].x = 1,0
 fields.field1[0].y = 1,0
 fields.field1[0].z = 2,0
@@ -152,7 +149,7 @@ fields.field1[1].z = 0,0
 fields.field1[1].phi_x = 1
 fields.field1[1].phi_y = 1
 fields.field1[1].phi_z = 1
-fields.field1[1].omega = 2
+fields.field1[1].omega = 7
 fields.field1[1].N_Floquet = 3
 
 fields.field1[2].x = 8,0
@@ -161,40 +158,32 @@ fields.field1[2].z = 0,0
 fields.field1[2].phi_x = 0
 fields.field1[2].phi_y = 0
 fields.field1[2].phi_z = 0
-fields.field1[2].omega = 2
+fields.field1[2].omega = 3
 fields.field1[2].N_Floquet = 1
 
-
-#mesh.ctypes.data_as(POINTER(c_double))
-#pmn = ctypes.pointer(modes_num)
-#openmmfC.sethamiltoniancomponents_c_(ctypes.byref(id),ctypes.byref(nm),ctypes.byref(total_frequencies),ctypes.byref(info))
-
-#openmmfC.sethamiltoniancomponents_c_(ctypes.byref(id),ctypes.byref(nm),ctypes.byref(total_frequencies),mesh.ctypes.data_as(POINTER(c_int)),ctypes.byref(info))
-#openmmfC.sethamiltoniancomponents_c_(ctypes.byref(id),ctypes.byref(nm),ctypes.byref(total_frequencies),modes_num.ctypes.data_as(POINTER(c_int)),ctypes.byref(info))
-
-modes_num = np.array([2,3,6],dtype=np.int32)#empty(N, dtype="int")
-array_1d_int = ndpointer(ctypes.c_int, ndim=1, flags='C_CONTIGUOUS')
-
-openmmfC.sethamiltoniancomponents_c_.restype = None
-openmmfC.sethamiltoniancomponents_c_.argtypes = [array_1d_int,c_int]
-openmmfC.sethamiltoniancomponents_c_(modes_num,info)
-
-#openmmfC.sethamiltoniancomponents_c_(ctypes.byref(id),ctypes.byref(nm),ctypes.byref(total_frequencies),ctypes.byref(mesh),ctypes.byref(info))
- 
-#openmmfC.sethamiltoniancomponents_c_(ctypes.byref(id),ctypes.byref(nm),ctypes.byref(total_frequencies),modes_num,ctypes.byref(fields),ctypes.byref(info))
+openmmfC.sethamiltoniancomponents_c_(id_p,ctypes.byref(nm),ctypes.byref(total_frequencies),modes_num_p,fields_p,ctypes.byref(info))
 
 
-#print(id.d_bare)
-#print(id.id_system)
+#    multimodefloquetmatrix_c_(&id,&nm,&total_frequencies,modes_num,fields,&info);
+openmmfC.multimodefloquetmatrix_c_(id_p,ctypes.byref(nm),ctypes.byref(total_frequencies),modes_num_p,fields_p,ctypes.byref(info))
+mmf_dim = c_int(3)
+openmmfC.multimodefloquetmatrix_c_python_.restype = ctypes.c_int
+mmf_dim = openmmfC.multimodefloquetmatrix_c_python_(id_p,ctypes.byref(nm),ctypes.byref(total_frequencies),modes_num_p,fields_p,ctypes.byref(mmf_dim),ctypes.byref(info));
+print(mmf_dim)
+
+#openmmfC.h_floquet_size.value
+#    double * e_floquet = new double [h_floquet_size];
+#    dcmplx * U_F =  new dcmplx [h_floquet_size*h_floquet_size];
+#openmmfC.lapack_fulleigenvalues_c_(U_F...,h_floquet_size,e_floquet.ctypes.data_as(PONTER(c_double)),ctypes.byref(info))
+
+#openmmfC.multimodetimeevolutionoperator_c_(&h_floquet_size,&nm,modes_num,U_F,e_floquet,&d_bare,fields,&t1,&t2,U_AUX,&info);
+
+#openmmfC.sethamiltoniancomponents_c_.restype = ctypes.c_int#None
+#openmmfC.sethamiltoniancomponents_c_.argtypes = [ctypes.byref(atom_c_T),array_1d_int,c_int]
+#openmmfC.sethamiltoniancomponents_c_(modes_num,info)
+#Q how to prototype id ?
 
 
-    #%%
-    
-openmmfC.floquetinit_c.restype = c_int
-out = openmmfC.floquetinit_c(ctypes.byref(i),name)
-
-openmmfC.hello.restype = c_char_p
-openmmfC.hello('world')
 
 #%%
 

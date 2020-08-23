@@ -459,10 +459,10 @@ SUBROUTINE SETHAMILTONIANCOMPONENTS(ID,NM,NF,MODES_NUM,FIELD,INFO)
   DOUBLE PRECISION, DIMENSION(id%d_bare) :: E_ZEEMAN
   DOUBLE PRECISION :: RESONANTrfFREQUENCY
 
-  !  WRITE(*,*) "# Setting the Hamiltonian components for a ",ID_name
-  !  WRITE(*,*) "# with ",nm, " modes and ",nf," fields"
+  !WRITE(*,*) "# Setting the Hamiltonian components for a ",ID_name
+  !WRITE(*,*) "# with ",nm, " modes and ",nf," fields"
   TOTAL_FREQUENCIES = NF
-  !  write(*,*) "# total frequencies:", total_frequencies,ID%id_system
+  !write(*,*) "# total frequencies:", total_frequencies,ID%id_system
   SELECT CASE(ID%id_system)
   CASE(3) ! ATOM, BOTH HYPERFINE MANIFOLDS
      U_ZEEMAN = 0.0

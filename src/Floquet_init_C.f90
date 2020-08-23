@@ -65,7 +65,7 @@ SUBROUTINE FLOQUETINIT_QUBIT_C(ID_C,length_name,ATOMICSPECIE,INFO)
     ID_C%id_system = ATOM_%id_system
     ID_C%D_BARE    = ATOM_%D_BARE
 !    write(*,*)
-!    write(*,*) length_name,ID_C%id_system, ID_C%D_BARE!,atomicspecie_F
+    write(*,*) length_name,ID_C%id_system, ID_C%D_BARE!,atomicspecie_F
     
   END SUBROUTINE FLOQUETINIT_QUBIT_C
 
@@ -204,6 +204,9 @@ SUBROUTINE SETHAMILTONIANCOMPONENTS_C(ATOM__C,NM,NF,MODES_NUM,COUPLING_C,INFO)
   ! THESE TWO TYPES ARE THEN PASSED ON TO THE ALL OTHER ROUTINES
   !write(*,*) info,nm,nf
   CALL SETHAMILTONIANCOMPONENTS(ATOM_,NM,NF,MODES_NUM,COUPLING,INFO)
+  
+!  write(*,*)
+!  write(*,*) "SETHAMILTONIANCOMPONENTS_C, modes_num: ", MODES_NUM
 
 END SUBROUTINE SETHAMILTONIANCOMPONENTS_C
 
