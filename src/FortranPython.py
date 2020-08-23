@@ -97,6 +97,7 @@ class mode_c_array_T(ctypes.Structure):
 
 #openmmfC = ctypes.CDLL('./libtestC.so')
 openmmfC = ctypes.CDLL('../lib/libmultimodefloquet.so')
+c_dcmplx = ctypes.c_double*2
 
 
 #c_double_p = ctypes.POINTER(ctypes.c_double)
@@ -165,16 +166,22 @@ openmmfC.sethamiltoniancomponents_c_(id_p,ctypes.byref(nm),ctypes.byref(total_fr
 
 
 #    multimodefloquetmatrix_c_(&id,&nm,&total_frequencies,modes_num,fields,&info);
-openmmfC.multimodefloquetmatrix_c_(id_p,ctypes.byref(nm),ctypes.byref(total_frequencies),modes_num_p,fields_p,ctypes.byref(info))
-mmf_dim = c_int(3)
-openmmfC.multimodefloquetmatrix_c_python_.restype = ctypes.c_int
-mmf_dim = openmmfC.multimodefloquetmatrix_c_python_(id_p,ctypes.byref(nm),ctypes.byref(total_frequencies),modes_num_p,fields_p,ctypes.byref(mmf_dim),ctypes.byref(info));
-print(mmf_dim)
+#openmmfC.multimodefloquetmatrix_c_(id_p,ctypes.byref(nm),ctypes.byref(total_frequencies),modes_num_p,fields_p,ctypes.byref(info))
+h_floquet_size = openmmfC.multimodefloquetmatrix_c_python_(id_p,ctypes.byref(nm),ctypes.byref(total_frequencies),modes_num_p,fields_p,ctypes.byref(info))
 
 #openmmfC.h_floquet_size.value
 #    double * e_floquet = new double [h_floquet_size];
 #    dcmplx * U_F =  new dcmplx [h_floquet_size*h_floquet_size];
 #openmmfC.lapack_fulleigenvalues_c_(U_F...,h_floquet_size,e_floquet.ctypes.data_as(PONTER(c_double)),ctypes.byref(info))
+e_floquet   = np.zeros(h_floquet_size,dtype=np.double)
+e_floquet_p = ctypes.pointer(e_floquet)
+
+U_F = np.zeros(h_floquet_size,dtype=np.complex)
+U_F_p = ctypes.pointer(U_F)
+
+openmmfC.lapack_fulleigenvalues_c_(U_F_p,ctypes.byref(h_floquet_size),e_floquet_p,ctypes.byref(info))
+
+
 
 #openmmfC.multimodetimeevolutionoperator_c_(&h_floquet_size,&nm,modes_num,U_F,e_floquet,&d_bare,fields,&t1,&t2,U_AUX,&info);
 

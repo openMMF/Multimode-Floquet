@@ -23,6 +23,8 @@ void floquetinit_c_(atom_c * id_c , int *lenght_name, char *atomicspecie,double 
 
 }
 */
+
+int A__;
 extern "C" {
   // DIMENSION OF THE MULTIMODE FLOQUET MATRIX. CALCULATED INTERNALLY
   int h_floquet_size;
@@ -42,7 +44,7 @@ extern "C" {
   
   // BUILDING FLOQUET MATRIX OF GENERIC MODEL
   void    multimodefloquetmatrix_c_(atom_c *id,int * nm, int * total_frequencies,int * modes_num,mode_c * fields,int * info);
-  void    multimodefloquetmatrix_c_python_(atom_c *id,int * nm, int * total_frequencies,int * modes_num,mode_c * fields,int * mmf_dim,int * info);
+  int     multimodefloquetmatrix_c_python_(atom_c *id,int * nm, int * total_frequencies,int * modes_num,mode_c * fields,int * info);
   void multimodefloquetmatrix_sp_c_(atom_c *id,int * nm, int * total_frequencies,int * modes_num,mode_c * fields, int * info);
   
   
