@@ -64,7 +64,9 @@ SUBROUTINE FLOQUETINIT_QUBIT_C(ID_C,length_name,ATOMICSPECIE,INFO)
     
     ID_C%id_system = ATOM_%id_system
     ID_C%D_BARE    = ATOM_%D_BARE
-
+!    write(*,*)
+!    write(*,*) length_name,ID_C%id_system, ID_C%D_BARE!,atomicspecie_F
+    
   END SUBROUTINE FLOQUETINIT_QUBIT_C
 
   SUBROUTINE FLOQUETINIT_SPIN_C(ID_C,length_name,atomicspecie,jtotal,info)

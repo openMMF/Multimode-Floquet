@@ -271,7 +271,7 @@ contains
        ALLOCATE(j_z(Total_states_LSI,Total_states_LSI))
        CALL F_REPRESENTATION(j_x,j_y,j_z,0.05D1)
     END IF
-    write(*,*)"Floquet_qubit in floquet_init.f90 ", atomicspecie,info,id%d_bare
+    write(*,*) "Floquet_qubit in floquet_init.f90 ", atomicspecie,info,id%d_bare
     call write_matrix(J_x)
   END SUBROUTINE FLOQUETINIT_QUBIT
 

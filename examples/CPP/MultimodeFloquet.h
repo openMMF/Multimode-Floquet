@@ -141,3 +141,4 @@ void matmul_c(int * op , dcmplx * a, int * ra, int * ca, dcmplx * b, int * rb, i
   printf("%i\n",*op);
   matmul_c_(op, a, ra, ca, b, rb, cb, c, info);
 }
+

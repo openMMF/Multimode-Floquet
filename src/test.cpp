@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <math.h>
 #include <string.h>
-
+/*
 extern "C" {
 int myFunction(int num) { 
 
@@ -23,42 +23,78 @@ int myFunction(int num) {
 }
 
 /*
-
+*/
 /*
 int square(int i) {
 	return i * i;
 }
 
-
+*/
 using namespace std;
 typedef std::complex<double> dcmplx;
-
+/*
 //#include "MultimodeFloquet.h"
 
 //extern "C" int h_floquet_size;
 
 
+*/
+
 
 extern "C" {
+  
+  struct mode_c{
+    double omega;
+    dcmplx x,y,z;
+    double phi_x,phi_y,phi_z;
+    int N_Floquet;
+  };
+
   struct atom_c{
     int id_system;
     int d_bare;
   };
-  
-  int floquetinit_qubit_c_(atom_c *id, int *lenght_name, char * atomicspecie, int * info){
-    printf("DONE! %d %s %d \n",*lenght_name,atomicspecie,*info);
-    return 0;
+ 
+  void  floquetinit_qubit_c_(atom_c *id, int *lenght_name, char * atomicspecie, int * info){
+  //int floquetinit_qubit_c_(int *lenght_name, char * atomicspecie, int * info){
+    //printf("\nDONE! %d %s %d \n",*lenght_name,atomicspecie,*info);
+    id->id_system = 7;
+    id->d_bare = 2;
+    printf("\n%d  %d %s \n",id->d_bare, id->id_system, atomicspecie);
+    
   }
-  
-  //int floquetinit_c(atom_c * id, char *name,int *info){   
-  //int floquetinit_c(char *name,int *info){   
-  int floquetinit_c(int *info){   
-    int length_name;
-    //length_name = strlen(name);
-    //floquetinit_qubit_c_(id,&length_name,name,info);   
-    return 0;   
+   
+  void floquetinit_c(atom_c * id, char *name,int *info){   
+    /*  int floquetinit_c(int &i,char *name){//,int *info){   */
+  //int floquetinit_c(int i,int *info){   
+    int length_name,i;
+    length_name = strlen(name);
+    printf("\n%d %s\n",length_name,name);
+    i = length_name;
+    floquetinit_qubit_c_(id,&length_name,name,info);   
+    //i = *info;
+    //printf("%s\n",name);
+    //name2 = name;
+    //return i;   
  }
 
+
+  //void  sethamiltoniancomponents_c_(atom_c *id,int * nm, int * total_frequencies,int * modes_num,mode_c * fields,int * info){
+  //void  sethamiltoniancomponents_c_(atom_c *id,int * nm, int * total_frequencies,int * modes_num,int * info){
+  //void  sethamiltoniancomponents_c_(atom_c *id,int * nm, int * total_frequencies,int * info){
+  void  sethamiltoniancomponents_c_(int * modes_num,int * info){
+	
+    printf("\n modes_num[0]: %d \n",modes_num[0]);
+    printf("\n modes_num[1]: %d \n",modes_num[1]);
+    printf("\n modes_num[2]: %d \n",modes_num[2]);
+  }
+
+ /*
+  char * hello(char * what){
+    return what;
+  };
+
+  */
 }
 /*
 int floquetinit_c(int A){
