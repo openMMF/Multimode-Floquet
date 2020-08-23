@@ -172,11 +172,12 @@ fields.field1[2].N_Floquet = 1
 #openmmfC.sethamiltoniancomponents_c_(ctypes.byref(id),ctypes.byref(nm),ctypes.byref(total_frequencies),mesh.ctypes.data_as(POINTER(c_int)),ctypes.byref(info))
 #openmmfC.sethamiltoniancomponents_c_(ctypes.byref(id),ctypes.byref(nm),ctypes.byref(total_frequencies),modes_num.ctypes.data_as(POINTER(c_int)),ctypes.byref(info))
 
-array_1d_int = ndpointer(dtype=np.int, ndim=1, flags='CONTIGUOUS')
+modes_num = np.array([2,3,6],dtype=np.int32)#empty(N, dtype="int")
+array_1d_int = ndpointer(ctypes.c_int, ndim=1, flags='C_CONTIGUOUS')
+
 openmmfC.sethamiltoniancomponents_c_.restype = None
-#openmmfC.sethamiltoniancomponents_c_.argtypes = [array_1d_int,c_int]
-openmmfC.sethamiltoniancomponents_c_.argtypes = [POINTER(c_int),c_int]
-openmmfC.sethamiltoniancomponents_c_(mesh.ctypes.data_as(POINTER(c_int)),info)
+openmmfC.sethamiltoniancomponents_c_.argtypes = [array_1d_int,c_int]
+openmmfC.sethamiltoniancomponents_c_(modes_num,info)
 
 #openmmfC.sethamiltoniancomponents_c_(ctypes.byref(id),ctypes.byref(nm),ctypes.byref(total_frequencies),ctypes.byref(mesh),ctypes.byref(info))
  

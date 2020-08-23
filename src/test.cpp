@@ -82,11 +82,12 @@ extern "C" {
   //void  sethamiltoniancomponents_c_(atom_c *id,int * nm, int * total_frequencies,int * modes_num,mode_c * fields,int * info){
   //void  sethamiltoniancomponents_c_(atom_c *id,int * nm, int * total_frequencies,int * modes_num,int * info){
   //void  sethamiltoniancomponents_c_(atom_c *id,int * nm, int * total_frequencies,int * info){
-  void  sethamiltoniancomponents_c_(int * modes_num,int * info){
+  void  sethamiltoniancomponents_c_(int * modes_num,int  info){
 	
     printf("\n modes_num[0]: %d \n",modes_num[0]);
     printf("\n modes_num[1]: %d \n",modes_num[1]);
     printf("\n modes_num[2]: %d \n",modes_num[2]);
+    printf("\n info: %d \n", info);
   }
 
  /*
