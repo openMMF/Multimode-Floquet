@@ -76,7 +76,7 @@ subroutine mesh_exp(r_min, r_max, a, N,mesh)
 end subroutine mesh_exp
 
 
-subroutine mesh_exp_c(r_min, r_max, a,N,mesh) bind(c, name='mesh_exp_c')
+subroutine mesh_exp_c(id,r_min, r_max, a,N,mesh) !bind(c,name='mesh_exp_c')
   USE SUBINTERFACE
   USE ISO_C_BINDING
   USE TYPES
@@ -86,11 +86,14 @@ subroutine mesh_exp_c(r_min, r_max, a,N,mesh) bind(c, name='mesh_exp_c')
   real(c_double), intent(in), value :: r_max
   real(c_double), intent(in), value :: a
   integer(c_int), intent(in), value :: N
-  !TYPE(ATOM),intent(out) :: ID
+  TYPE(ATOM),intent(inout) :: ID
   real(c_double), intent(out) :: mesh(N)
   
   call mesh_exp(r_min,r_max,a,N,mesh)
-
+  allocate(ID%E_bare(7))
+  !ID%E_bare=0
+  !ID%E_bare(3) = 4
+  !write(*,*) ID%E_bare
 end subroutine mesh_exp_c
 
 subroutine derivedType_c(INFO) bind(c, name='derivedType_c')
@@ -99,11 +102,12 @@ subroutine derivedType_c(INFO) bind(c, name='derivedType_c')
   
   IMPLICIT NONE
   !TYPE(ATOM),intent(out) :: ID
-  INTEGER(c_int), intent(inout) :: INFO
+  INTEGER(c_int), intent(in) :: INFO
   !ID%id_system = 1
   !ID%D_BARE = 2
   !ALLOCATE(ID%E_BARE(2))
-  info = 0
+  !info = 0
+  write(*,*) info
 
 end subroutine derivedType_c
 

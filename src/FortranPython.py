@@ -23,28 +23,32 @@ from numpy import empty
 !gfortran -shared -fPIC test.f90 -o libtestF.so
 
 class atom_c_T(ctypes.Structure):
+    c_double_p = ctypes.POINTER(ctypes.c_double)
     _fields = [
                 ("id_system", c_int),
-                ("d_bare", c_int)            
+                ("d_bare", c_int),   
+                ("E_bare", c_double_p)
             ]
 
 
 openmmfF = CDLL('./libtestF.so')
 
 
-id = atom_c_T
+id = atom_c_T()
+id.id_system = 3
+id.d_bare    = 2
 r_min=1.0
 r_max = 2.0
 a = 3.0
 N = 8
 mesh = empty(N, dtype="double")
 #
-openmmfF.mesh_exp_c(c_double(r_min), c_double(r_max), c_double(a), c_int(N),
+openmmfF.mesh_exp_c_(ctypes.pointer(id),c_double(r_min), c_double(r_max), c_double(a), c_int(N),
                  mesh.ctypes.data_as(POINTER(c_double)))
 print(mesh)
 
 
-openmmfF.derivedType_c(c_int(N))
+#openmmfF.derivedType_c(c_int(N))
 
 
 #%%
