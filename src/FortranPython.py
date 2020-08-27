@@ -115,7 +115,7 @@ id_p = ctypes.pointer(id)
 
 name   = 'qubit'
 name2  = 'qubit2'#c_char_p()
-info   = 3;
+
 jtotal = 2;
 t1     = 2.0;
 lenght_name = c_int(len(name));
@@ -173,16 +173,83 @@ openmmfC.sethamiltoniancomponents_c_(id_p,ctypes.byref(nm),ctypes.byref(total_fr
 #openmmfC.multimodefloquetmatrix_c_(id_p,ctypes.byref(nm),ctypes.byref(total_frequencies),modes_num_p,fields_p,ctypes.byref(info))
 h_floquet_size = openmmfC.multimodefloquetmatrix_c_python_(id_p,ctypes.byref(nm),ctypes.byref(total_frequencies),modes_num_p,fields_p,ctypes.byref(info))
 
+
+#info = c_int(0)
+#h_floquet_size = 42
+e_floquet   = np.zeros(h_floquet_size,dtype=np.double)
+e_floquet_p = e_floquet.ctypes.data_as(POINTER(c_double))
+
+U_F = np.zeros(h_floquet_size*h_floquet_size,dtype=np.complex)
+U_F_p = U_F.ctypes.data_as(POINTER(c_dcmplx))
+
+p_avg   = np.zeros(h_floquet_size*h_floquet_size,dtype=np.double)
+p_avg_p = p_avg.ctypes.data_as(POINTER(c_dcmplx))
+
+
+h_floquet_size = c_int(h_floquet_size)
+openmmfC.lapack_fulleigenvalues_c_(U_F_p,ctypes.byref(h_floquet_size),e_floquet_p,ctypes.byref(info))
+
+#print(e_floquet)
+U_AUX   = np.zeros(id.d_bare*id.d_bare,dtype=np.complex)
+U_AUX_p = U_AUX.ctypes.data_as(POINTER(c_dcmplx))
+#U_AUX   = c_dcmplx(0.0)
+#U_AUX_p = ctypes.byref(U_AUX)
+
+d_bare = c_int(id.d_bare)
+t1     = c_double(0.0)
+t2     = c_double(10.0)
+
+#print(U_F)
+  #void multimodetimeevolutionoperator_c_(int * h_floquet_size,int * nm,int * modes_num,dcmplx * U_F,double * e_floquet,int * d_bare,mode_c * fields,double * t1,double * t2,dcmplx * U_AUX,int * info);
+
+openmmfC.multimodetimeevolutionoperator_c_(ctypes.byref(h_floquet_size),ctypes.byref(nm),modes_num_p,U_F_p,e_floquet_p,ctypes.byref(d_bare),fields_p,ctypes.byref(t1),ctypes.byref(t2),U_AUX_p,ctypes.byref(info))
+
+
+#//--- EVALUATE THE AVERAGE TRANSITION PROBATILIBIES IN THE BARE BASIS
+
+
+openmmfC.multimodetransitionavg_c_(ctypes.byref(h_floquet_size),ctypes.byref(nm),fields_p,modes_num_p,U_F_p,e_floquet_p,ctypes.byref(d_bare),p_avg_p,ctypes.byref(info));
+    
+#    // !---  EVALUATE INSTANTANEOUS MULTIMODE FLOQUET TRANSFORMATION
+#    dcmplx * U_B2D = new dcmplx [d_bare*h_floquet_size];
+#    double * P_B2D = new double [d_bare*h_floquet_size];
+#    t1 = 0.0;
+#    multimodefloquettransformation_c_(&h_floquet_size,&nm,modes_num,U_F,e_floquet,&d_bare,fields,&t1,U_B2D,&info); 
+#    for(l=0;l<d_bare*h_floquet_size;l++) P_B2D[l] = pow(abs(U_B2D[l]),2);
+
+#print(U_F)
+#print(U_AUX)
+
 #openmmfC.h_floquet_size.value
 #    double * e_floquet = new double [h_floquet_size];
 #    dcmplx * U_F =  new dcmplx [h_floquet_size*h_floquet_size];
 #openmmfC.lapack_fulleigenvalues_c_(U_F...,h_floquet_size,e_floquet.ctypes.data_as(PONTER(c_double)),ctypes.byref(info))
+    #%%
+
+
+!rm *.so
+!g++  -fPIC -shared -o libtestC.so test.cpp
+!pwd
+
+import ctypes 
+from ctypes import CDLL, POINTER, c_int, c_double,c_char_p#,c_int_p,c_double_p
+from numpy import empty
+import numpy as np
+from numpy.ctypeslib import ndpointer
+
+c_dcmplx = ctypes.c_double*2#ctypes.POINTER(ctypes.c_double)
+
+openmmfC = ctypes.CDLL('./libtestC.so')
+
+info = c_int(0)
+h_floquet_size = 42
 e_floquet   = np.zeros(h_floquet_size,dtype=np.double)
-e_floquet_p = ctypes.pointer(e_floquet)
+e_floquet_p = e_floquet.ctypes.data_as(POINTER(c_double))
 
 U_F = np.zeros(h_floquet_size,dtype=np.complex)
-U_F_p = ctypes.pointer(U_F)
+U_F_p = U_F.ctypes.data_as(POINTER(c_dcmplx))
 
+h_floquet_size = c_int(h_floquet_size)
 openmmfC.lapack_fulleigenvalues_c_(U_F_p,ctypes.byref(h_floquet_size),e_floquet_p,ctypes.byref(info))
 
 

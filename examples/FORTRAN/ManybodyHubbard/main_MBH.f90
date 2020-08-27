@@ -141,3 +141,28 @@ SUBROUTINE Onsite_twobody(N,L,state,J,INFO)
 
 END SUBROUTINE Onsite_twobody
 
+
+SUBROUTINE Tunneling_F(Nup,Ndown,L,state,T,INFO)
+
+  INTEGER :: N,I_,J_,k_ 
+  N = SIZE(state,1)
+  allocate(new_state(L))
+
+  J = 0
+  DO k_=1,L ! loop though all sites
+     DO J_=1,N
+        DO I_=J_+1,N
+           new_state = a_dagger(k_,state(J_))
+           new_state = a_ (k_+1,new_state,K)
+           J(I_,J_) = dot_product(state(I_,:),new_state)
+        END DO
+     END DO
+     J = J + TRANSPOSE(CONJG(J))
+     DO J_=1,N
+        new_state = a_dagger(k_,state(J_))
+        new_state = a_ (k_+1,new_state)
+        J(J_,J_) = dot_product(state(J_,:),new_state)
+     END DO
+  END DO
+
+END SUBROUTINE Tunneling_F

@@ -153,6 +153,10 @@ int main(){
     }
     delete(e_floquet);    
     delete(U_F);
+    delete(p_avg);
+    delete(U_B2D);
+    delete(P_B2D)
+
 
   }
   

@@ -95,12 +95,13 @@ extern "C" {
     //printf("\n id.d_bare: %d \n", id.d_bare);
   }
 
- /*
-  char * hello(char * what){
-    return what;
-  };
+  void  lapack_fulleigenvalues_c_(dcmplx *U_F,int *h_floquet_size,double *e_floquet,int *info){
 
-  */
+    printf("\n %d %f %d \n",*h_floquet_size,e_floquet[0],*info);
+      ;
+  }
+
+
 }
 /*
 int floquetinit_c(int A){
