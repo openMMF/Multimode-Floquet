@@ -176,3 +176,116 @@ SUBROUTINE Onsite_twobody(D_BARE,N_SITES,N_BODIES,STATE,H_U,INFO)
 
 END SUBROUTINE Onsite_twobody
 
+SUBROUTINE Tunneling_F(D_BARE,N_SITES,N_BODIES,STATE,H_J,INFO)
+   
+  USE CREATIONDESTRUCTION
+  IMPLICIT NONE    
+  INTEGER,                               INTENT(IN)    :: N_SITES
+  INTEGER,    DIMENSION(2),              INTENT(IN)    :: D_BARE,N_BODIES
+  INTEGER,    DIMENSION(D_BARE(1)+D_BARE(2),N_SITES),      INTENT(IN)    :: STATE
+  COMPLEX*16, DIMENSION(D_BARE(1)+D_BARE(2),D_BARE(1)+D_BARE(2)), INTENT(OUT)   :: H_J
+  INTEGER,                               INTENT(INOUT) :: INFO
+
+  INTEGER, DIMENSION(N_SITES) :: NEW_STATE,STATE_J,STATE_I
+    
+  COMPLEX*16, DIMENSION(D_BARE(1),D_BARE(1)) :: T_UP
+  COMPLEX*16, DIMENSION(D_BARE(2),D_BARE(2)) :: T_DOWN
+  COMPLEX*16, DIMENSION(:,:), ALLOCATABLE :: T
+  
+  
+  INTEGER :: N,I_,J_,k_,l_
+  INTEGER, DIMENSION(3) :: N_
+  
+  N_(1) = D_BARE(1)
+  N_(2) = D_BARE(2)
+  N_(3) = D_BARE(1)*D_BARE(2)
+  ALLOCATE(T(N_(3),N_(3)))
+  
+  T_UP   = 0
+  T_DOWN = 0
+  H_J    = 0
+  T      = 0
+  DO k_=1,N_SITES-1 ! loop though all sites
+    DO l_=1,2 ! loop through spin up and spin down
+        N = D_BARE(l_)
+        DO J_=1,N ! Nested loop through all spin up/down states
+            DO I_=J_+1,N
+                STATE_J = STATE(J_ + (l_-1)*D_BARE(1),:) 
+                STATE_I = STATE(I_ + (l_-1)*D_BARE(1),:) 
+                NEW_STATE = TUNNELING_F_(k_,STATE_J)
+                !write(*,*) NEW_STATE,dot_product((NEW_STATE-STATE_I),(NEW_STATE-STATE_I))
+                IF(dot_product((NEW_STATE-STATE_I),(NEW_STATE-STATE_I)).EQ.0) THEN
+                    IF(l_.EQ.1) THEN
+                        T_UP(I_,J_) = 1.0
+                        T_UP(J_,I_) = 1.0
+                    ELSE
+                        T_DOWN(I_,J_) = 1.0
+                        T_DOWN(J_,I_) = 1.0
+                    END IF  
+
+                END IF           
+            END DO
+        END DO
+
+        DO J_=1,N
+            STATE_J = STATE(J_+(l_-1)*D_BARE(1),:) 
+            STATE_I = STATE(J_+(l_-1)*D_BARE(1),:) 
+            NEW_STATE = TUNNELING_F_(k_,STATE_J)
+            IF(dot_product((NEW_STATE-STATE_I),(NEW_STATE-STATE_I)).EQ.0) THEN
+                IF(l_.EQ.1) THEN
+                    T_UP(J_,J_) = 1.0
+                ELSE
+                    T_DOWN(J_,J_) = 1.0
+                END IF
+            END IF           
+        END DO
+    END DO  
+    CALL TENSORMULT(N_,T_UP,T_DOWN,T,INFO)
+    H_J = H_J + T
+  END DO
+
+END SUBROUTINE Tunneling_F
+
+
+SUBROUTINE Onsite_twobody_F(D_BARE,N_SITES,N_BODIES,STATE,H_U,INFO)
+   
+  USE CREATIONDESTRUCTION
+  IMPLICIT NONE    
+  INTEGER,                               INTENT(IN)    :: N_SITES
+  INTEGER,    DIMENSION(2),              INTENT(IN)    :: D_BARE,N_BODIES
+  INTEGER,    DIMENSION(D_BARE(1)+D_BARE(2),N_SITES),      INTENT(IN)    :: STATE
+  COMPLEX*16, DIMENSION(D_BARE(1)+D_BARE(2),D_BARE(1)+D_BARE(2)), INTENT(OUT)   :: H_U
+  INTEGER,                               INTENT(INOUT) :: INFO
+
+  INTEGER, DIMENSION(N_SITES) :: NEW_STATE,STATE_J,STATE_I    
+
+  
+  INTEGER :: N,I_,J_,k_,l_
+  
+  COMPLEX*16, DIMENSION(D_BARE(1),D_BARE(1)) :: T_UP
+  COMPLEX*16, DIMENSION(D_BARE(2),D_BARE(2)) :: T_DOWN
+  COMPLEX*16, DIMENSION(:,:), ALLOCATABLE :: T
+
+  INTEGER, DIMENSION(3) :: N_
+  
+  H_U = 0
+  T_UP   = 0
+  T_DOWN = 0
+  N_(1) = D_BARE(1)
+  N_(2) = D_BARE(2)
+  N_(3) = D_BARE(1)*D_BARE(2)
+  ALLOCATE(T(N_(3),N_(3)))
+    
+  DO k_=1,N_SITES-1 ! loop though all sites
+    DO l_ = 1,2 ! loop through spin up and spin down
+        N = D_BARE(l_)
+        DO J_=1,N
+            IF(l_.EQ.1) T_UP(J_,J_) = STATE(J_,k_)
+            IF(l_.EQ.2) T_DOWN(J_,J_) = STATE(J_,k_)
+        END DO
+    END DO
+    CALL TENSORMULT(N_,T_UP,T_DOWN,T,INFO)
+    H_U = H_U + T
+  END DO
+
+END SUBROUTINE Onsite_twobody_F
