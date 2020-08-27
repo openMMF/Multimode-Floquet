@@ -12,6 +12,7 @@
 *.log
 *.blg	
 *.mod
+*.so
 #*#
 *~
 nbproject/

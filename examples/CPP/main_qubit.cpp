@@ -34,7 +34,6 @@ int main(){
   d_bare = id.d_bare;
 
   dcmplx * U_AUX = new dcmplx [d_bare*d_bare];
-
   int nm = 3;
   int * modes_num = new int [nm];
 
@@ -109,15 +108,17 @@ int main(){
     
 
 
-    
-
-    multimodefloquetmatrix_c_(&id,&nm,&total_frequencies,modes_num,fields,&info); // in this function we calculate the dimension of the multimode floquet hilbert space, 
+    // TO MAKE THIS ARRAY OF THE CORRECT SIZE WE NEED TO EVALUATE H_FLOQUET_SIZE BEFORE, I.E. EN SETHAMILTONIANCOMPONENTS_C
+    dcmplx * H_F_ = new dcmplx [4]; 
+    multimodefloquetmatrix_c_(&id,&nm,&total_frequencies,modes_num,fields,H_F_,&info); // in this function we calculate the dimension of the multimode floquet hilbert space, 
                                                                                   // which is the value of the global variable h_floquet_size
     
 
+    cout << "Floquet H" <<  H_F_[3] < "\n\n";
     double * e_floquet = new double [h_floquet_size];
     dcmplx * U_F =  new dcmplx [h_floquet_size*h_floquet_size];
-    
+    //cout << h_floquet_c << "\n";
+    //printf("Floquet matrix element: %f \n",abs(*h_floquet_c));
     lapack_fulleigenvalues_c_(U_F,&h_floquet_size,e_floquet,&info);// here, the diagonalization is done with the internal (Fortran) Hamiltonian (H_FLOQUET)
                                                                    // U_F is the transformation that diagonalise the Hamiltonian
                                                                    // On the Fortran side, H_FLOQUET is deallocated after diagonalization. This is needed since
@@ -148,17 +149,16 @@ int main(){
       t2 = r*32.0*4.0*atan(1.0)/256;
       multimodetimeevolutionoperator_c_(&h_floquet_size,&nm,modes_num,U_F,e_floquet,&d_bare,fields,&t1,&t2,U_AUX,&info);
       for(l=0;l<d_bare*d_bare;l++) p_avg[l] = pow(abs(U_AUX[l]),2);
-      write_matrix_c_(p_avg,&d_bare);      
+      //      write_matrix_c_(p_avg,&d_bare);      
       
     }
     delete(e_floquet);    
     delete(U_F);
     delete(p_avg);
     delete(U_B2D);
-    delete(P_B2D)
-
-
+    delete(P_B2D);
   }
-  
+    
   return 0;
+
 }

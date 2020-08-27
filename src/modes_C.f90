@@ -26,7 +26,9 @@ MODULE MODES_4F
   USE ISO_C_BINDING
   TYPE(MODE),DIMENSION(:),ALLOCATABLE :: COUPLING
   TYPE(ATOM)                          :: ATOM_
-  INTEGER(C_INT),BIND(C,name="h_floquet_size") :: H_FLOQUET_SIZE
+  INTEGER(C_INT),TARGET,BIND(C,name="h_floquet_size") :: H_FLOQUET_SIZE
+  !COMPLEX*16,POINTER,DIMENSION(:,:) :: H_FLOQUET_C  ! pointer to access the internal H_FLOQUET matrix and make it visible to C++ 
+  INTEGER,POINTER :: H_FLOQUET_C  ! pointer to access the internal H_FLOQUET matrix and make it visible to C++ 
   LOGICAL COUPLINGALLOCATED 
   
   
