@@ -46,7 +46,6 @@ extern "C" {
   
   // BUILDING FLOQUET MATRIX OF GENERIC MODEL
   void    multimodefloquetmatrix_c_(atom_c *id,int * nm, int * total_frequencies,int * modes_num,mode_c * fields,dcmplx *h_f_, int * info);
-  dcmplx * multimodefloquetmatrix_c_pt_(atom_c *id,int * nm, int * total_frequencies,int * modes_num,mode_c * fields,int * info);
   int     multimodefloquetmatrix_c_python_(atom_c *id,int * nm, int * total_frequencies,int * modes_num,mode_c * fields,int * info);
   void multimodefloquetmatrix_sp_c_(atom_c *id,int * nm, int * total_frequencies,int * modes_num,mode_c * fields, int * info);
   
@@ -86,8 +85,9 @@ extern "C" {
   void rec_write_matrix_c_(double *A,int * A_dim1, int * A_dim2);
   
   
-  // UTILITY FUNCTION: MATRIX MULTIPLICATION WITH LAPACK
-  
+  // deallocate all arrays allocated with fortran
+  void deallocateall_c_(int *id);
+
  
 } 
 
