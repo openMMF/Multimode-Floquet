@@ -75,7 +75,7 @@ MODULE CREATIONDESTRUCTION
 
   implicit none
   private
-  public :: A_DAGGER,A_,TUNNELING_
+  public :: A_DAGGER,A_,TUNNELING_,TUNNELING_F_
 
   interface A_DAGGER
     procedure A_DAGGER_INT,A_DAGGER_REAL
@@ -107,6 +107,27 @@ contains
        !WRITE(*,*) k,NEW_STATE
     END FUNCTION TUNNELING_
 
+    !FERMIONIC  tunneling
+    FUNCTION TUNNELING_F_(k,STATE) result(NEW_STATE)
+
+    
+        INTEGER, INTENT(IN) :: k
+        INTEGER, DIMENSION(:), INTENT(IN) :: STATE
+    
+        DOUBLE PRECISION, DIMENSION(SIZE(STATE,1)) :: NEW_STATE
+    
+        !WRITE(*,*) k,NEW_STATE
+        NEW_STATE      = STATE 
+        IF(STATE(K).EQ.1 .AND. STATE(K+1).EQ.0) THEN
+            NEW_STATE(k)   = NEW_STATE(k) - 1            
+            NEW_STATE(k+1) = NEW_STATE(k+1) + 1
+            !NEW_STATE      = SQRT(1.0*STATE(K)*(STATE(k+1)+1))*NEW_STATE
+        ELSE
+            NEW_STATE = 0
+        END IF  
+       !WRITE(*,*) k,NEW_STATE
+    END FUNCTION TUNNELING_F_
+   
 
     !BOSONIC CREATION AND DESTRUCTION OPERATORE
     FUNCTION A_DAGGER_INT(k,STATE) result(NEW_STATE)
@@ -239,15 +260,17 @@ END SUBROUTINE Manybody_basis
 
 SUBROUTINE TENSORMULT(N,A,B,C,INFO)
     IMPLICIT NONE
-    INTEGER, INTENT(IN) :: N
-    COMPLEX*16, DIMENSION(N,N), INTENT(IN) :: A,B
-    COMPLEX*16, DIMENSION(2*N,2*N), INTENT(OUT) :: C
+    INTEGER, DIMENSION(3), INTENT(IN) :: N
+    INTEGER, INTENT(INOUT) :: INFO
+    COMPLEX*16, DIMENSION(N(1),N(1)), INTENT(IN) :: A
+    COMPLEX*16, DIMENSION(N(2),N(2)), INTENT(IN) :: B
+    COMPLEX*16, DIMENSION(N(3),N(3)), INTENT(OUT) :: C
     
     INTEGER i,j
     
-    DO =1,N
-        DO j=1,N
-            C((i-1)*N+1:j*N,(i-1)*N+1:j*N) = A*B(i,j)
+    DO i=1,N(2)
+        DO j=1,N(2)
+            C((i-1)*N(1)+1:j*N(1),(i-1)*N(1)+1:j*N(1)) = A*B(i,j)
         END DO
     END DO
     
