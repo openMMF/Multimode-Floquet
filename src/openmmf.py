@@ -50,6 +50,7 @@ class mode_c_array_T(ctypes.Structure):
             ]
 
 #===================================================================
+#   // GENERAL INIT SUBROUTINE
 #===================================================================
 
 def floquetinit_c(id,name,info):
@@ -64,6 +65,7 @@ def floquetinit_c(id,name,info):
 #  void floquetinit_alkali_c_(atom_c *id, int *lenght_name, char * atomicspecie, int * lenght_name2, char * manifold, int * info);
         
 #===================================================================
+#   // BUILDING FLOQUET MATRIX OF GENERIC MODEL
 #===================================================================
 
 #def sethamiltoniancomponents_c_(id,nm,total_frequencies,modes_num,fields,info):
@@ -77,6 +79,7 @@ def sethamiltoniancomponents_c_(id,modes_num,fields,info):
     openmmfC.sethamiltoniancomponents_c_(id_p,ctypes.byref(nm),ctypes.byref(total_frequencies),modes_num_p,fields_p,ctypes.byref(info))
 
 #===================================================================
+#   // BUILDING FLOQUET MATRIX OF GENERIC MODEL
 #===================================================================
 
 #def multimodefloquetmatrix_c_python_(id,nm,total_frequencies,modes_num,fields,info):
@@ -91,6 +94,7 @@ def multimodefloquetmatrix_c_python_(id,modes_num,fields,info):
     return h_floquet_size
 
 #===================================================================
+#  // CALCULATE THE SPECTRUM OF THE FLOQUET HAMILTONIAN
 #===================================================================
 
 def lapack_fulleigenvalues_c_(U_F,h_floquet_size,e_floquet,info):    
@@ -101,6 +105,7 @@ def lapack_fulleigenvalues_c_(U_F,h_floquet_size,e_floquet,info):
     openmmfC.lapack_fulleigenvalues_c_(U_F_p,ctypes.byref(h_floquet_size),e_floquet_p,ctypes.byref(info))
 
 #===================================================================
+#   // CONTSRUCTION OF THE TIME-EVOLUTION OPERATOR
 #===================================================================
     
 #def multimodetransitionavg_c_(h_floquet_size,nm,fields,modes_num,U_F,e_floquet,d_bare,p_avg,info):
@@ -113,39 +118,145 @@ def multimodetransitionavg_c_(h_floquet_size,fields,modes_num,U_F,e_floquet,d_ba
     U_F_p          = U_F.ctypes.data_as(POINTER(c_dcmplx))
     e_floquet_p    = e_floquet.ctypes.data_as(POINTER(c_double))
     fields_p       = ctypes.pointer(fields)
-    p_avg_p        = p_avg.ctypes.data_as(POINTER(c_dcmplx))
+    p_avg_p        = p_avg.ctypes.data_as(POINTER(c_double))
     openmmfC.multimodetransitionavg_c_(ctypes.byref(h_floquet_size),ctypes.byref(nm),fields_p,modes_num_p,U_F_p,e_floquet_p,ctypes.byref(d_bare),p_avg_p,ctypes.byref(info));
 
 
 #===================================================================
 #===================================================================
-#def multimodefloquettransformation_c_(h_floquet_size,modes_num, U_F,e_floquet,d_bare,fields,t1, U_B2D,nfo) 
+def multimodefloquettransformation_c_(h_floquet_size,modes_num, U_F,e_floquet,d_bare,fields,t1, U_B2D,info): 
+    info           = c_int(info)
+    d_bare         = c_int(d_bare)
+    t1             = c_double(t1)
+    nm             = c_int(modes_num.size)
+    h_floquet_size = c_int(h_floquet_size)        
+    modes_num_p    = modes_num.ctypes.data_as(POINTER(c_int))
+    U_F_p          = U_F.ctypes.data_as(POINTER(c_dcmplx))
+    U_B2D_p        = U_B2D.ctypes.data_as(POINTER(c_dcmplx))
+    e_floquet_p    = e_floquet.ctypes.data_as(POINTER(c_double))
+    fields_p       = ctypes.pointer(fields)
+    openmmfC.multimodefloquettransformation_c_(ctypes.byref(h_floquet_size),ctypes.byref(nm),modes_num_p,U_F_p,e_floquet_p,ctypes.byref(d_bare),fields_p,ctypes.byref(t1),U_B2D_p,ctypes.byref(info)) 
 
 
 #===================================================================
 #===================================================================
-#def multimodemicromotion_c_(id,h_floquet_size,nm, modes_num,U_F,e_floquet,d_bare,fields,t1, U_B2D,info):
-
+def multimodemicromotion_c_(id,h_floquet_size,modes_num,U_F,e_floquet,d_bare,fields,t1, U_B2D,info):
+    id_p           = ctypes.pointer(id)
+    info           = c_int(info)
+    d_bare         = c_int(d_bare)
+    t1             = c_double(t1)
+    nm             = c_int(modes_num.size)
+    h_floquet_size = c_int(h_floquet_size)        
+    modes_num_p    = modes_num.ctypes.data_as(POINTER(c_int))
+    U_F_p          = U_F.ctypes.data_as(POINTER(c_dcmplx))
+    U_B2D_p        = U_B2D.ctypes.data_as(POINTER(c_dcmplx))
+    e_floquet_p    = e_floquet.ctypes.data_as(POINTER(c_double))
+    fields_p       = ctypes.pointer(fields)
+    openmmfC.multimodemicromotion_c_(id_p,ctypes.byref(h_floquet_size),ctypes.byref(nm),modes_num_p,U_F_p,e_floquet_p,ctypes.byref(d_bare),fields_p,ctypes.byref(t1),U_B2D_p,ctypes.byref(info));
 
 #===================================================================
 #===================================================================
-
 
 #def multimodetimeevolutionoperator_c_(h_floquet_size,nm,modes_num,U_F,e_floquet,d_bare,fields,t1,t2,U_AUX,info):
 def multimodetimeevolutionoperator_c_(h_floquet_size,modes_num,U_F,e_floquet,d_bare,fields,t1,t2,U_AUX,info):
     d_bare = c_int(d_bare)
     t1     = c_double(t1)
     t2     = c_double(t2)
-
-    info = c_int(info)
-    nm                = c_int(modes_num.size)
+    info           = c_int(info)
+    nm             = c_int(modes_num.size)
     h_floquet_size = c_int(h_floquet_size)        
-    modes_num_p = modes_num.ctypes.data_as(POINTER(c_int))
-    U_F_p = U_F.ctypes.data_as(POINTER(c_dcmplx))
-    e_floquet_p = e_floquet.ctypes.data_as(POINTER(c_double))
-    fields_p = ctypes.pointer(fields)
-    U_AUX_p = U_AUX.ctypes.data_as(POINTER(c_dcmplx))
+    modes_num_p    = modes_num.ctypes.data_as(POINTER(c_int))
+    U_F_p          = U_F.ctypes.data_as(POINTER(c_dcmplx))
+    e_floquet_p    = e_floquet.ctypes.data_as(POINTER(c_double))
+    fields_p       = ctypes.pointer(fields)
+    U_AUX_p        = U_AUX.ctypes.data_as(POINTER(c_dcmplx))
     openmmfC.multimodetimeevolutionoperator_c_(ctypes.byref(h_floquet_size),ctypes.byref(nm),modes_num_p,U_F_p,e_floquet_p,ctypes.byref(d_bare),fields_p,ctypes.byref(t1),ctypes.byref(t2),U_AUX_p,ctypes.byref(info))
+
+#===================================================================
+#===================================================================
+
+#  void timeevolutionoperator_c_(atom_c *id, int *d_bare, int *nm, int * modes_num, mode_c *field, double *t1, double *t2, int *info); 
+def timeevolutionoperator_c_(id,d_bare,modes_num,field,t1,t2,U,info):
+    id_p           = ctypes.pointer(id)
+    d_bare         = c_int(d_bare)
+    t1             = c_double(t1)
+    t2             = c_double(t2)
+    info           = c_int(info)
+    nm             = c_int(modes_num.size)
+    modes_num_p    = modes_num.ctypes.data_as(POINTER(c_int))
+    U_p            = U.ctypes.data_as(POINTER(c_dcmplx))
+    fields_p       = ctypes.pointer(fields)
+    openmmfC.timeevolutionoperator_c_(id_p, ctypes.byref(d_bare), ctypes.byref(nm), modes_num_p, field_p, ctypes.byref(t1), ctypes.byref(t2),U_P, ctypes.byref(info))
+        
+
+#===================================================================
+#  // DEFINITION OF DRESSED BASIS
+#===================================================================
+ # void            dressedbasis_c_(int * h_floquet_size,atom_c *id,int * nm, int * modes_num,mode_c * fields, dcmplx * U_FD, double * e_dressed,int * info); 
+def dressedbasis_c_(h_floquet_size,id,modes_num,fields,U_FD,e_dressed,info):
+    id_p           = ctypes.pointer(id)
+    h_floquet_size = c_int(h_floquet_size)
+    info           = c_int(info)
+    nm             = c_int(modes_num.size)
+    modes_num_p    = modes_num.ctypes.data_as(POINTER(c_int))
+    U_FD_p         = U_FD.ctypes.data_as(POINTER(c_dcmplx))
+    fields_p       = ctypes.pointer(fields)
+    e_dressed_p    = ctypes.pointer(e_dressed)
+    openmmfC.dressedbasis_c_(ctypes.byref(h_floquet_size),id_p,ctypes.byref(nm),modes_num_p,fields_p,U_FD_p,e_dressed_p,ctypes.byref(info))
+
+#===================================================================
+#===================================================================
+    
+ # void  dressedbasis_subset_c_(atom_c *id , int * dressingfloquetdimension,int * dressingfields, int * nm, int * dressingfields_indices, int * modes_num,mode_c * fields, dcmplx * U_FD, double * e_dressed,int * info);
+def dressedbasis_subset_c_(id,dressingfloquetdimension,dressingfields,dressingfields_indices,modes_num,fields,U_FD,e_dressed,info):
+    id_p                     = ctypes.pointer(id)
+    dressingfloquetdimension = c_int(dressingfloquetdimension)
+    dressingfields           = c_int(dressingfields)
+    dressingfields_indices_p = dressingfields_indices.ctypes.data_as(POINTER(c_int))
+    nm             = c_int(modes_num.size)
+    modes_num_p    = modes_num.ctypes.data_as(POINTER(c_int))
+    fields_p       = ctypes.pointer(fields)
+    U_FD_p         = U_FD.ctypes.data_as(POINTER(c_dcmplx))
+    e_dressed_p    = ctypes.pointer(e_dressed)
+    info           = c_int(info)
+    openmmfC.dressedbasis_subset_c_(id_p, ctypes.byref(dressingfloquetdimension),ctypes.byref(dressingfields),ctypes.byref(nm),dressingfields_indices_p,modes_num_p,fields_p,U_FD_p,e_dressed_p,ctypes.byref(info));
+     
+#===================================================================
+#===================================================================
+     
+ # void  dressedbasis_subset_sp_c_(atom_c * id, int * dressingfloquetdimension,int * dressingfields,int * nm, int * dressingfields_indices, int * modes_num,mode_c * fields, dcmplx * U_FD, double * e_dressed,int * info);
+ # void  dressedbasis_sp_c_(int h_floquet_size, atom_c *id, int * nm, int * modes_num, mode_c * fields, dcmplx * U_FD, double * e_dressed, int * info);
+
+#===================================================================
+#===================================================================
+
+ # void micromotionfourierdressedbasis_c_(atom_c *id , int * dressingfields_indices, int * modes_num,mode_c * fields,int * info);
+
+def micromotionfourierdressedbasis_c_(id,dressingfields_indices,modes_num,fields,U_FD,e_dressed,info):
+    id_p                     = ctypes.pointer(id)
+    dressingfields_indices_p = dressingfields_indices.ctypes.data_as(POINTER(c_int))
+    modes_num_p    = modes_num.ctypes.data_as(POINTER(c_int))
+    fields_p       = ctypes.pointer(fields)
+    U_FD_p         = U_FD.ctypes.data_as(POINTER(c_dcmplx))
+    e_dressed_p    = ctypes.pointer(e_dressed)
+    info           = c_int(info)
+    openmmfC.micromotionfourierdressedbasis_c_(id_p,dressingfields_indices_p,modes_num_p,fields_p,U_FD_p,e_dressed_p,ctypes.byref(info));
+
+
+#===================================================================
+#===================================================================
+
+ # void micromotiondressedbasis_c_(atom_c *id , int * modes_num, int * dressingfields_indices, mode_c * fields, double T1, dcmplx * U, int * info);
+def micromotiondressedbasis_c_(id,modes_num,dressingfields_indices,fields,t1,U,info):
+    id_p                     = ctypes.pointer(id)
+    dressingfields_indices_p = dressingfields_indices.ctypes.data_as(POINTER(c_int))
+    modes_num_p    = modes_num.ctypes.data_as(POINTER(c_int))
+    fields_p       = ctypes.pointer(fields)
+    t1             = c_double(t1)
+    U_p            = U.ctypes.data_as(POINTER(c_dcmplx))
+    info           = c_int(info)
+    openmmfC.micromotiondressedbasis_c_(id_p,modes_num_p,dressingfields_indices_p,fields_p,ctypes.byref(t1),U_p,ctypes.byref(info));
+
 
 #===================================================================
 #===================================================================

@@ -1,31 +1,32 @@
-MODULE PASSING2C
-  INTERFACE
-     SUBROUTINE MICROMOTIONFOURIERDRESSEDBASIS_C(ID,DRESSINGFIELDS_INDICES,MODES_NUM,FIELDS,INFO)
-       ! ID        (in)    :: TYPE(ATOM) system ID
-       ! DRESSINGFIELDS_INDICES (in) :: integer array indicating the indices of the dressing modes
-       ! MODES_NUM (in)    :: integer array indicating the number of harmonics of all driving modes 
-       ! FIELDS    (in)    :: Array of TYPE(MODE) of dimension 
-       ! U_FD      (out)   :: complex*16 matrix fourier decomposition of the micromotion operator of the dressed basis
-       ! E_DRESSED (out)   :: dressed energies
-       ! INFO      (inout) :: error flag
-       !USE TYPES_C
-       !USE SUBINTERFACE
-       !USE MODES_4F
-       USE TYPES
-       !IMPLICIT NONE
-       
-       TYPE(ATOM),                     INTENT(IN)  :: ID
-       INTEGER,    DIMENSION(:),       INTENT(IN)  :: DRESSINGFIELDS_INDICES
-       INTEGER,    DIMENSION(:),       INTENT(IN)  :: MODES_NUM
-       TYPE(MODE), DIMENSION(:),       INTENT(IN)  :: FIELDS
-       !  COMPLEX*16, DIMENSION(:,:),     ALLOCATABLE, INTENT(OUT) :: U_FD
-       !  DOUBLE PRECISION, DIMENSION(:), ALLOCATABLE, INTENT(OUT) :: E_DRESSED
-       INTEGER, INTENT(INOUT) :: INFO
-     END SUBROUTINE MICROMOTIONFOURIERDRESSEDBASIS_C
-  END INTERFACE
-END MODULE PASSING2C
+!!$MODULE PASSING2C
+!!$  INTERFACE
+!!$     SUBROUTINE MICROMOTIONFOURIERDRESSEDBASIS_C(ID,DRESSINGFIELDS_INDICES,MODES_NUM,FIELDS,INFO)
+!!$       ! ID        (in)    :: TYPE(ATOM) system ID
+!!$       ! DRESSINGFIELDS_INDICES (in) :: integer array indicating the indices of the dressing modes
+!!$       ! MODES_NUM (in)    :: integer array indicating the number of harmonics of all driving modes 
+!!$       ! FIELDS    (in)    :: Array of TYPE(MODE) of dimension 
+!!$       ! U_FD      (out)   :: complex*16 matrix fourier decomposition of the micromotion operator of the dressed basis
+!!$       ! E_DRESSED (out)   :: dressed energies
+!!$       ! INFO      (inout) :: error flag
+!!$       !USE TYPES_C
+!!$       !USE SUBINTERFACE
+!!$       !USE MODES_4F
+!!$       USE TYPES
+!!$       !IMPLICIT NONE
+!!$       
+!!$       TYPE(ATOM),                     INTENT(IN)  :: ID
+!!$       INTEGER,    DIMENSION(:),       INTENT(IN)  :: DRESSINGFIELDS_INDICES
+!!$       INTEGER,    DIMENSION(:),       INTENT(IN)  :: MODES_NUM
+!!$       TYPE(MODE), DIMENSION(:),       INTENT(IN)  :: FIELDS
+!!$       !  COMPLEX*16, DIMENSION(:,:),     ALLOCATABLE, INTENT(OUT) :: U_FD
+!!$       !  DOUBLE PRECISION, DIMENSION(:), ALLOCATABLE, INTENT(OUT) :: E_DRESSED
+!!$       INTEGER, INTENT(INOUT) :: INFO
+!!$     END SUBROUTINE MICROMOTIONFOURIERDRESSEDBASIS_C
+!!$  END INTERFACE
+!!$END MODULE PASSING2C
 
-SUBROUTINE MICROMOTIONFOURIERDRESSEDBASIS_C(ID,DRESSINGFIELDS_INDICES,MODES_NUM,FIELDS,INFO)
+SUBROUTINE MICROMOTIONFOURIERDRESSEDBASIS_C(ID,DRESSINGFIELDS_INDICES,MODES_NUM,FIELDS,U_FD,E_DRESSED,INFO)
+!SUBROUTINE MICROMOTIONFOURIERDRESSEDBASIS_C(ID,DRESSINGFIELDS_INDICES,MODES_NUM,FIELDS,INFO)
 ! ID        (in)    :: TYPE(ATOM) system ID
 ! DRESSINGFIELDS_INDICES (in) :: integer array indicating the indices of the dressing modes
 ! MODES_NUM (in)    :: integer array indicating the number of harmonics of all driving modes 
@@ -43,12 +44,12 @@ SUBROUTINE MICROMOTIONFOURIERDRESSEDBASIS_C(ID,DRESSINGFIELDS_INDICES,MODES_NUM,
   INTEGER,    DIMENSION(:),       INTENT(IN)  :: DRESSINGFIELDS_INDICES
   INTEGER,    DIMENSION(:),       INTENT(IN)  :: MODES_NUM
   TYPE(MODE), DIMENSION(:),       INTENT(IN)  :: FIELDS
-!  COMPLEX*16, DIMENSION(:,:),     ALLOCATABLE, INTENT(OUT) :: U_FD
-!  DOUBLE PRECISION, DIMENSION(:), ALLOCATABLE, INTENT(OUT) :: E_DRESSED
+  COMPLEX*16, DIMENSION(:,:),     ALLOCATABLE, INTENT(OUT) :: U_FD
+  DOUBLE PRECISION, DIMENSION(:), ALLOCATABLE, INTENT(OUT) :: E_DRESSED
   INTEGER, INTENT(INOUT) :: INFO
 
   write(*,*) dressingfields_indices(1)
-!  CALL MICROMOTIONFOURIERDRESSEDBASIS(ID,DRESSINGFIELDS_INDICES,MODES_NUM,FIELDS, U_FD__,E_DRESSED__,INFO)
+  CALL MICROMOTIONFOURIERDRESSEDBASIS(ID,DRESSINGFIELDS_INDICES,MODES_NUM,FIELDS, U_FD__,E_DRESSED__,INFO)
 
 END SUBROUTINE MICROMOTIONFOURIERDRESSEDBASIS_C
 
