@@ -32,13 +32,15 @@ extern "C" {
   int h_floquet_c; // Floquet matrix in the bare basis
 
   // GENERAL INIT SUBROUTINE
-  void floquetinit_old_c_(int *length_name, char *atomicspecie,char  *manifold,int * jtotal,atom_c * id_c,int * info);
+  //void floquetinit_old_c_(int *length_name, char *atomicspecie,char  *manifold,int * jtotal,atom_c * id_c,int * info);
   //void floquetinit_c_(int *length_name, char *atomicspecie,char  *manifold,int * jtotal,atom_c * id_c,int * info);
   //void floquetinit_c_(atom_c *id_c, int *length_name, char *atomicspecie,int * info); 
-  void floquetinit_qubit_c_(atom_c *id, int *lenght_name, char * atomicspecie, int * info);
   //void floquetinit_qubit_c_(atom_c *id,  int * info);
-  void floquetinit_spin_c_(atom_c *id, int *lenght_name, char * atomicspecie, double * jtotal, int * info);
+  void floquetinit_qubit_c_ (atom_c *id, int *lenght_name, char * atomicspecie,                                      int * info);
+  void floquetinit_spin_c_  (atom_c *id, int *lenght_name, char * atomicspecie, double * jtotal,                     int * info);
   void floquetinit_alkali_c_(atom_c *id, int *lenght_name, char * atomicspecie, int * lenght_name2, char * manifold, int * info);
+  //  void floquetinit_mbh_c_   (atom_c *id, int *lenght_name, char * atomicspecie, int *NP, int *L, int *stats,         int * info);
+
        
   // SET HAMILTONIAN OF SPIN-LIKE MODELS
   void  sethamiltoniancomponents_c_(atom_c *id,int * nm, int * total_frequencies,int * modes_num,mode_c * fields,int * info);
@@ -46,7 +48,6 @@ extern "C" {
   
   // BUILDING FLOQUET MATRIX OF GENERIC MODEL
   void    multimodefloquetmatrix_c_(atom_c *id,int * nm, int * total_frequencies,int * modes_num,mode_c * fields,dcmplx *h_f_, int * info);
-  dcmplx * multimodefloquetmatrix_c_pt_(atom_c *id,int * nm, int * total_frequencies,int * modes_num,mode_c * fields,int * info);
   int     multimodefloquetmatrix_c_python_(atom_c *id,int * nm, int * total_frequencies,int * modes_num,mode_c * fields,int * info);
   void multimodefloquetmatrix_sp_c_(atom_c *id,int * nm, int * total_frequencies,int * modes_num,mode_c * fields, int * info);
   
@@ -64,6 +65,8 @@ extern "C" {
   void multimodefloquettransformation_c_(int * h_floquet_size,int * nm,int * modes_num,dcmplx * U_F,double * e_floquet,int * d_bare,mode_c * fields,double * t1,dcmplx * U_B2D,int * info); 
   void multimodemicromotion_c_(atom_c *id,int * h_floquet_size,int * nm,int * modes_num,dcmplx * U_F,double * e_floquet,int * d_bare,mode_c * fields,double * t1,dcmplx * U_B2D,int * info); 
   void multimodetimeevolutionoperator_c_(int * h_floquet_size,int * nm,int * modes_num,dcmplx * U_F,double * e_floquet,int * d_bare,mode_c * fields,double * t1,double * t2,dcmplx * U_AUX,int * info);
+  void timeevolutionoperator_c_(atom_c *id, int *d_bare, int *nm, int * modes_num, mode_c *field, double *t1, double *t2, dcmplx *U, int *info); 
+
   
     
   // DEFINITION OF DRESSED BASIS
@@ -71,7 +74,7 @@ extern "C" {
   void  dressedbasis_subset_c_(atom_c *id , int * dressingfloquetdimension,int * dressingfields, int * nm, int * dressingfields_indices, int * modes_num,mode_c * fields, dcmplx * U_FD, double * e_dressed,int * info);
   void  dressedbasis_subset_sp_c_(atom_c * id, int * dressingfloquetdimension,int * dressingfields,int * nm, int * dressingfields_indices, int * modes_num,mode_c * fields, dcmplx * U_FD, double * e_dressed,int * info);
   void  dressedbasis_sp_c_(int h_floquet_size, atom_c *id, int * nm, int * modes_num, mode_c * fields, dcmplx * U_FD, double * e_dressed, int * info);
-  void micromotionfourierdressedbasis_c_(atom_c *id , int * dressingfields_indices, int * modes_num,mode_c * fields,int * info);
+  void micromotionfourierdressedbasis_c_(atom_c *id , int * dressingfields_indices, int * modes_num,mode_c * fields,dcmplx * U_FD, double *e_dressed,int * info);
   void micromotiondressedbasis_c_(atom_c *id , int * modes_num, int * dressingfields_indices, mode_c * fields, double T1, dcmplx * U, int * info);
 
   
@@ -86,8 +89,9 @@ extern "C" {
   void rec_write_matrix_c_(double *A,int * A_dim1, int * A_dim2);
   
   
-  // UTILITY FUNCTION: MATRIX MULTIPLICATION WITH LAPACK
-  
+  // deallocate all arrays allocated with fortran
+  void deallocateall_c_(int *id);
+
  
 } 
 
@@ -127,12 +131,22 @@ void floquetinit_c(atom_c *id, char *name, double  *jtotal,int *info){
 
 }
 
+void floquetinit_c(atom_c *id, char *name,  int *NP, int *L, int *stats,int * info){
+  
+  int length_name;
+  
+  length_name = strlen(name);
+  //  floquetinit_mbh_c_ (id,&lenght_name, name, NP, L, stats, info);
+
+}
+
+
 void floquetinit_old_c(char *name,char *manifold,int *jtotal,atom_c *id,int *info){
   
   int length_name;
   
   length_name = strlen(name);
-  floquetinit_old_c_(&length_name,name,manifold,jtotal,id,info);
+  //floquetinit_old_c_(&length_name,name,manifold,jtotal,id,info);
 
 }
 /*

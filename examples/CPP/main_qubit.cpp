@@ -114,7 +114,7 @@ int main(){
                                                                                   // which is the value of the global variable h_floquet_size
     
 
-    cout << "Floquet H" <<  H_F_[3] < "\n\n";
+    //cout << "Floquet H" <<  H_F_[3] < "\n\n";
     double * e_floquet = new double [h_floquet_size];
     dcmplx * U_F =  new dcmplx [h_floquet_size*h_floquet_size];
     //cout << h_floquet_c << "\n";

@@ -154,8 +154,8 @@ int main(){
     sethamiltoniancomponents_c_(&id,&nm,&total_frequencies,modes_num,fields,&info); // every time a field parameter is modified, we should run this function
 
     //!--- FIND THE MULTIMODE FLOQUET SPECTRUM 
-    
-    multimodefloquetmatrix_c_(&id,&nm,&total_frequencies,modes_num,fields,&info); // in this function we calculate the dimension of the multimode 
+    dcmplx * H_F_ = new dcmplx [4]; 
+    multimodefloquetmatrix_c_(&id,&nm,&total_frequencies,modes_num,fields,H_F_,&info); // in this function we calculate the dimension of the multimode 
                                                                                   // floquet hilbert space: h_floquet_size 
 
 

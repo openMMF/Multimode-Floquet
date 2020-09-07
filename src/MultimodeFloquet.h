@@ -32,13 +32,15 @@ extern "C" {
   int h_floquet_c; // Floquet matrix in the bare basis
 
   // GENERAL INIT SUBROUTINE
-  void floquetinit_old_c_(int *length_name, char *atomicspecie,char  *manifold,int * jtotal,atom_c * id_c,int * info);
+  //void floquetinit_old_c_(int *length_name, char *atomicspecie,char  *manifold,int * jtotal,atom_c * id_c,int * info);
   //void floquetinit_c_(int *length_name, char *atomicspecie,char  *manifold,int * jtotal,atom_c * id_c,int * info);
   //void floquetinit_c_(atom_c *id_c, int *length_name, char *atomicspecie,int * info); 
-  void floquetinit_qubit_c_(atom_c *id, int *lenght_name, char * atomicspecie, int * info);
   //void floquetinit_qubit_c_(atom_c *id,  int * info);
-  void floquetinit_spin_c_(atom_c *id, int *lenght_name, char * atomicspecie, double * jtotal, int * info);
+  void floquetinit_qubit_c_ (atom_c *id, int *lenght_name, char * atomicspecie,                                      int * info);
+  void floquetinit_spin_c_  (atom_c *id, int *lenght_name, char * atomicspecie, double * jtotal,                     int * info);
   void floquetinit_alkali_c_(atom_c *id, int *lenght_name, char * atomicspecie, int * lenght_name2, char * manifold, int * info);
+  void floquetinit_mbh_c_   (atom_c *id, int *lenght_name, char * atomicspecie, int *NP, int *L, int *stats,         int * info);
+
        
   // SET HAMILTONIAN OF SPIN-LIKE MODELS
   void  sethamiltoniancomponents_c_(atom_c *id,int * nm, int * total_frequencies,int * modes_num,mode_c * fields,int * info);
@@ -128,6 +130,16 @@ void floquetinit_c(atom_c *id, char *name, double  *jtotal,int *info){
   floquetinit_spin_c_(id,&length_name,name,jtotal,info);
 
 }
+
+void floquetinit_c(atom_c *id, char *name,  int *NP, int *L, int *stats,int * info){
+  
+  int length_name;
+  
+  length_name = strlen(name);
+  floquetinit_mbh_c_ (id,&lenght_name, name, NP, L, stats, info);
+
+}
+
 
 void floquetinit_old_c(char *name,char *manifold,int *jtotal,atom_c *id,int *info){
   
