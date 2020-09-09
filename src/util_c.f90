@@ -128,9 +128,11 @@ SUBROUTINE MATMUL_C(OP,A,RA,CA,B,RB,CB,C,INFO)
   COMPLEX*16, DIMENSION(RA,CB), INTENT(INOUT)::C
   INTEGER, INTENT(INOUT):: INFO
 
-
+  !write(*,*) abs(A)**2
+  !write(*,*) abs(B)**2
+  !write(*,*) op
   SELECT CASE (OP)
-
+     
      !CASE("T")
   CASE(1)
      IF(RA.EQ.RB) THEN
@@ -169,8 +171,11 @@ SUBROUTINE MATMUL_C(OP,A,RA,CA,B,RB,CB,C,INFO)
   CASE(4)
 
      !WRITE(*,*) "N"
+     !write(*,*) abs(A)**2
      IF(CA.EQ.RB) THEN
+        !write(*,*) abs(A)**2
         C = MATMUL(A,B)
+        !write(*,*) abs(C)**2
      ELSE
         C = 0.0
         INFO = -1

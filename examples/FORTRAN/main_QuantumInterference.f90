@@ -57,7 +57,7 @@ PROGRAM MULTIMODEFLOQUET
   FIELDS(2)%phi_y     = 0.0
   FIELDS(2)%phi_z     = 0.0
   FIELDS(2)%omega     = 0.5
-  FIELDS(2)%N_Floquet = 20
+  FIELDS(2)%N_Floquet = 4
 
   FIELDS(3)%X         = 0.0625
   FIELDS(3)%Y         = 0.0
@@ -66,7 +66,7 @@ PROGRAM MULTIMODEFLOQUET
   FIELDS(3)%phi_y     = 0.0
   FIELDS(3)%phi_z     = 0.0
   FIELDS(3)%omega     = 1.0
-  FIELDS(3)%N_Floquet = 20
+  FIELDS(3)%N_Floquet = 2
   
   DO n=1,128
      FIELDS(2)%OMEGA= 0.1 + (N-1)*1.9/128

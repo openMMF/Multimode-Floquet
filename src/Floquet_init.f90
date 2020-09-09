@@ -49,7 +49,62 @@ SUBROUTINE SET_ATOMIC_PARAMETERS(ATOMICSPECIE,MANIFOLD,JTOTAL_,ID,INFO)
         Fdown   = Fdown_6Li     
         INFO    = 1  ! ITS AN ATOM
         ID_name = ID_name_6Li
-        !        write(*,*) "# 6Li"
+        !write(*,*) "# 6Li"
+     CASE ("85Rb")
+        mass_at = mass_at_85Rb
+        I       = I_85Rb
+        g_I     = g_I_85Rb
+        J       = J_85Rb
+        g_J     = g_J_85Rb
+        A       = A_85Rb
+        a_s     = a_s_85Rb
+        alpha_E = alpha_E_85Rb
+        Fup     = Fup_85Rb
+        Fdown   = Fdown_85Rb     
+        INFO    = 1  ! ITS AN ATOM
+        ID_name = ID_name_85Rb
+        !write(*,*) "# 6Li"
+     CASE ("123Cs")
+        mass_at = mass_at_123Cs
+        I       = I_123Cs
+        g_I     = g_I_123Cs
+        J       = J_123Cs
+        g_J     = g_J_123Cs
+        A       = A_123Cs
+        a_s     = a_s_123Cs
+        alpha_E = alpha_E_123Cs
+        Fup     = Fup_123Cs
+        Fdown   = Fdown_123Cs     
+        INFO    = 1  ! ITS AN ATOM
+        ID_name = ID_name_123Cs
+        !write(*,*) "# 6Li"
+     CASE ("41K")
+        mass_at = mass_at_41K
+        I       = I_41K
+        g_I     = g_I_41K
+        J       = J_41K
+        g_J     = g_J_41K
+        A       = A_41K
+        a_s     = a_s_41K
+        alpha_E = alpha_E_41K
+        Fup     = Fup_41K
+        Fdown   = Fdown_41K     
+        INFO    = 1  ! ITS AN ATOM
+        ID_name = ID_name_41K
+        !write(*,*) "# 6Li"
+     CASE ("23Na")
+        mass_at = mass_at_23Na
+        I       = I_23Na
+        g_I     = g_I_23Na
+        J       = J_23Na
+        g_J     = g_J_23Na
+        A       = A_23Na
+        a_s     = a_s_23Na
+        alpha_E = alpha_E_23Na
+        Fup     = Fup_23Na
+        Fdown   = Fdown_23Na     
+        INFO    = 1  ! ITS AN ATOM
+        ID_name = ID_name_23Na
      CASE("qubit")
         mass_at = amu
         I       = I_qubit
@@ -79,7 +134,7 @@ SUBROUTINE SET_ATOMIC_PARAMETERS(ATOMICSPECIE,MANIFOLD,JTOTAL_,ID,INFO)
         INFO    = 3 ! ITS A SPIN
         ID_name = ID_name_spin
 
-        write(*,*) "# spin"
+        !write(*,*) "# spin",Fup,Fdown
      CASE("lattice")
         INFO    = 5 ! ITS A lattice
         ID_name = ID_name_lattice
@@ -104,7 +159,7 @@ SUBROUTINE SET_ATOMIC_PARAMETERS(ATOMICSPECIE,MANIFOLD,JTOTAL_,ID,INFO)
            total_states_lsi = 2*Fup + 1
            gF               = gF_2
            ID%id_system = 1
-
+           !write(*,*) Ftotal,total_states_lsi,gF
         ELSE  IF(MANIFOLD.EQ."L") THEN
 
            Ftotal           = Fdown
@@ -154,6 +209,7 @@ SUBROUTINE SET_ATOMIC_PARAMETERS(ATOMICSPECIE,MANIFOLD,JTOTAL_,ID,INFO)
      gF     = 1.0
      Ftotal = JTOTAL
      ID%id_system = 5
+     !write(*,*) JTOTAL,total_states_lsi
   ELSE IF(INFO .EQ. 4) THEN
      ! HERE WE DEFINE THE PARAMETES OF THE LATTICE HAMILTONIAN
      ID%id_system = 6     
@@ -271,8 +327,8 @@ contains
        ALLOCATE(j_z(Total_states_LSI,Total_states_LSI))
        CALL F_REPRESENTATION(j_x,j_y,j_z,0.05D1)
     END IF
-    write(*,*)"Floquet_qubit in floquet_init.f90 ", atomicspecie,info,id%d_bare
-    call write_matrix(J_x)
+    !write(*,*)"Floquet_qubit in floquet_init.f90 ", atomicspecie,info,id%d_bare
+    !call write_matrix(J_x)
   END SUBROUTINE FLOQUETINIT_QUBIT
 
   SUBROUTINE FLOQUETINIT_SPIN(ID,atomicspecie,jtotal,info)
@@ -302,7 +358,7 @@ contains
     INTEGER  r,D_F2,P,r_,p_
     DOUBLE PRECISION, DIMENSION(:),ALLOCATABLE:: Energy
 
-    !  write(*,*) atomicspecie
+    !write(*,*) atomicspecie,JTOTAL
     INFO = 4
     CALL SET_ATOMIC_PARAMETERS(ATOMICSPECIE,'B',JTOTAL,ID,INFO)
     !------ ALLOCATE NEEDED ARRAYS: Hamiltonian and Lapack
@@ -399,7 +455,7 @@ contains
     INFO = 4
     CALL SET_ATOMIC_PARAMETERS(ATOMICSPECIE,MANIFOLD,0.2D1,ID,INFO)
     !------ ALLOCATE NEEDED ARRAYS: Hamiltonian and Lapack
-    !  write(*,*) total_states_lsi,info
+    !write(*,*) total_states_lsi,info
     ALLOCATE(Energy(TOTAL_STATES_LSI))
     ALLOCATE(H_IJ(Total_states_LSI,Total_states_LSI))
     ALLOCATE(U_ZEEMAN(Total_states_LSI,Total_states_LSI))
