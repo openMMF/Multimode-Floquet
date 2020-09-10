@@ -188,7 +188,7 @@ PROGRAM MULTIMODEFLOQUET
         T2 = 700.0E-6
         T2 = A*T2/hbar
         ! ===== EVALUATE TIME-EVOLUTION OPERATOR  IN THE BARE BASIS
-        CALL TIMEEVOLUTIONOPERATOR(ID,D_BARE,SIZE(MODES_NUM,1),SIZE(MODES_NUM,1),MODES_NUM,FIELDS,T1,T2,U_AUX,INFO) 
+        CALL TIMEEVOLUTIONOPERATOR(ID,D_BARE,SIZE(MODES_NUM,1),TOTAL_FREQUENCIES,MODES_NUM,FIELDS,T1,T2,U_AUX,INFO) 
         WRITE(3,*) (FIELDS(3)%OMEGA*A/HBAR)/(2*pi),1-abs(u_aux(3,3))**2,pop
         
 !!$     !=================================================================================

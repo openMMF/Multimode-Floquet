@@ -1,4 +1,5 @@
 
+
 #include <iostream>
 #include <complex>
 #include <stdio.h>
@@ -27,8 +28,8 @@ int main(){
 
   double t1,t2;
 
-  disco0 = fopen("qubit_avg.dat","w+");
-  disco1 = fopen("qubit_timeevol.dat","w+");
+  disco0 = fopen("qubit_avg_SP.dat","w+");
+  disco1 = fopen("qubit_timeevol_SP.dat","w+");
 
   info   = 0;
   jtotal = 2;
@@ -38,13 +39,13 @@ int main(){
   d_bare = id.d_bare;
 
   dcmplx * U_AUX = new dcmplx [d_bare*d_bare];
+
   int nm = 2;
   int * modes_num = new int [nm];
 
   modes_num[0] = 1;
   modes_num[1] = 1;
   
-
   total_frequencies = 0;
   for(r=0;r<nm;r++){
     total_frequencies += modes_num[r];

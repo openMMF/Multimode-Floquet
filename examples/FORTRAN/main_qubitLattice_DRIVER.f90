@@ -107,7 +107,7 @@ PROGRAM MULTIMODEFLOQUET
   dt = T2
   DO r=1,1024
      T2 = (r-1.0)*10.0E4/1024
-     CALL TIMEEVOLUTIONOPERATOR(ID,D_BARE,SIZE(MODES_NUM,1),MODES_NUM,FIELDS,T1,T2,U_AUX,INFO) 
+     CALL TIMEEVOLUTIONOPERATOR(ID,D_BARE,SIZE(MODES_NUM,1),TOTAL_FREQUENCIES,MODES_NUM,FIELDS,T1,T2,U_AUX,INFO) 
      dh2_dt = 2.0*eta*FIELDS(2)%OMEGA*(                 J_x*cos(fields(2)%omega*T2+phi1) + J_z*sin(fields(2)%omega*T2+phi1))
      dh3_dt = 2.0*eta*FIELDS(3)%OMEGA*(DCMPLX(0.0,-1.0)*J_y*cos(fields(3)%omega*T2+phi2) + J_z*sin(fields(3)%omega*T2+phi2))
      W2 = W2 + dt*MATMUL(TRANSPOSE(CONJG(U_AUX)),MATMUL(dh2_dt,U_AUX))

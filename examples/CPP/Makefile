@@ -31,10 +31,10 @@ all: Example_lib_c Example_lib_c_sp
 
 
 Example_lib_c: main_qubit.cpp main_DressedQubit.cpp 
-	$(CPP) -o qubit           main_qubit.cpp        -I$(MMFINC) -L$(MMFLIB) -lmultimodefloquet -lgfortran $(GFFLAGS) 
-	$(CPP) -o qubit_driver    main_qubit_DRIVER.cpp -I$(MMFINC) -L$(MMFLIB) -lmultimodefloquet -lgfortran $(GFFLAGS) 
-	$(CPP) -o dressedqubit    main_DressedQubit.cpp -I$(MMFINC) -L$(MMFLIB) -lmultimodefloquet -lgfortran $(GFFLAGS) 
-	$(CPP) -o dressedqubitV2  main_DressedQubitV2.cpp -I$(MMFINC) -L$(MMFLIB) -lmultimodefloquet -lgfortran $(GFFLAGS) 
+	$(CPP) -o qubit           main_qubit.cpp        -I$(MMFINC) -L$(MMFLIB) -lmultimodefloquet -lgfortran $(GFFLAGS) -L$(MKLLIBS) -I$(MKLINC) $(GFFLAGS_SP) $(MKLFLAGS)
+	$(CPP) -o qubit_driver    main_qubit_DRIVER.cpp -I$(MMFINC) -L$(MMFLIB) -lmultimodefloquet -lgfortran $(GFFLAGS) -L$(MKLLIBS) -I$(MKLINC) $(GFFLAGS_SP) $(MKLFLAGS)
+	$(CPP) -o dressedqubit    main_DressedQubit.cpp -I$(MMFINC) -L$(MMFLIB) -lmultimodefloquet -lgfortran $(GFFLAGS) -L$(MKLLIBS) -I$(MKLINC) $(GFFLAGS_SP) $(MKLFLAGS)
+#	$(CPP) -o dressedqubitV2  main_DressedQubitV2.cpp -I$(MMFINC) -L$(MMFLIB) -lmultimodefloquet -lgfortran $(GFFLAGS) -L$(MKLLIBS) -I$(MKLINC) $(GFFLAGS_SP) $(MKLFLAGS)
 
 Example_lib_c_sp: main_qubit_sp.cpp main_DressedQubit_SP.cpp main_qubit_inspection.cpp
 	$(CPP) -o  qubit_sp          main_qubit_sp.cpp       -I$(MMFINC) -L$(MMFLIB) -lmultimodefloquet -lgfortran -L$(MKLLIBS) -I$(MKLINC) $(GFFLAGS_SP) $(MKLFLAGS)
@@ -46,4 +46,4 @@ Example_lib_c_sp: main_qubit_sp.cpp main_DressedQubit_SP.cpp main_qubit_inspecti
 ############################
 
 clean:
-	rm qubit dressedqubit qubit_sp dressedqubit_sp 
+	rm qubit dressedqubit qubit_sp dressedqubit_sp inspection_sp qubit_driver
