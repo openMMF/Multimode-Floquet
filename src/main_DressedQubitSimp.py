@@ -75,13 +75,13 @@ U_F1_red = np.zeros([d_bare*d_bare],dtype=np.complex)
 U_F2_red = np.zeros([d_bare*d_bare],dtype=np.complex)
 
 # DEALLOCATE ALL ARRAYS
-openmmf.deallocateall(id)
+#openmmf.deallocateall(id)
 
-#%%
+
 # ========= FIND THE MULTIMODE FLOQUET SPECTRUM  AND TIME EVOLUTION
 
-N_ = 0#64
-M_ = 0#512
+N_ = 1#64
+M_ = 1#512
 
 U_AUX             = np.empty([d_bare*d_bare],dtype=np.complex)
 P_TimeEvol        = np.empty([N_,M_,d_bare*d_bare],dtype=np.double)
@@ -89,52 +89,50 @@ P_DressedTimeEvol = np.empty([N_,M_,d_bare*d_bare],dtype=np.double)
 
 U_T   = np.empty([d_bare,d_bare],dtype=np.complex)
 
-#for r in range(N_+1):
+for r in range(N_):
 #    #====== SET THE DRESSING FREQUENCY
-#    field[2].omega = Z_0 - X_1 + 2.0*r*X_1/N_
-#    openmmf.sethamiltoniancomponents(id,modes_num,field,info) # every time a field parameter is modified, we should run this function
+    field[2].omega = Z_0 - X_1 + 2.0*r*X_1/N_
+    openmmf.sethamiltoniancomponents(id,modes_num,field,info) # every time a field parameter is modified, we should run this function
 #
 #    # BUILD THE MULTIMODE FLOQUET MATRIX
-#    h_floquet_size = openmmf.multimodefloquetmatrix(id,modes_num,field,info)
+    h_floquet_size = openmmf.multimodefloquetmatrix(id,modes_num,field,info)
 #
 #    # ALLOCATE ARRAYS FOR FLOQUET ENERGIES (E_FLOQUET),  MICROMOTION (U_F),
 #    # TIME-AVERAGE TRANSITION PROBABILITY (P_AVG), AND AUXILIAR MATRIX (U_AUX)
-#    e_floquet = np.zeros(h_floquet_size,dtype=np.double)
-#    U_F       = np.zeros(h_floquet_size*h_floquet_size,dtype=np.complex)
+    e_floquet = np.zeros(h_floquet_size,dtype=np.double)
+    U_F       = np.zeros(h_floquet_size*h_floquet_size,dtype=np.complex)
 #
 #    # DIAGONALISE THE MULTIMODE FLOQUET MATRIX
-#    openmmf.lapack_fulleigenvalues(U_F,h_floquet_size,e_floquet,info)
+    openmmf.lapack_fulleigenvalues(U_F,h_floquet_size,e_floquet,info)
 #
 #    #// ======= EVALUATE TIME-EVOLUTION OPERATOR IN THE BARE BASIS       
-#    t1 = 0.0;
-#    t2 = 0.0;
-#    for m in range(M_+1):
-#      U_AUX      = np.empty([d_bare*d_bare],dtype=np.complex)
-#      t2 = m*6400/M_;
+    t1 = 0.0;
+    t2 = 0.0;
+    for m in range(M_+1):
+      U_AUX      = np.empty([d_bare*d_bare],dtype=np.complex)
+      t2 = m*6400/M_;
 #
 #      # EVALUATE THE TIME EVOLUTION OPERATOR
-#      openmmf.multimodetimeevolutionoperator(h_floquet_size,modes_num,U_F,e_floquet,d_bare,field,t1,t2,U_AUX,info)
-#      P_TimeEvol[r,m,:] = np.power(np.abs(U_AUX),2)      
-#      
-#      # //!=================================================================================
-#      # //!== TRANSFORM THE TIME-EVOLUTION OPERATOR TO THE DRESSED BASIS
-#      # //!=================================================================================
-#      # //       
-#      # //!== BUILD THE TIME-DEPENDENT TRANSFORMATION BETWEEN THE BARE AND THE RF DRESSED BASIS: U_F1
-#      
-#      info =0        
-#      openmmf.multimodemicromotion(id,U_FD.shape[0],modes_subset,U_FD,e_dressed,d_bare,field_subset,t1, U_F1_red,info)
-#      openmmf.multimodemicromotion(id,U_FD.shape[0],modes_subset,U_FD,e_dressed,d_bare,field_subset,t2, U_F2_red,info)
-#
-#      U_F1_red = np.reshape(U_F1_red,[d_bare,d_bare],order='F')
-#      U_F2_red = np.reshape(U_F2_red,[d_bare,d_bare],order='F')
-#      U_AUX    = np.reshape(U_AUX,[d_bare,d_bare],order='F')
-#      
-#      #//! ====== CALCULATE THE TIME-EVOLUTION OPERATOR IN THE DRESSED BASIS USING THE PREVIOUS ONE CALCULATED IN THE BARE BASIS
-#      U_T = np.matmul(np.transpose(np.conjugate(U_F2_red)),np.matmul(U_AUX,U_F1_red))
-#      U_T = np.reshape(U_T,[d_bare*d_bare],order='F')
-#      P_DressedTimeEvol[r,m,:] = np.power(np.abs(U_T),2)
-#
+      openmmf.multimodetimeevolutionoperator(h_floquet_size,modes_num,U_F,e_floquet,d_bare,field,t1,t2,U_AUX,info)
+      #P_TimeEvol[r,m,:] = np.power(np.abs(U_AUX),2)      
+
+    # //!== BUILD THE TIME-DEPENDENT TRANSFORMATION BETWEEN THE BARE AND THE RF DRESSED BASIS: U_F1
+
+      info =0        
+      openmmf.multimodemicromotion(id,U_FD.shape[0],modes_subset,U_FD,e_dressed,d_bare,field_subset,t1, U_F1_red,info)
+      openmmf.multimodemicromotion(id,U_FD.shape[0],modes_subset,U_FD,e_dressed,d_bare,field_subset,t2, U_F2_red,info)
+
+      U_F1_red = np.reshape(U_F1_red,[d_bare,d_bare],order='F')
+      U_F2_red = np.reshape(U_F2_red,[d_bare,d_bare],order='F')
+      U_AUX    = np.reshape(U_AUX,[d_bare,d_bare],order='F')
+      
+      #//! ====== CALCULATE THE TIME-EVOLUTION OPERATOR IN THE DRESSED BASIS USING 
+      #           THE PREVIOUS ONE CALCULATED IN THE BARE BASIS
+      
+      U_T = np.matmul(np.transpose(np.conjugate(U_F2_red)),np.matmul(U_AUX,U_F1_red))
+      U_T = np.reshape(U_T,[d_bare*d_bare],order='F')
+      #P_DressedTimeEvol[r,m,:] = np.power(np.abs(U_T),2)
+
 
 # DEALLOCATE ALL ARRAYS
 openmmf.deallocateall(id)

@@ -247,4 +247,4 @@ build/MultimodeFloquet.o:src/MultimodeFloquet.f90
 ############################
 
 clean:
-	rm build/*.o ./*mod  include/*.mod lib/*.a 
+	rm build/*.o ./*mod  include/*.mod lib/*.a lib/*.so

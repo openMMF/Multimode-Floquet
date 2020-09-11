@@ -45,14 +45,14 @@ field[1].phi_x = 0.0
 field[1].phi_y = 0.0
 field[1].phi_z = 0.0
 field[1].omega = 1.0
-field[1].N_Floquet = 8
+field[1].N_Floquet = 1
 
 N_= 128
 M_= 128
 P_AVG      = np.empty([N_,d_bare*d_bare],dtype=np.double)
 P_TimeEvol = np.empty([N_,N_,d_bare*d_bare],dtype=np.double)
 omega = np.linspace(0.2,2.2,N_)
-for m in range(N_):
+for m in [64]:#range(N_):
     # SET NEW FIELD CONFIGURATOIN, E.G.
     field[1].omega = 0.2 + m*2.0/N_
 
@@ -75,10 +75,11 @@ for m in range(N_):
     # EVALUATE THE AVERAGE TRANSITION PROBATILIBIES IN THE BARE BASIS
     openmmf.multimodetransitionavg(h_floquet_size,field,modes_num,U_F,e_floquet,d_bare,p_avg,info)
     P_AVG[m,:] = p_avg
+    print(U_F)
 
     #SET THE INITIAL (T1) AND FINAL TIME (T2)
     t1     = 0.0
-    for r in range(M_):
+    for r in [64]:#range(M_):
         t2 = r*32.0*4.0*np.arctan(1.0)/M_ 
         # EVALUATE THE TIME EVOLUTION OPERATOR
         openmmf.multimodetimeevolutionoperator(h_floquet_size,modes_num,U_F,e_floquet,d_bare,field,t1,t2,U_AUX,info)
@@ -87,7 +88,7 @@ for m in range(N_):
 # DEALLOCATE ALL ARRAYS
 openmmf.deallocateall(id)
 
-
+#%%
 #plotting the avg transition probability
 plt.plot(omega,P_AVG[:,1])
 plt.xlabel('frequency')

@@ -162,12 +162,13 @@ def multimodefloquetmatrix_sp(id,modes_num,fields,info):
     id_p              = ctypes.pointer(id)
     nm                = c_int(modes_num.size)
     total_frequencies = c_int(np.sum(modes_num))    
-    info              = c_int(info)
+    #info              = c_int(info)
+    info              = c_int(int(6))
     modes_num_p       = modes_num.ctypes.data_as(POINTER(c_int))
     fields_p          = ctypes.pointer(fields)
-    h_floquet_size    = np.zeros([3],dtype=np.int32)
+    h_floquet_size    = np.zeros([4],dtype=np.int32)
     h_floquet_size_p  = h_floquet_size.ctypes.data_as(POINTER(c_int))
-    #h_floquet_size =    openmmfC.multimodefloquetmatrix_python_sp_c_(id_p,ctypes.byref(nm),ctypes.byref(total_frequencies),modes_num_p,fields_p,ctypes.byref(info))
+
     openmmfC.multimodefloquetmatrix_python_sp_c_(id_p,ctypes.byref(nm),ctypes.byref(total_frequencies),modes_num_p,fields_p,h_floquet_size_p,ctypes.byref(info))
     return h_floquet_size
 
@@ -183,7 +184,7 @@ def get_h_floquet_sp(h_floquet_size, info):
     VALUES_p          =    VALUES.ctypes.data_as(POINTER(c_dcmplx))
     ROW_INDEX_p       = ROW_INDEX.ctypes.data_as(POINTER(c_int))
     COLUMN_p          =    COLUMN.ctypes.data_as(POINTER(c_int))
-    
+        
     openmmfC.get_h_floquet_sp_c_(h_floquet_size_p,VALUES_p,ROW_INDEX_p,COLUMN_p,ctypes.byref(info))
     #openmmfC.get_h_floquet_sp_c_(h_floquet_size_p,VALUES_p)
 
@@ -265,9 +266,9 @@ def multimodemicromotion(id,h_floquet_size,modes_num,U_F,e_floquet,d_bare,fields
 # OF THE MICROMOTION OPERATOR, WHICH IS STORE IN U_F.
 #===================================================================
 def multimodetimeevolutionoperator(h_floquet_size,modes_num,U_F,e_floquet,d_bare,fields,t1,t2,U_AUX,info):
-    d_bare = c_int(d_bare)
-    t1     = c_double(t1)
-    t2     = c_double(t2)
+    d_bare         = c_int(d_bare)
+    t1             = c_double(t1)
+    t2             = c_double(t2)
     info           = c_int(info)
     nm             = c_int(modes_num.size)
     h_floquet_size = c_int(h_floquet_size)        

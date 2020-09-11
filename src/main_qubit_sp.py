@@ -9,8 +9,12 @@ Created on Mon Sep  7 11:03:08 2020
 
 import numpy as np
 
+from scipy import sparse
 import openmmf as openmmf
 import matplotlib.pyplot as plt
+
+from scipy.sparse.linalg import eigsh,eigs
+from scipy.linalg import eig
 
 
 # INITIALISE THE DATA TYPE
@@ -47,55 +51,62 @@ field[1].phi_z = 0.0
 field[1].omega = 1.0
 field[1].N_Floquet = 8
 
-N_= 1#28
-M_= 1#28
+N_= 128
+M_= 128
+
 P_AVG      = np.empty([N_,d_bare*d_bare],dtype=np.double)
-P_TimeEvol = np.empty([N_,N_,d_bare*d_bare],dtype=np.double)
-omega = np.linspace(0.2,2.2,N_)
+P_TimeEvol = np.empty([N_,M_,d_bare*d_bare],dtype=np.double)
+omega      = np.linspace(0.2,2.2,N_)
+
 for m in range(N_):
     # SET NEW FIELD CONFIGURATOIN, E.G.
     field[1].omega = 0.2 + m*2.0/N_
 
     # SET THE HAMILTONIAN COMPONENTS    
     openmmf.sethamiltoniancomponents(id,modes_num,field,info)
+    
 
     # BUILD THE MULTIMODE FLOQUET MATRIX
-    
     h_floquet_size = openmmf.multimodefloquetmatrix_sp(id,modes_num,field,info)
-    values,row_index,column = openmmf.get_h_floquet_sp(h_floquet_size,info)
-    print(h_floquet_size)
-    print(values)
-    print(row_index)
-    print(column)
-#    
-#    e_l = np.double(-40.0);
-#    e_r = np.double( 40.0);
-#
+    # h_floquet_size is a numpy.array instance with four components with information 
+    # about the sparse rep. of the multimode Floquet Hamiltonian 
+    # h_floquet_size[0]: number of values different from zero
+    # h_floquet_size[1]: Row positions
+    # h_floquet_size[2]: Column positions
+    # h_floquet_size[3]: Dimension of the multimiod Floquet Hamiltonian
+
+    # Here we get the value (V), row (I), column (J) represetnation of the multimode Floquet Hamiltonian
+    V,I,J = openmmf.get_h_floquet_sp(h_floquet_size,info)
+    
+    #We use V,I,J to build a sparse coordinate matrix
+    H_F            = sparse.coo_matrix((V,(J,I)),shape=(h_floquet_size[3],h_floquet_size[3]))
+    # 
+    e_floquet, U_F = eig(H_F.toarray())
+    
+    #print(U_F)    
+
 #    # ALLOCATE ARRAYS FOR FLOQUET ENERGIES (E_FLOQUET),  MICROMOTION (U_F),
 #    # TIME-AVERAGE TRANSITION PROBABILITY (P_AVG), AND AUXILIAR MATRIX (U_AUX)
-#    e_floquet = np.zeros(h_floquet_size,dtype=np.double)
-#    U_F       = np.zeros(h_floquet_size*h_floquet_size,dtype=np.complex)
-#    p_avg     = np.zeros(id.d_bare*id.d_bare,dtype=np.double)
-#    U_AUX     = np.zeros(id.d_bare*id.d_bare,dtype=np.complex)
-#
-#    # DIAGONALISE THE MULTIMODE FLOQUET MATRIX
-#    #openmmf.mklsparse_fulleigenvalues(h_floquet_size,U_F,e_floquet,e_l,e_r,info)
-#    #print(e_floquet)
+    p_avg     = np.zeros(id.d_bare*id.d_bare,dtype=np.double)
+    U_AUX     = np.zeros(id.d_bare*id.d_bare,dtype=np.complex)
 #
 #    # EVALUATE THE AVERAGE TRANSITION PROBATILIBIES IN THE BARE BASIS
-#    #openmmf.multimodetransitionavg(h_floquet_size,field,modes_num,U_F,e_floquet,d_bare,p_avg,info)
-#    P_AVG[m,:] = p_avg
+    openmmf.multimodetransitionavg(h_floquet_size[3],field,modes_num,U_F,e_floquet,d_bare,p_avg,info)
+
+ 
+    P_AVG[m,:] = p_avg
 #
 #    #SET THE INITIAL (T1) AND FINAL TIME (T2)
-#    t1     = 0.0
-#    for r in range(M_):
-#        t2 = r*32.0*4.0*np.arctan(1.0)/M_ 
+    t1     = 0.0
+    for r in range(M_):
+        t2 = r*32.0*4.0*np.arctan(1.0)/M_ 
 #        # EVALUATE THE TIME EVOLUTION OPERATOR
-#        #openmmf.multimodetimeevolutionoperator(h_floquet_size,modes_num,U_F,e_floquet,d_bare,field,t1,t2,U_AUX,info)
-#        P_TimeEvol[m,r,:] = np.power(np.abs(U_AUX),2)
+        openmmf.multimodetimeevolutionoperator(h_floquet_size[3],modes_num,U_F,e_floquet,d_bare,field,t1,t2,U_AUX,info)
+        P_TimeEvol[m,r,:] = np.power(np.abs(U_AUX),2)
 
 # DEALLOCATE ALL ARRAYS
 openmmf.deallocateall(id)
+
 #%%
 
 #plotting the avg transition probability

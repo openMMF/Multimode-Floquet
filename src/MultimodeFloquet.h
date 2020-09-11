@@ -37,6 +37,7 @@ extern "C" {
   //int  multimodefloquetmatrix_python_sp_c_(atom_c *id,int * nm, int * total_frequencies,int * modes_num,mode_c * fields, int * info);
   void multimodefloquetmatrix_python_sp_c_(atom_c *id,int * nm, int * total_frequencies,int * modes_num,mode_c * fields, int * h_f,int * info);
   void get_h_floquet_sp_c_(int * h_f, dcmplx * values, int * row_index, int * column, int * info);
+  //void get_h_floquet_sp_c_(int * h_f, int * row_index, int * column, int * info);
 
   
   // CALCULATE THE SPECTRUM OF THE FLOQUET HAMILTONIAN

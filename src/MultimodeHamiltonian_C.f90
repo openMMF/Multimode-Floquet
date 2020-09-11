@@ -105,3 +105,22 @@ FUNCTION MULTIMODEFLOQUETMATRIX_C_PYTHON(ATOM__C,NM,NF,MODES_NUM,FIELD_C,INFO) R
      MMF_DIM = 0
   END IF
 END FUNCTION MULTIMODEFLOQUETMATRIX_C_PYTHON
+
+
+SUBROUTINE GET_H_FLOQUET_C(h_floquet_size_,H_FLOQUET_C_,INFO)
+  
+  USE ARRAYS
+  USE MODES_4F          ! DEFINED IN modes_C.f90, declares atom_,coupling, values__, row_index__, column__
+
+  IMPLICIT NONE
+  INTEGER,                                               INTENT(IN)  :: h_floquet_size_
+  COMPLEX*16,DIMENSION(h_floquet_size_,h_floquet_size_), INTENT(OUT) :: H_FLOQUET_C_
+  INTEGER,                                               INTENT(INOUT) :: INFO
+
+  H_FLOQUET_C_    = H_FLOQUET
+  IF(INFO.EQ.-1) THEN ! THIS MEANS WE SHOULD USE AN EXTERNAL TOOL TO DIAGONALIZSE THE HAMILTONIAN
+     IF(ALLOCATED(H_FLOQUET)) DEALLOCATE(H_FLOQUET) 
+     INFO = 0
+  END IF
+
+END SUBROUTINE GET_H_FLOQUET_C
