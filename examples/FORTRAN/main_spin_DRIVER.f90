@@ -26,7 +26,7 @@ PROGRAM MULTIMODEFLOQUET
 
 
 
-!  OPEN(UNIT=3,FILE="spin_oscillation_DRIVER.dat",ACTION="WRITE")
+  OPEN(UNIT=3,FILE="spin_oscillation_DRIVER.dat",ACTION="WRITE")
 
 
   INFO = 0
@@ -69,7 +69,7 @@ PROGRAM MULTIMODEFLOQUET
   FIELDS(2)%omega = 1.0
   FIELDS(2)%N_Floquet = 20
 
-  DO m=1,1!28
+  DO m=1,128
 
      ! --- SET DRIVING PARAMETERS 
      FIELDS(2)%omega = 0.2 + (m-1)*2.0/128

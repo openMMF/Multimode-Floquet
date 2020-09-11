@@ -21,6 +21,7 @@ PROGRAM MULTIMODEFLOQUET
   DOUBLE PRECISION                              :: T1,T2
 
   DOUBLE PRECISION m_, eta,  phi1,  phi2 ,  gamma, dt
+  INTEGER N_
 
 
 
@@ -105,8 +106,9 @@ PROGRAM MULTIMODEFLOQUET
   CALL TIMEEVOLUTIONOPERATOR(ID,D_BARE,SIZE(MODES_NUM,1),SIZE(MODES_NUM,1),MODES_NUM,FIELDS,T1,T2,U_dt,INFO) 
 
   dt = T2
-  DO r=1,1024
-     T2 = (r-1.0)*10.0E4/1024
+  N_ = 1024
+  DO r=1,N_
+     T2 = (r-1.0)*10.0E4/N_
      CALL TIMEEVOLUTIONOPERATOR(ID,D_BARE,SIZE(MODES_NUM,1),TOTAL_FREQUENCIES,MODES_NUM,FIELDS,T1,T2,U_AUX,INFO) 
      dh2_dt = 2.0*eta*FIELDS(2)%OMEGA*(                 J_x*cos(fields(2)%omega*T2+phi1) + J_z*sin(fields(2)%omega*T2+phi1))
      dh3_dt = 2.0*eta*FIELDS(3)%OMEGA*(DCMPLX(0.0,-1.0)*J_y*cos(fields(3)%omega*T2+phi2) + J_z*sin(fields(3)%omega*T2+phi2))

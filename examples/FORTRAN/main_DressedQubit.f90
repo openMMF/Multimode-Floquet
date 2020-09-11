@@ -145,14 +145,14 @@ PROGRAM MULTIMODEFLOQUET
   ALLOCATE(U_F1_red(ID%D_BARE,ID%D_BARE))
   ALLOCATE(U_F2_red(ID%D_BARE,ID%D_BARE))
 
-  N_ = 1!64
-  M_ = 128!512
-  DO r=1,1 !N_
+  N_ = 16!64
+  M_ = 16!128
+  DO r=1,N_
 
 !!$!========= FIND THE MULTIMODE FLOQUET SPECTRUM 
       
 
-     FIELDS(3)%omega     = FIELDS(1)%Z - FIELDS(2)%X/2.0! + 2.0*(r-1)*FIELDS(2)%X/64
+     FIELDS(3)%omega     = FIELDS(1)%Z - FIELDS(2)%X + 2.0*(r-1)*FIELDS(2)%X/64
      CALL MULTIMODEFLOQUETMATRIX(ID,size(modes_num,1),total_frequencies,MODES_NUM,FIELDS,INFO)          
      ALLOCATE(E_FLOQUET(SIZE(H_FLOQUET,1)))
      E_FLOQUET = 0.0  
@@ -164,7 +164,7 @@ PROGRAM MULTIMODEFLOQUET
      ! ===== EVALUATE TIME-EVOLUTION OPERATOR 
 
      T1 = 0.0
-     DO m=65,65!1,M_+1
+     DO m=1,M_+1
         T2 = (m-1)*16.0*100.0/128.0
 
 
@@ -174,7 +174,7 @@ PROGRAM MULTIMODEFLOQUET
         CALL MULTIMODETIMEEVOLUTINOPERATOR(SIZE(U_F,1),SIZE(MODES_NUM,1),MODES_NUM,U_F,E_FLOQUET,ID%D_BARE,FIELDS,T1,T2,U_AUX,INFO) 
         WRITE(3,*) FIELDS(3)%OMEGA,t2,ABS(U_AUX)**2
         !CALL WRITE_MATRIX(ABS(U_AUX)**2)
-        write(*,*) U_AUX
+        !write(*,*) U_AUX
 
 !!$     !=================================================================================
 !!$     !== TRANSFORM THE TIME-EVOLUTION OPERATOR TO THE DRESSED BASIS
@@ -183,14 +183,14 @@ PROGRAM MULTIMODEFLOQUET
 !!$     !== BUILD THE TIME-DEPENDENT TRANSFORMATIONO BETWEEN THE BARE AND THE RF DRESSED BASIS       
         info =0         
         CALL MULTIMODEMICROMOTION(ID,SIZE(U_FD,1),NM_,MODES_NUM_,U_FD,E_DRESSED,ID%D_BARE,FIELDS_,T1,U_F1_red,INFO)
-        write(*,*) U_F1_red
+        !write(*,*) U_F1_red
         CALL MULTIMODEMICROMOTION(ID,SIZE(U_FD,1),NM_,MODES_NUM_,U_FD,E_DRESSED,ID%D_BARE,FIELDS_,T2,U_F2_red,INFO) 
-        write(*,*) U_F2_red
+        !write(*,*) U_F2_red
 
 
         ! ---- CALCULATE THE TIME-EVOLUTION OPERATOR IN THE DRESSED BASIS USING THE PREVIOUSLY CALCULATED IN THE BARE BASIS
-        WRITE(*,*)
-        WRITE(*,*) MATMUL(U_AUX,U_F1_red)
+        !WRITE(*,*)
+        !WRITE(*,*) MATMUL(U_AUX,U_F1_red)
         U_AUX = MATMUL(TRANSPOSE(CONJG(U_F2_red)),MATMUL(U_AUX,U_F1_red)) 
         WRITE(4,*) FIELDS(3)%OMEGA,t2,ABS(U_AUX)**2
         !write(*,*) MATMUL(U_AUX,U_F1_red)

@@ -32,7 +32,7 @@ PROGRAM MULTIMODEFLOQUET
   ! ===================================================
 
 
-
+  INTEGER M_,N_
  
   OPEN(UNIT=3,file="qubit_bareoscillation_DRIVER.dat", action="write")
   OPEN(UNIT=4,file="qubit_dressedoscillation_DRIVER.dat", action="write")
@@ -153,17 +153,19 @@ PROGRAM MULTIMODEFLOQUET
   !   CALL WRITE_MATRIX(REAL(FIELDS(m)%V))
   !END DO
 
-  DO r=1,64
+  N_ = 16
+  M_ = 16
+  DO r=1,N_
 
 !!$!========= FIND THE MULTIMODE FLOQUET SPECTRUM 
       
-     FIELDS(3)%omega     = FIELDS(2)%X/4.0 + (r-1)*FIELDS(2)%X/64
+     FIELDS(3)%omega     = FIELDS(2)%X/4.0 + (r-1)*FIELDS(2)%X/N_
      
      ! ===== EVALUATE TIME-EVOLUTION OPERATOR 
 
      T1 = 0.0
-     DO m=64,64!128,128         
-        T2 = (m-1)*16.0*100.0/128
+     DO m=1,M_         
+        T2 = (m-1)*16.0*100.0/M_
         
         ! ===== EVALUATE TIME-EVOLUTION OPERATOR  IN THE BARE BASIS
         CALL TIMEEVOLUTIONOPERATOR(ID,D_BARE,SIZE(MODES_NUM,1),SIZE(MODES_NUM,1),MODES_NUM,FIELDS,T1,T2,U_AUX,INFO) 

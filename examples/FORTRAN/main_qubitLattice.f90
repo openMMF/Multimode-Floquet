@@ -21,7 +21,7 @@ PROGRAM MULTIMODEFLOQUET
   DOUBLE PRECISION                              :: T1,T2
 
   DOUBLE PRECISION m_, eta,  phi1,  phi2 ,  gamma, dt,TotalTime,W2_0,W3_0
-
+  INTEGER N_
 
 
 
@@ -126,7 +126,8 @@ PROGRAM MULTIMODEFLOQUET
      CALL MULTIMODETIMEEVOLUTINOPERATOR(SIZE(U_F,1),SIZE(MODES_NUM,1),MODES_NUM,U_F,E_FLOQUET,ID%D_BARE,FIELDS,T1,T2,U_dt,INFO) 
      U_AUX = Qubit_IDENTITY
      TotalTime = 10000.0
-     DO r=1,256*4096*8!int(TotalTime/dt)
+     N_ = int(TotalTime/dt)
+     DO r=1,N_
         dh2 = 2.0*eta*FIELDS(2)%OMEGA*(                 J_x*cos(fields(2)%omega*T2+phi1) + J_z*sin(fields(2)%omega*T2+phi1))!*dt
         dh3 = 2.0*eta*FIELDS(3)%OMEGA*(DCMPLX(0.0,-1.0)*J_y*cos(fields(3)%omega*T2+phi2) + J_z*sin(fields(3)%omega*T2+phi2))!*dt
         U_AUX = MATMUL(U_dt,U_AUX)

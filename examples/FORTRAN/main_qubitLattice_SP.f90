@@ -153,11 +153,11 @@ PROGRAM MULTIMODEFLOQUET
   !DEALLOCATE(U_F)
 
   T1 = 0.0
-  dt = 0.0001
+  dt = 1.0E-4
   T2 = 0.0
   W2 = 0.0
   W3 = 0.0
-  DO r=1,256
+  DO r=1,256,64
      T2 = T2 + dt
      CALL MULTIMODETIMEEVOLUTINOPERATOR(SIZE(U_F,1),SIZE(MODES_NUM,1),MODES_NUM,U_F,E_FLOQUET,ID%D_BARE,FIELDS,T1,T2,U_AUX,INFO) 
      dh2 = 2.0*eta*FIELDS(2)%OMEGA*(                 J_x*cos(fields(2)%omega*T2+phi1) + J_z*sin(fields(2)%omega*T2+phi1))*dt

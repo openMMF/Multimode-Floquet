@@ -162,7 +162,7 @@ PROGRAM MULTIMODEFLOQUET
      ! ===== EVALUATE TIME-EVOLUTION OPERATOR 
 
      T1 = 0.0
-     DO m=1,512,4
+     DO m=1,512,64
         T2 = (m-1)*16.0*100.0/128.0
 
 

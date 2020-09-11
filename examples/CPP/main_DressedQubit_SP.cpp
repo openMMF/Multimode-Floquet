@@ -22,7 +22,7 @@ int main(){
   char op[]="N";
 
 
-  int r,m,l,i,j;
+  int r,m,l,i,j,n_,m_;
   int d_bare,total_frequencies,sp;
 
   double t1,t2,e_l,e_r;
@@ -147,7 +147,10 @@ int main(){
   
   // ! ========= FIND THE MULTIMODE FLOQUET SPECTRUM 
 
-  for(r=0;r<1;r++){
+  n_ = 16;
+  m_ = 16;
+
+  for(r=0;r<n_;r++){
 
     // ====== SET THE DRESSING FREQUENCY
 
@@ -179,7 +182,7 @@ int main(){
     // ======= EVALUATE TIME-EVOLUTION OPERATOR IN THE BARE BASIS       
     t1 = 0.0;
     t2 = 0.0;
-    for(m=0;m<1;m++){
+    for(m=0;m<m_;m++){
       t2 = m*16.0*100/128.0;
       multimodetimeevolutionoperator_c_(&h_floquet_size,&nm,modes_num,U_F,e_floquet,&d_bare,fields,&t1,&t2,U_AUX,&info);	
 

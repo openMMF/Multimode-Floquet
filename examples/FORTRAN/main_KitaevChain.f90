@@ -130,7 +130,7 @@ PROGRAM MULTIMODEFLOQUET
 !  write(*,*)
 !  write(*,*)
   
-  CALL WRITE_MATRIX(REAL(FIELDS(2)%V))
+!  CALL WRITE_MATRIX(REAL(FIELDS(2)%V))
   DO m=1,256
      ! --- SET DRIVING PARAMETERS 
      FIELDS(2)%omega = 0.2 + (m-1.0)*0.6/256.0

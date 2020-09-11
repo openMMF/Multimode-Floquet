@@ -171,7 +171,7 @@ PROGRAM MULTIMODEFLOQUET
   ALLOCATE(U_F2_red(ID%D_BARE,ID%D_BARE))
 
 
-  DO r=1,266
+  DO r=1,1
 !     read(1,*) freq,pop
      
 !!$!========= FIND THE MULTIMODE FLOQUET SPECTRUM 
