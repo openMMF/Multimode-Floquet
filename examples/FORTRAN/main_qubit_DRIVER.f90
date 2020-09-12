@@ -31,7 +31,7 @@ PROGRAM MULTIMODEFLOQUET
 
   INFO = 0
   CALL FLOQUETINIT(ID,'qubit',INFO)  
-  WRITE(*,*) total_states_lsi
+!  WRITE(*,*) total_states_lsi
 
   D_BARE = ID%D_BARE
   ALLOCATE(P_AVG(D_BARE,D_BARE))

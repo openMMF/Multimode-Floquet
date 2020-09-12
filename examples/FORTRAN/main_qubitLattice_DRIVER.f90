@@ -78,7 +78,7 @@ PROGRAM MULTIMODEFLOQUET
   FIELDS(2)%phi_y = 0.0
   FIELDS(2)%phi_z = phi1 
   FIELDS(2)%omega = 0.1
-  FIELDS(2)%N_Floquet = 16
+  FIELDS(2)%N_Floquet = 2
 
   FIELDS(3)%X     =  0.0
   FIELDS(3)%Y     =  2.0*eta
@@ -87,7 +87,7 @@ PROGRAM MULTIMODEFLOQUET
   FIELDS(3)%phi_y = phi2 - pi/2
   FIELDS(3)%phi_z = phi2
   FIELDS(3)%omega = gamma*FIELDS(2)%OMEGA
-  FIELDS(3)%N_Floquet = 16
+  FIELDS(3)%N_Floquet = 2
  
   DO m=1,TOTAL_FREQUENCIES    
      FIELDS(m)%X = FIELDS(m)%X*exp(DCMPLX(0.0,1.0)*FIELDS(m)%phi_x)

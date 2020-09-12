@@ -146,7 +146,9 @@ int main(){
   
   
   //==== ALLOCATE ARRAYS FOR THE MICROMOTION OPERATORS IN THE EXTENDED AND ORIGINAL HILBERT SPACES.
-   
+  
+
+ 
   dcmplx * U_F1_red = new dcmplx [d_bare*d_bare];                   // selection of a single dressed manifold at time t1
   dcmplx * U_F2_red = new dcmplx [d_bare*d_bare];                   // selection of a single dressed manifold at time t2
   dcmplx * U_T      = new dcmplx [d_bare*d_bare]; // U_aux

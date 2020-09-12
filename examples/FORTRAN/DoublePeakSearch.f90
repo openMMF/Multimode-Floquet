@@ -87,7 +87,7 @@ PROGRAM MULTIMODEFLOQUET
   FIELDS(2)%phi_y     = 0.0
   FIELDS(2)%phi_z     = 0.0
   FIELDS(2)%omega     = 2.0*pi*2.27E6
-  FIELDS(2)%N_Floquet = 6
+  FIELDS(2)%N_Floquet = 2
   
   FIELDS(3)%X         = 2.0E-7
   FIELDS(3)%Y         = 2.0E-7
@@ -202,7 +202,7 @@ PROGRAM MULTIMODEFLOQUET
         T2 = A*T2/hbar
         ! ===== EVALUATE TIME-EVOLUTION OPERATOR  IN THE BARE BASIS
         CALL TIMEEVOLUTIONOPERATOR(ID,D_BARE,SIZE(MODES_NUM,1),TOTAL_FREQUENCIES,MODES_NUM,FIELDS,T1,T2,U_AUX,INFO) 
-        !WRITE(3,*) (FIELDS(3)%OMEGA*A/HBAR)/(2*pi),1-abs(u_aux(3,3))**2
+        WRITE(3,*) (FIELDS(3)%OMEGA*A/HBAR)/(2*pi),1-abs(u_aux(3,3))**2
         
 !!$     !=================================================================================
 !!$     !== TRANSFORM THE TIME-EVOLUTION OPERATOR TO THE DRESSED BASIS
@@ -218,14 +218,14 @@ PROGRAM MULTIMODEFLOQUET
 
         ! ---- CALCULATE THE TIME-EVOLUTION OPERATOR IN THE DRESSED BASIS USING THE PREVIOUSLY CALCULATED IN THE BARE BASIS
         U_AUX = MATMUL(TRANSPOSE(CONJG(U_F2_red)),MATMUL(U_AUX,U_F1_red)) ! HERE, P_AUX SHOULD BE OF DIMENSION D_BARE X D_BARE
-        WRITE(*,*) REAL(1E4*FIELDS(1)%Z), 1E-6*((FIELDs(3)%OMEGA - 2.0 -fields(2)%omega)*A/hbar )/(2*pi),1-ABS(U_AUX(3,3))**2,&
+        WRITE(4,*) REAL(1E4*FIELDS(1)%Z), 1E-6*((FIELDs(3)%OMEGA - 2.0 -fields(2)%omega)*A/hbar )/(2*pi),1-ABS(U_AUX(3,3))**2,&
              & 1-ABS(U_AUX(2,2))**2, 1-ABS(U_AUX(1,1))**2
 
 !        WRITE(*,*) FIELDS(3)%OMEGA/(2*pi),t2,ABS(U_AUX)**2
 
      END DO
-     write(*,*)
-     write(*,*)
+     write(4,*)
+     write(4,*)
   END DO
   
 END PROGRAM MULTIMODEFLOQUET

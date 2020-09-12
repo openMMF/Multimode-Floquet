@@ -5,8 +5,9 @@ PROGRAM MULTIMODEFLOQUET
   USE TYPES
   USE SUBINTERFACE
   USE SUBINTERFACE_LAPACK
-  USE FLOQUETINIT_ 
+  !USE FLOQUETINIT_ 
   USE ARRAYS 
+  USE FLOQUETINITINTERFACE
 
 
   IMPLICIT NONE
@@ -27,13 +28,13 @@ PROGRAM MULTIMODEFLOQUET
 
 
   
-!OPEN(UNIT=3,FILE="Hamiltonian_oscillation.dat",ACTION="WRITE")
+OPEN(UNIT=3,FILE="Hamiltonian_oscillation.dat",ACTION="WRITE")
 
 
 
   INFO = 0
   D_BARE = 33
-  CALL FLOQUETINIT('lattice','U',D_BARE,ID,INFO)  
+  CALL FLOQUETINIT(ID,'lattice',1.0D0*D_BARE,INFO)  
 
   ALLOCATE(E_BARE(D_BARE))
   ALLOCATE(H_BARE(D_BARE,D_BARE))
@@ -133,15 +134,15 @@ PROGRAM MULTIMODEFLOQUET
 !  write(*,*)
 !  write(*,*)
   
-  CALL WRITE_MATRIX(REAL(FIELDS(2)%V))
+  !CALL WRITE_MATRIX(REAL(FIELDS(2)%V))
 
-  DO m=1,256
+  DO m=1,256,64
      ! --- SET DRIVING PARAMETERS 
      FIELDS(2)%omega = 0.2 + (m-1.0)*0.6/256.0
      !write(*,*) total_frequencies,ID%ID_SYSTEM
      !--- FIND THE MULTIMODE FLOQUET SPECTRUM 
      CALL MULTIMODEFLOQUETMATRIX(ID,size(modes_num,1),total_frequencies,MODES_NUM,FIELDS,INFO)
-     write(*,*)
+     !write(*,*)
 !     write(*,*)
 
      !call write_matrix(real(h_floquet))
@@ -158,7 +159,7 @@ PROGRAM MULTIMODEFLOQUET
      U_F = H_FLOQUET ! FOURIER DECOMPOSITION OF THE STATES DRESSED BY MODE NUMBER 
      DEALLOCATE(H_FLOQUET)
      DO r=1,SIZE(U_F,1)
-        WRITE(*,*) FIELDS(2)%omega,r,E_FLOQUET(r)
+        WRITE(3,*) FIELDS(2)%omega,r,E_FLOQUET(r)
      END DO
      
      DEALLOCATE(E_FLOQUET)

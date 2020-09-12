@@ -8,7 +8,6 @@ PROGRAM MULTIMODEFLOQUET
   USE ARRAYS 
   USE FLOQUETINITINTERFACE
 
-
   IMPLICIT NONE
   TYPE(ATOM)                                       ID
   TYPE(MODE),       DIMENSION(:),   ALLOCATABLE :: FIELDS
@@ -19,7 +18,6 @@ PROGRAM MULTIMODEFLOQUET
   COMPLEX*16,       DIMENSION(:,:), ALLOCATABLE :: H__,U_F,U_AUX,U_B2D,U_F1_red,U_F2_red
   DOUBLE PRECISION, DIMENSION(:,:), ALLOCATABLE :: P_AVG
   DOUBLE PRECISION                              :: T1,T2
-
  
   ! ===================================================
   !PARAMETERS REQUIRED TO DEFINE THE DRESSED BASIS
@@ -79,7 +77,7 @@ PROGRAM MULTIMODEFLOQUET
   FIELDS(2)%phi_y     = 0.0
   FIELDS(2)%phi_z     = 0.0
   FIELDS(2)%omega     = 1.0
-  FIELDS(2)%N_Floquet = 5
+  FIELDS(2)%N_Floquet = 2
   
   FIELDS(3)%X         = 0.125*FIELDS(2)%X/2.0
   FIELDS(3)%Y         = 0.0
@@ -88,7 +86,7 @@ PROGRAM MULTIMODEFLOQUET
   FIELDS(3)%phi_y     = 0.0
   FIELDS(3)%phi_z     = 0.0
   FIELDS(3)%omega     = FIELDS(2)%X/2.0
-  FIELDS(3)%N_Floquet = 7
+  FIELDS(3)%N_Floquet = 2
 
   D_MULTIFLOQUET = ID%D_BARE
   DO r=1,TOTAL_FREQUENCIES
@@ -98,7 +96,6 @@ PROGRAM MULTIMODEFLOQUET
   !=================================================================================
   !==== DEFINITION OF THE DRESSING FIELDS AND DRESSED BASIS AND VARIABLES NEEDED TO DEFINE THE MICROMOTION OPERATOR
   !=================================================================================
-
   DRESSINGFIELDS = 2   ! NUMBER OF DRESSING FIELDS
   ALLOCATE(DRESSINGFIELDS_INDICES(DRESSINGFIELDS)) ! ARRAY THAT TELL US WHICH OF THE FIELD DEFINED ABOVE ARE THE DRESSING ONES
   DRESSINGFIELDS_INDICES(1) = 1 
@@ -107,12 +104,14 @@ PROGRAM MULTIMODEFLOQUET
   DO m=2,DRESSINGFIELDS
      DRESSINGFLOQUETDIMENSION = DRESSINGFLOQUETDIMENSION*(2*FIELDS(DRESSINGFIELDS_INDICES(m))%N_FLOQUET + 1 )
   END DO
+
   ALLOCATE(U_FD(DRESSINGFLOQUETDIMENSION,DRESSINGFLOQUETDIMENSION))
   ALLOCATE(E_DRESSED(DRESSINGFLOQUETDIMENSION))
   CALL DRESSEDBASIS_SUBSET(ID,DRESSINGFLOQUETDIMENSION,DRESSINGFIELDS,SIZE(MODES_NUM,1),DRESSINGFIELDS_INDICES,MODES_NUM,FIELDS,&
        & U_FD,E_DRESSED,INFO) ! U_FD IS THE TRANSFORMATION OPERATOR BETWEEN THE BARE AND DRESSED BASIS, BOTH EXTENDED.
   !CALL WRITE_MATRIX(ABS(U_FD)**2)
 !  write(*,*) E_DRESSED,SIZE(E_DRESSED,1)
+
   NM_ = DRESSINGFIELDS  ! NUMBER OF DRESSING MODES
   ALLOCATE(MODES_NUM_(NM_))
   DO r=1,NM_
@@ -134,8 +133,6 @@ PROGRAM MULTIMODEFLOQUET
   END DO
   
   
-
-
   !=================================================================================
   !== MULTIMODE FLOQUET DRESSED BASIS AND TIME-EVOLUTION OPERATOR IN THE BARE BASIS
   !=================================================================================
@@ -145,16 +142,21 @@ PROGRAM MULTIMODEFLOQUET
   ALLOCATE(U_F1_red(ID%D_BARE,ID%D_BARE))
   ALLOCATE(U_F2_red(ID%D_BARE,ID%D_BARE))
 
-  N_ = 16!64
-  M_ = 16!128
+  N_ = 64
+  M_ = 64
+
   DO r=1,N_
 
 !!$!========= FIND THE MULTIMODE FLOQUET SPECTRUM 
       
 
-     FIELDS(3)%omega     = FIELDS(1)%Z - FIELDS(2)%X + 2.0*(r-1)*FIELDS(2)%X/64
+     FIELDS(3)%omega     = FIELDS(1)%Z - FIELDS(2)%X + 2.0*(r-1)*FIELDS(2)%X/N_
      CALL MULTIMODEFLOQUETMATRIX(ID,size(modes_num,1),total_frequencies,MODES_NUM,FIELDS,INFO)          
-     ALLOCATE(E_FLOQUET(SIZE(H_FLOQUET,1)))
+     IF(ALLOCATED(E_FLOQUET)) THEN
+     
+     ELSE
+        ALLOCATE(E_FLOQUET(SIZE(H_FLOQUET,1)))
+     END IF
      E_FLOQUET = 0.0  
      U_F = H_FLOQUET ! FOURIER DECOMPOSITION OF THE STATES DRESSED BY MODE NUMBER 
      CALL LAPACK_FULLEIGENVALUES(U_F,SIZE(U_F,1),E_FLOQUET,INFO)
@@ -165,39 +167,35 @@ PROGRAM MULTIMODEFLOQUET
 
      T1 = 0.0
      DO m=1,M_+1
-        T2 = (m-1)*16.0*100.0/128.0
+        T2 = (m-1)*64000.0/N_
 
 
         
         ! ===== EVALUATE TIME-EVOLUTION OPERATOR  IN THE BARE BASIS
         U_aux = 0.0
+        !write(*,*) E_FLOQUET
         CALL MULTIMODETIMEEVOLUTINOPERATOR(SIZE(U_F,1),SIZE(MODES_NUM,1),MODES_NUM,U_F,E_FLOQUET,ID%D_BARE,FIELDS,T1,T2,U_AUX,INFO) 
         WRITE(3,*) FIELDS(3)%OMEGA,t2,ABS(U_AUX)**2
-        !CALL WRITE_MATRIX(ABS(U_AUX)**2)
-        !write(*,*) U_AUX
+        !write(*,*) abs(U_AUX)**2
 
-!!$     !=================================================================================
-!!$     !== TRANSFORM THE TIME-EVOLUTION OPERATOR TO THE DRESSED BASIS
-!!$     !=================================================================================
-!!$        
-!!$     !== BUILD THE TIME-DEPENDENT TRANSFORMATIONO BETWEEN THE BARE AND THE RF DRESSED BASIS       
+        !=================================================================================
+        !== TRANSFORM THE TIME-EVOLUTION OPERATOR TO THE DRESSED BASIS
+        !=================================================================================
+        
+        !== BUILD THE TIME-DEPENDENT TRANSFORMATIONO BETWEEN THE BARE AND THE RF DRESSED BASIS       
+
         info =0         
         CALL MULTIMODEMICROMOTION(ID,SIZE(U_FD,1),NM_,MODES_NUM_,U_FD,E_DRESSED,ID%D_BARE,FIELDS_,T1,U_F1_red,INFO)
-        !write(*,*) U_F1_red
+        !write(*,*) ABS(U_F1_red)**2
         CALL MULTIMODEMICROMOTION(ID,SIZE(U_FD,1),NM_,MODES_NUM_,U_FD,E_DRESSED,ID%D_BARE,FIELDS_,T2,U_F2_red,INFO) 
-        !write(*,*) U_F2_red
-
+        !write(*,*) ABS(U_F2_red)**2
 
         ! ---- CALCULATE THE TIME-EVOLUTION OPERATOR IN THE DRESSED BASIS USING THE PREVIOUSLY CALCULATED IN THE BARE BASIS
-        !WRITE(*,*)
-        !WRITE(*,*) MATMUL(U_AUX,U_F1_red)
         U_AUX = MATMUL(TRANSPOSE(CONJG(U_F2_red)),MATMUL(U_AUX,U_F1_red)) 
         WRITE(4,*) FIELDS(3)%OMEGA,t2,ABS(U_AUX)**2
-        !write(*,*) MATMUL(U_AUX,U_F1_red)
-        !CALL WRITE_MATRIX(ABS(U_AUX)**2)
 
      END DO
-!     write(*,*)
+
      DEALLOCATE(E_FLOQUET)
      WRITE(3,*)
      WRITE(4,*)

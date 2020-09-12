@@ -27,33 +27,34 @@ all:  lib lib_lapack all_examples
 all_examples: Example_lib Example_lib_sp Example_lib_c Example_lib_c_sp
 
 
-lib:build/modes.o build/Modules.o build/Modules_release.o build/delta_kr.o build/Floquet.o \
+lib:build/modes.o build/modes_C.o build/Modules.o build/Modules_release.o build/delta_kr.o build/Floquet.o \
  build/I_and_J_representations.o build/F_representation.o build/LapackEigenValues.o \
  build/MKLSparseEigenValues.o build/util.o build/quick-sort-index-table.o build/VarCRSPacking.o \
  build/sparse_utils.o build/MultimodeHamiltonian_SP.o build/MultimodeHamiltonian.o \
  build/MultimodeFloquetTE.o build/MultimodeFloquetTE_DRIVER.o build/MultimodeMicroMotion.o \
  build/MultimodeMicroMotionDressedBasis.o build/MultimodeMicroMotionDressedBasis_C.o \
  build/MultimodeTransitionAVG.o build/MultimodeDressedBasis.o build/MultimodeDressedBasis_SP.o \
- build/util_c.o build/modes_C.o build/Floquet_init_C.o build/MultimodeHamiltonian_SP_C.o  \
+ build/util_c.o build/Floquet_init_C.o build/MultimodeHamiltonian_SP_C.o  \
  build/MultimodeHamiltonian_C.o build/LapackEigenValues_C.o build/MultimodeTransitionAVG_C.o \
  build/MultimodeMicroMotion_C.o build/MultimodeFloquetTE_DRIVER_C.o build/MultimodeFloquetTE_C.o \
  build/MultimodeDressedBasis_C.o build/MultimodeDressedBasis_SP_C.o build/MKLSparseEigenValues_C.o 
 	$(AR) -urv lib/libmultimodefloquet.a build/*.o
 	$(RANLIB) lib/libmultimodefloquet.a
+	$(GF) -shared -fPIC build/*.o -o lib/libmultimodefloquet.so
 	cp *.mod ./include/
-#	cp src/*.h ./include
 
 #build/VarCRSPacking.o build/sparse_utils.o
-lib_lapack :build/modes.o build/Modules.o build/Modules_release.o build/delta_kr.o build/Floquet.o \
+lib_lapack :build/modes.o build/modes_C.o  build/Modules.o build/Modules_release.o build/delta_kr.o build/Floquet.o \
  build/I_and_J_representations.o build/F_representation.o build/LapackEigenValues.o \
- build/util.o build/quick-sort-index-table.o  build/MultimodeHamiltonian.o \
+ build/util.o build/quick-sort-index-table.o build/VarCRSPacking.o \
+ build/sparse_utils.o build/MultimodeHamiltonian.o \
  build/MultimodeFloquetTE.o build/MultimodeFloquetTE_DRIVER.o build/MultimodeMicroMotion.o \
  build/MultimodeMicroMotionDressedBasis.o build/MultimodeMicroMotionDressedBasis_C.o \
  build/MultimodeTransitionAVG.o build/MultimodeDressedBasis.o \
- build/util_c.o build/modes_C.o build/Floquet_init_C.o \
+ build/util_c.o build/Floquet_init_C.o \
  build/MultimodeHamiltonian_C.o build/LapackEigenValues_C.o build/MultimodeTransitionAVG_C.o \
  build/MultimodeMicroMotion_C.o build/MultimodeFloquetTE_DRIVER_C.o build/MultimodeFloquetTE_C.o \
- build/MultimodeDressedBasis_C.o  #build/MKLSparseEigenValues_C.o 
+ build/MultimodeDressedBasis_C.o  build/MKLSparseEigenValues_C.o 
 	$(AR) -urv lib/libmultimodefloquet.a build/*.o
 	$(RANLIB) lib/libmultimodefloquet.a
 	$(GF) -shared -fPIC build/*.o -o lib/libmultimodefloquet.so

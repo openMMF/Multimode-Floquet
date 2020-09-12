@@ -138,7 +138,7 @@ PROGRAM MULTIMODEFLOQUET
   
 !  CALL WRITE_MATRIX(REAL(FIELDS(2)%V))
 
-  DO m=1,512,16
+  DO m=1,512,32
      ! --- SET DRIVING PARAMETERS 
      FIELDS(2)%omega = 0.4 + (m-1.0)*0.4/512.0
      !write(*,*) total_frequencies,ID%ID_SYSTEM

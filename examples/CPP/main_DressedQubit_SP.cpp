@@ -35,7 +35,6 @@ int main(){
 
   info   = 0;
   jtotal = 2;
-  //floquetinit_c(name,manifold,&jtotal,&id,&info);
   floquetinit_c(&id,name,&info);
 
   d_bare = id.d_bare;
@@ -67,14 +66,14 @@ int main(){
   fields[0].omega = 0.0;
   fields[0].N_Floquet = 0;
 
-  fields[1].x     = 0.125;
+  fields[1].x     = 0.125/2.0;
   fields[1].y     = 0.0;
   fields[1].z     = 0.0;
   fields[1].phi_x = 0.0;
   fields[1].phi_y = 0.0;
   fields[1].phi_z = 0.0;
   fields[1].omega = 1.0;
-  fields[1].N_Floquet = 5;
+  fields[1].N_Floquet = 2;
 
   fields[2].x     = 0.125*fields[1].x/2.0;
   fields[2].y     = 0.0;
@@ -83,7 +82,7 @@ int main(){
   fields[2].phi_y = 0.0;
   fields[2].phi_z = 0.0;
   fields[2].omega = real(fields[1].x)/2.0;
-  fields[2].N_Floquet = 6;
+  fields[2].N_Floquet = 2;
 
   //printf("%i %i \n",d_bare,total_frequencies);
 
@@ -104,11 +103,19 @@ int main(){
     dressingfloquetdimension = dressingfloquetdimension*(2*fields[dressingfields_indices[m]].N_Floquet + 1);
   }
   dcmplx * U_FD = new dcmplx [dressingfloquetdimension*dressingfloquetdimension];
+
   double * e_dressed = new double [dressingfloquetdimension];
   
-  // dressedbasis_subset_c_(&id,&dressingfloquetdimension,&dressingfields,&nm,dressingfields_indices,modes_num,fields, U_FD, e_dressed,&info);
   dressedbasis_subset_sp_c_(&id,&dressingfloquetdimension,&dressingfields,&nm,dressingfields_indices,modes_num,fields, U_FD, e_dressed,&info);
   
+
+
+
+
+
+
+
+
   
   int index0 = d_bare*fields[1].N_Floquet;
   
@@ -147,14 +154,14 @@ int main(){
   
   // ! ========= FIND THE MULTIMODE FLOQUET SPECTRUM 
 
-  n_ = 16;
-  m_ = 16;
 
+  n_ = 64;
+  m_ = 64;
   for(r=0;r<n_;r++){
 
     // ====== SET THE DRESSING FREQUENCY
 
-    fields[2].omega = real(fields[1].x)/4.0 + r*real(fields[1].x)/64.0;     
+    fields[2].omega = real(fields[0].z) - real(fields[1].x) + 2.0*r*real(fields[1].x)/n_;     
     sethamiltoniancomponents_c_(&id,&nm,&total_frequencies,modes_num,fields,&info); // every time a field parameter is modified, we should run this function
 
     //!--- FIND THE MULTIMODE FLOQUET SPECTRUM 
@@ -183,7 +190,7 @@ int main(){
     t1 = 0.0;
     t2 = 0.0;
     for(m=0;m<m_;m++){
-      t2 = m*16.0*100/128.0;
+      t2 = m*6400.0/m_;
       multimodetimeevolutionoperator_c_(&h_floquet_size,&nm,modes_num,U_F,e_floquet,&d_bare,fields,&t1,&t2,U_AUX,&info);	
 
       for(i=0;i<d_bare*d_bare;i++){

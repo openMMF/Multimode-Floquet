@@ -28,7 +28,7 @@ PROGRAM MULTIMODEFLOQUET
   INTEGER                                       :: DRESSINGFIELDS ! NUMBER OF DRESSING FIELDS
   INTEGER,          DIMENSION(:), ALLOCATABLE   :: DRESSINGFIELDS_INDICES ! IDENTITY OF THE DRESSING FIELDS
 
-
+  INTEGER M_,N_
 
 
   ! ===================================================
@@ -78,7 +78,7 @@ PROGRAM MULTIMODEFLOQUET
   FIELDS(2)%phi_y     = 0.0
   FIELDS(2)%phi_z     = 0.0
   FIELDS(2)%omega     = 1.0
-  FIELDS(2)%N_Floquet = 5
+  FIELDS(2)%N_Floquet = 2
   
   FIELDS(3)%X         = 0.2*FIELDS(2)%X
   FIELDS(3)%Y         = 0.0
@@ -87,7 +87,7 @@ PROGRAM MULTIMODEFLOQUET
   FIELDS(3)%phi_y     = 0.0
   FIELDS(3)%phi_z     = 0.0
   FIELDS(3)%omega     = FIELDS(2)%X/2.0
-  FIELDS(3)%N_Floquet = 5
+  FIELDS(3)%N_Floquet = 2
 
   D_MULTIFLOQUET = ID%D_BARE
   DO r=1,TOTAL_FREQUENCIES
@@ -133,7 +133,7 @@ PROGRAM MULTIMODEFLOQUET
 
 
   CALL MICROMOTIONFOURIERDRESSEDBASIS(ID,DRESSINGFIELDS_INDICES,MODES_NUM,FIELDS,U_FD,E_DRESSED,INFO)
-  write(*,*) e_dressed, size(E_dressed,1)
+  !write(*,*) e_dressed, size(E_dressed,1)
   
   !=================================================================================
   !== MULTIMODE FLOQUET DRESSED BASIS AND TIME-EVOLUTION OPERATOR IN THE BARE BASIS
@@ -144,13 +144,13 @@ PROGRAM MULTIMODEFLOQUET
   ALLOCATE(U_F1(ID%D_BARE,ID%D_BARE))
   ALLOCATE(U_F2(ID%D_BARE,ID%D_BARE))
   
-
-  DO r=1,64,4
+  N_=16
+  DO r=1,N_
 
 !!$!========= FIND THE MULTIMODE FLOQUET SPECTRUM 
       
 
-     FIELDS(3)%omega     = FIELDS(1)%Z - FIELDS(2)%X + 2.0*(r-1)*FIELDS(2)%X/64
+     FIELDS(3)%omega     = FIELDS(1)%Z - FIELDS(2)%X + 2.0*(r-1)*FIELDS(2)%X/N_
      CALL MULTIMODEFLOQUETMATRIX(ID,size(modes_num,1),total_frequencies,MODES_NUM,FIELDS,INFO)          
      ALLOCATE(E_FLOQUET(SIZE(H_FLOQUET,1)))
      E_FLOQUET = 0.0  
@@ -162,8 +162,8 @@ PROGRAM MULTIMODEFLOQUET
      ! ===== EVALUATE TIME-EVOLUTION OPERATOR 
 
      T1 = 0.0
-     DO m=1,512,64
-        T2 = (m-1)*16.0*100.0/128.0
+     DO m=1,M_
+        T2 = (m-1)*16.0*100.0/M_
 
 
         
