@@ -154,8 +154,8 @@ int main(){
   // ! ========= FIND THE MULTIMODE FLOQUET SPECTRUM 
   //printf("%d %d\n",d_bare,dressingfloquetdimension);
   int n_ = 64;
-  int m_ = 64;
-  for(r=0;r<n_;r++){
+  int m_ = 512;
+  for(r=0;r<n_;r+=4){
 
     // ====== SET THE DRESSING FREQUENCY
 
@@ -186,8 +186,8 @@ int main(){
     t1 = 0.0;
     t2 = 0.0;
     
-    for(j=0;j<m_;j++){
-      t2 = j*6400/m_;
+    for(j=0;j<m_;j+=4){
+      t2 = j*1600/128;
       multimodetimeevolutionoperator_c_(&h_floquet_size,&nm,modes_num,U_F,e_floquet,&d_bare,fields,&t1,&t2,U_AUX,&info);
       m = 0;
       /*for(i=0;i<d_bare;i++){

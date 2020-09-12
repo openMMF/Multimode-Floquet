@@ -13,7 +13,7 @@ import numpy as np
 from numpy.ctypeslib import ndpointer
 
 
-openmmfC = ctypes.CDLL('../lib/libmultimodefloquet.so')
+openmmfC = ctypes.CDLL('../../lib/libmultimodefloquet.so')
 c_dcmplx = ctypes.c_double*2
 
 #===================================================================

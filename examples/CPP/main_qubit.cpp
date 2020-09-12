@@ -22,14 +22,13 @@ int main(){
   char manifold[] = "U";
   FILE *disco0,*disco1;
 
-  
   int r,m,l,N_;
   int d_bare,total_frequencies;
 
   double t1,t2;
 
-  disco0 = fopen("qubit_avg_SP.dat","w+");
-  disco1 = fopen("qubit_timeevol_SP.dat","w+");
+  disco0 = fopen("qubit_avgerage.dat","w+");
+  disco1 = fopen("qubit_timeevol.dat","w+");
 
   info   = 0;
   jtotal = 2;
@@ -53,6 +52,7 @@ int main(){
   
   mode_c * fields = new mode_c [total_frequencies];
     
+
   fields[0].x     = 0.0;
   fields[0].y     = 0.0;
   fields[0].z     = 1.0;

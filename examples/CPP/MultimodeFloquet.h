@@ -32,6 +32,7 @@ extern "C" {
   
   // BUILDING FLOQUET MATRIX OF GENERIC MODEL
   void    multimodefloquetmatrix_c_       (atom_c *id,int * nm, int * total_frequencies,int * modes_num,mode_c * fields, int * info);
+  void get_h_floquet_c_(int * h, dcmplx * values, int* info);
   int     multimodefloquetmatrix_c_python_(atom_c *id,int * nm, int * total_frequencies,int * modes_num,mode_c * fields,int * info);
   void multimodefloquetmatrix_sp_c_       (atom_c *id,int * nm, int * total_frequencies,int * modes_num,mode_c * fields, int * info);
   //int  multimodefloquetmatrix_python_sp_c_(atom_c *id,int * nm, int * total_frequencies,int * modes_num,mode_c * fields, int * info);

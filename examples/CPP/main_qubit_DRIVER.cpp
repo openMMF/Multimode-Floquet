@@ -1,3 +1,5 @@
+
+
 #include <iostream>
 #include <complex>
 #include <stdio.h>
@@ -27,12 +29,15 @@ int main(){
 
   disco1 = fopen("qubit_timeevol_driver.dat","w+");
 
+
   info   = 0;
   jtotal = 2;
   t1     = 2.0;
   floquetinit_c(&id,name,&info);
   
   d_bare = id.d_bare;
+
+
 
   int nm = 2;
   int * modes_num = new int [nm];
@@ -73,7 +78,7 @@ int main(){
   for(m=1;m<=N_;m++){
     
     // --- SET DRIVING PARAMETERS 
-    fields[1].omega = 0.2 + (m-1)*2.0/128.0;
+    fields[1].omega = 0.2 + (m-1)*2.0/N_;
     
     //--- EVALUATE TIME-EVOLUTION OPERATOR IN THE BARE BASIS
     t1= 0.0;

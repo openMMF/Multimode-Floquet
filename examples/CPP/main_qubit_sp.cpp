@@ -23,13 +23,13 @@ int main(){
   FILE *disco0,*disco1;
 
 
-  int r,m,l,N_;
+  int r,m,l,N_,t;
   int d_bare,total_frequencies,sp;
 
   double t1,t2,e_l,e_r;
 
-  disco0 = fopen("qubit_avg.dat","w+");
-  disco1 = fopen("qubit_timeevol.dat","w+");
+  disco0 = fopen("qubit_avgerage_SP.dat","w+");
+  disco1 = fopen("qubit_timeevol_SP.dat","w+");
 
   info   = 0;
   jtotal = 2;
@@ -69,13 +69,13 @@ int main(){
   fields[1].phi_y = 0.0;
   fields[1].phi_z = 0.0;
   fields[1].omega = 1.0;
-  fields[1].N_Floquet = 8;
+  fields[1].N_Floquet = 1;
 
-  N_ = 128;
-  for(m=1;m<N_;m++){
+  N_ = 128*16;
+  for(m=1;m<2;m++){
     
     // --- SET DRIVING PARAMETERS 
-    fields[1].omega = 0.2 + (m-1)*2.0/N_;
+    fields[1].omega = 1.0;//0.2 + (m-1)*2.0/N_;
     sethamiltoniancomponents_c_(&id,&nm,&total_frequencies,modes_num,fields,&info);
     
     //!--- FIND THE MULTIMODE FLOQUET SPECTRUM 
@@ -94,9 +94,19 @@ int main(){
    
     mklsparse_fulleigenvalues_c_(&h_floquet_size,&e_l,&e_r,e_floquet,U_F,&info);
     //printf("info = %i, h_floquet_size = %i\n", info,h_floquet_size);
-    //for(r=0;r<h_floquet_size;r++) printf("%15.5f  ",e_floquet[r]);
+    /*    t = 0;
+    for(r=0;r<h_floquet_size;r++){
+      for(l=0;l<h_floquet_size;l++){
+	printf("%15.5f  ", real(U_F[t]));
+	t++;
+      }
+      printf("\n");
+    }
+    printf("\n");
 
-
+    for(r=0;r<h_floquet_size;r++) printf("%15.5f  ",e_floquet[r]);
+    printf("\n");
+    */
 
     //--- EVALUATE THE AVERAGE TRANSITION PROBATILIBIES IN THE BARE BASIS
     
@@ -119,7 +129,8 @@ int main(){
     
     //--- EVALUATE TIME-EVOLUTION OPERATOR IN THE BARE BASIS
     t1= 0.0;
-    for(r=1;r<N_;r++){      
+    //for(r=N_/2;r<N_;r+=N_){      
+    for(r=0;r<N_;r++){      
 
       t2 = r*32.0*4.0*atan(1.0)/N_;
       multimodetimeevolutionoperator_c_(&h_floquet_size,&nm,modes_num,U_F,e_floquet,&d_bare,fields,&t1,&t2,U_AUX,&info);
