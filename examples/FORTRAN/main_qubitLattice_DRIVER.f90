@@ -21,6 +21,7 @@ PROGRAM MULTIMODEFLOQUET
   DOUBLE PRECISION                              :: T1,T2
 
   DOUBLE PRECISION m_, eta,  phi1,  phi2 ,  gamma, dt
+  INTEGER N_
 
 
 
@@ -77,7 +78,7 @@ PROGRAM MULTIMODEFLOQUET
   FIELDS(2)%phi_y = 0.0
   FIELDS(2)%phi_z = phi1 
   FIELDS(2)%omega = 0.1
-  FIELDS(2)%N_Floquet = 16
+  FIELDS(2)%N_Floquet = 2
 
   FIELDS(3)%X     =  0.0
   FIELDS(3)%Y     =  2.0*eta
@@ -86,7 +87,7 @@ PROGRAM MULTIMODEFLOQUET
   FIELDS(3)%phi_y = phi2 - pi/2
   FIELDS(3)%phi_z = phi2
   FIELDS(3)%omega = gamma*FIELDS(2)%OMEGA
-  FIELDS(3)%N_Floquet = 16
+  FIELDS(3)%N_Floquet = 2
  
   DO m=1,TOTAL_FREQUENCIES    
      FIELDS(m)%X = FIELDS(m)%X*exp(DCMPLX(0.0,1.0)*FIELDS(m)%phi_x)
@@ -102,12 +103,13 @@ PROGRAM MULTIMODEFLOQUET
   T1 = 0.0
   T2 = 1.0E-4
   dt = T2
-  CALL TIMEEVOLUTIONOPERATOR(ID,D_BARE,SIZE(MODES_NUM,1),MODES_NUM,FIELDS,T1,T2,U_dt,INFO) 
+  CALL TIMEEVOLUTIONOPERATOR(ID,D_BARE,SIZE(MODES_NUM,1),SIZE(MODES_NUM,1),MODES_NUM,FIELDS,T1,T2,U_dt,INFO) 
 
   dt = T2
-  DO r=1,1024
-     T2 = (r-1.0)*10.0E4/1024
-     CALL TIMEEVOLUTIONOPERATOR(ID,D_BARE,SIZE(MODES_NUM,1),MODES_NUM,FIELDS,T1,T2,U_AUX,INFO) 
+  N_ = 1024
+  DO r=1,N_
+     T2 = (r-1.0)*10.0E4/N_
+     CALL TIMEEVOLUTIONOPERATOR(ID,D_BARE,SIZE(MODES_NUM,1),TOTAL_FREQUENCIES,MODES_NUM,FIELDS,T1,T2,U_AUX,INFO) 
      dh2_dt = 2.0*eta*FIELDS(2)%OMEGA*(                 J_x*cos(fields(2)%omega*T2+phi1) + J_z*sin(fields(2)%omega*T2+phi1))
      dh3_dt = 2.0*eta*FIELDS(3)%OMEGA*(DCMPLX(0.0,-1.0)*J_y*cos(fields(3)%omega*T2+phi2) + J_z*sin(fields(3)%omega*T2+phi2))
      W2 = W2 + dt*MATMUL(TRANSPOSE(CONJG(U_AUX)),MATMUL(dh2_dt,U_AUX))

@@ -12,7 +12,7 @@ SUBROUTINE MULTIMODEFLOQUETMATRIX(ATOM_,NM,NF,MODES_NUM,FIELD,INFO)
   USE ARRAYS
   USE ATOMIC_PROPERTIES
   USE TYPES
-  !USE SUBINTERFACE_LAPACK
+
 
   IMPLICIT NONE
   INTEGER,                  INTENT(IN)    :: NM,NF
@@ -28,12 +28,12 @@ SUBROUTINE MULTIMODEFLOQUETMATRIX(ATOM_,NM,NF,MODES_NUM,FIELD,INFO)
 
   INTEGER, DIMENSION(NM) :: N_FLOQUET
 
-!  write(*,*) "# Creating the multimode hamiltonian for a", ID_name
-!  write(*,*) "# with ", NM," modes and ", NF, "frequencies"
+
+
   
   INFO      = 0
   N_FLOQUET = 0
-  !write(*,*) "# FORTRAN MULTIMODEFLOQUETMATRIX SAYS:",nm 
+
   DO n=2,NM
      FIELD_INDEX = 2+SUM(MODES_NUM(2:n-1))
      N_FLOQUET(n)=FIELD(FIELD_INDEX)%N_Floquet
@@ -49,7 +49,7 @@ SUBROUTINE MULTIMODEFLOQUETMATRIX(ATOM_,NM,NF,MODES_NUM,FIELD,INFO)
   IF(INFO.EQ.0) THEN
      D_OLD    = 1
      D        = ATOM_%D_BARE
-     !write(*,*) D,info
+
      ALLOCATE(H_FLOQUET_COPY(D,D))
      H_FLOQUET_COPY = 0.0     
      H_FLOQUET_COPY = FIELD(1)%V  ! STATIC HAMILTONIAN
@@ -87,16 +87,17 @@ SUBROUTINE MULTIMODEFLOQUETMATRIX(ATOM_,NM,NF,MODES_NUM,FIELD,INFO)
               index_r_upper = index_l_upper
               COUPLING(index_l_lower:index_l_upper, index_r_lower:index_r_upper) = &
                    &     FIELD(FIELD_INDEX)%V  ! COUPLING MATRIX OF MODE n
-!              write(*,*) r,field_index
+
            END DO
+!           write(*,*) o,D,(o-1)*D+1,o*D,size(H_FLOQUET_ROW,1),size(H_FLOQUET_ROW,2),n,N_FLOQUET(n)
            H_FLOQUET_ROW(1:D,(o-1)*D+1:o*D) = COUPLING/2.0
            FIELD_INDEX = FIELD_INDEX + 1
-           !CALL WRITE_MATRIX(ABS(H_FLOQUET_ROW))
+
         END DO
         FIELD_INDEX =2+SUM(MODES_NUM(2:n-1))
 
-        !write(*,*) n,N_FLOQUET(n),field_index,field(field_index)%omega,D
-        !write(*,*) n,FIELD_INDEX,N_Floquet(n),FIELD(FIELD_INDEX)%OMEGA
+
+
         D_OLD = D
         D     = D*(2*N_FLOQUET(n)+1)
         ALLOCATE(H_FLOQUET(D,D))
@@ -109,60 +110,15 @@ SUBROUTINE MULTIMODEFLOQUETMATRIX(ATOM_,NM,NF,MODES_NUM,FIELD,INFO)
            index_aux = 2*N_floquet(n)*D_OLD - D_OLD*(m+N_Floquet(n))
            index_l_lower = index_r_lower + D_OLD 
            index_l_upper = index_l_lower + index_aux - 1
-           !     WRITE(*,*) m,index_r_lower,index_r_upper,index_L_lower,index_l_upper,D_OLD,index_aux,size(H_FLOQUET_ROW,2)
+
            IF(m.LT.N_Floquet(n)) THEN
               H_FLOQUET(index_r_lower:index_r_upper,index_l_lower:index_l_upper) = H_FLOQUET_ROW(1:D_OLD,1:index_aux)
               H_FLOQUET(index_l_lower:index_l_upper,index_r_lower:index_r_upper) = &
                    & TRANSPOSE(CONJG(H_FLOQUET_ROW(1:D_OLD,1:index_aux)))
            END IF
            H_FLOQUET(index_r_lower:index_r_upper,index_r_lower:index_r_upper) = H_STATIC + m*FIELD(FIELD_INDEX)%OMEGA*identity
- !          write(*,*) m,n,m*FIELD(FIELD_INDEX)%OMEGA,field_index,n_floquet(n)
+
         END DO
-        !END IF
-!!$        ELSE IF(NF.EQ.NM) THEN
-!!$
-!!$           DO r=1,(2*N_Floquet(n-1)+1)
-!!$        
-!!$              index_l_lower = ATOM_%D_BARE*(r - 1) + 1
-!!$              index_l_upper = ATOM_%D_BARE*(r - 1) + ATOM_%D_BARE
-!!$              index_r_lower = index_l_lower
-!!$              index_r_upper = index_l_upper
-!!$!              COUPLING(index_l_lower:index_l_upper, index_r_lower:index_r_upper) = &
-!!$!                   &     FIELD(n)%V  ! COUPLING MATRIX OF MODE n
-!!$              !       write(*,*) n,r,index_l_lower,index_l_upper,BASIS
-!!$           END DO
-!!$  
-!!$           DO m=-N_floquet(n),N_Floquet(n)
-!!$              
-!!$              index_l_lower = (m + N_Floquet(n)    )*SIZE(COUPLING,1) + 1
-!!$              index_l_upper = index_l_lower + SIZE(COUPLING,1) - 1
-!!$              index_r_lower =  index_l_lower
-!!$              index_r_upper =  index_l_upper
-!!$              H_FLOQUET(index_l_lower:index_l_upper, index_r_lower:index_r_upper) = &
-!!$                   &  1.0*H_STATIC + 1.0*m*FIELD(n)%OMEGA*IDENTITY
-!!$              !        call write_matrix(ABS(H_STATIC))
-!!$              !call write_matrix(ABS(H_FLOQUET(index_l_lower:index_l_upper, index_r_lower:index_r_upper)))   
-!!$              !        write(*,*) n,m,hbar,FIELD(n)%OMEGA,A
-!!$              IF(m.LT.N_floquet(n)) THEN
-!!$                 
-!!$                 index_l_lower =  (m + N_Floquet(n) + 1)*SIZE(COUPLING,1) + 1
-!!$                 index_l_upper =  index_l_lower + SIZE(COUPLING,1) - 1
-!!$                 index_r_lower =  (m + N_Floquet(n)    )*SIZE(COUPLING,1) + 1
-!!$                 index_r_upper =  index_r_lower + SIZE(COUPLING,1) - 1
-!!$                 H_FLOQUET(index_l_lower:index_l_upper, index_r_lower:index_r_upper) = &
-!!$                      &     0.5*COUPLING
-!!$                 !           write(*,*) index_l_lower,index_l_upper,index_r_lower,index_r_upper
-!!$                 
-!!$                 index_l_lower =  (m + N_Floquet(n)    )*SIZE(COUPLING,1) + 1
-!!$                 index_l_upper =  index_r_lower + SIZE(COUPLING,1)  - 1        
-!!$                 index_r_lower =  (m + N_Floquet(n) + 1)*SIZE(COUPLING,1) + 1
-!!$                 index_r_upper =  index_l_lower + SIZE(COUPLING,1)  - 1         
-!!$                 H_FLOQUET(index_l_lower:index_l_upper, index_r_lower:index_r_upper) = &
-!!$                      &     0.5*TRANSPOSE(CONJG(COUPLING))
-!!$              END IF
-!!$              
-!!$           END DO
-        !        END IF
 
         DEALLOCATE(IDENTITY)
         DEALLOCATE(COUPLING)
@@ -176,11 +132,9 @@ SUBROUTINE MULTIMODEFLOQUETMATRIX(ATOM_,NM,NF,MODES_NUM,FIELD,INFO)
         END IF
 
      END DO
-!     write(*,*) "# Dimension of the matrix:", size(H_FLOQUET,1)
-
-!     CALL WRITE_MATRIX(real(H_FLOQUET))
   ELSE
 
   END IF
+
 END SUBROUTINE MULTIMODEFLOQUETMATRIX
 

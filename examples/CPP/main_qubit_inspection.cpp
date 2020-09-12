@@ -144,7 +144,7 @@ int main(){
       //      printf("\n");
     }
     */
-    printf("%15.5f %15.5f %15.5f %15.5f %15.5f %15.5f %15.5f %15.5f %15.5f \n",abs(fields[1].omega),abs(U_F[13]),abs(U_F[14]),abs(U_F[21]),abs(U_F[22]),arg(U_F[13]),arg(U_F[14]),arg(U_F[21]),arg(U_F[22]));
+    //    printf("%15.5f %15.5f %15.5f %15.5f %15.5f %15.5f %15.5f %15.5f %15.5f \n",abs(fields[1].omega),abs(U_F[13]),abs(U_F[14]),abs(U_F[21]),abs(U_F[22]),arg(U_F[13]),arg(U_F[14]),arg(U_F[21]),arg(U_F[22]));
     //--- EVALUATE THE AVERAGE TRANSITION PROBATILIBIES IN THE BARE BASIS
     /*    
     double * p_avg =  new double [h_floquet_size*h_floquet_size];

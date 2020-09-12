@@ -35,6 +35,7 @@ PROGRAM MULTIMODEFLOQUET
   OPEN(UNIT=4,FILE="qubit_noise_avgtransition_SP.dat",ACTION="WRITE")
 
   CALL RANDOM_SEED   ! Initializing
+
   INFO = 0
   CALL FLOQUETINIT(ID,'qubit',INFO)
   ALLOCATE(ENERGY(SIZE(J_Z,1)))
@@ -50,9 +51,8 @@ PROGRAM MULTIMODEFLOQUET
   ALLOCATE(MODES_NUM(3))
 
   MODES_NUM(1) = 1 !(STATIC FIELD)
-  MODES_NUM(2) = 2 !(DRIVING BY TWO HARMONICS)
-  MODES_NUM(3) = 3 !NOISY FIELD COMPONENTS
-
+  MODES_NUM(2) = 1 !(DRIVING BY TWO HARMONICS)
+  MODES_NUM(3) = 1 !(DRIVING BY TWO HARMONICS)
   
   TOTAL_FREQUENCIES = SUM(MODES_NUM,1)
   ALLOCATE(FIELDS(TOTAL_FREQUENCIES))
@@ -60,7 +60,7 @@ PROGRAM MULTIMODEFLOQUET
      ALLOCATE(FIELDS(m)%V(ID%D_BARE,ID%D_BARE))
   END DO
   
-  FIELDS(1)%X    = 1.0
+  FIELDS(1)%X    = 0.0
   FIELDS(1)%Y    = 0.0
   FIELDS(1)%Z    = 1.0
   FIELDS(1)%phi_x = 0.0
@@ -69,55 +69,25 @@ PROGRAM MULTIMODEFLOQUET
   FIELDS(1)%omega = 0.0
   FIELDS(1)%N_Floquet = 0
 
-  FIELDS(2)%X     = 2.0
+  FIELDS(2)%X     = 0.25
   FIELDS(2)%Y     = 0.0
-  FIELDS(2)%Z     = 2.0
+  FIELDS(2)%Z     = 0.0
   FIELDS(2)%phi_x = 0.0
   FIELDS(2)%phi_y = 0.0
   FIELDS(2)%phi_z = 0.0
   FIELDS(2)%omega = 1.0
-  FIELDS(2)%N_Floquet = 2
-
-  FIELDS(3)%X     = 2.0
-  FIELDS(3)%Y     = 3.0
-  FIELDS(3)%Z     = 0.0
-  FIELDS(3)%phi_x = 0.0
-  FIELDS(3)%phi_y = 0.0
-  FIELDS(3)%phi_z = 0.0
-  FIELDS(3)%omega = 1.0
-  FIELDS(3)%N_Floquet = 2
-
-!!$  FIELDS(4)%X     = 2.0
-!!$  FIELDS(4)%Y     = 1.0
-!!$  FIELDS(4)%Z     = 0.0
-!!$  FIELDS(4)%phi_x = 0.0
-!!$  FIELDS(4)%phi_y = 0.0
-!!$  FIELDS(4)%phi_z = 0.0
-!!$  FIELDS(4)%omega = 1.0
-!!$  FIELDS(4)%N_Floquet = 2
-!!$
-!!$  FIELDS(5)%X     = 2.0
-!!$  FIELDS(5)%Y     = 1.0
-!!$  FIELDS(5)%Z     = 0.0
-!!$  FIELDS(5)%phi_x = 0.0
-!!$  FIELDS(5)%phi_y = 0.0
-!!$  FIELDS(5)%phi_z = 0.0
-!!$  FIELDS(5)%omega = 1.0
-!!$  FIELDS(5)%N_Floquet = 2
-!!$
-
+  FIELDS(2)%N_Floquet = 1
 
   DO m=1,MODES_NUM(3)
      CALL RANDOM_NUMBER(NoisyField)
-     !write(*,*) m+2
-     FIELDS(int(m+3))%X     = NoisyField
-     FIELDS(int(m+3))%Y     = 0.0
-     FIELDS(int(m+3))%Z     = 0.0
-     FIELDS(int(m+3))%phi_x = 0.0
-     FIELDS(int(m+3))%phi_y = 0.0
-     FIELDS(int(m+3))%phi_z = 0.0
-     FIELDS(int(m+3))%omega = m*0.25/MODES_NUM(3)
-     FIELDS(int(m+3))%N_Floquet = 2
+     FIELDS(m+2)%X     = NoisyField
+     FIELDS(m+2)%Y     = 0.0
+     FIELDS(m+2)%Z     = 0.0
+     FIELDS(m+2)%phi_x = 0.0
+     FIELDS(m+2)%phi_y = 0.0
+     FIELDS(m+2)%phi_z = 0.0
+     FIELDS(m+2)%omega = m*0.25/MODES_NUM(3)
+     FIELDS(m+2)%N_Floquet = 1
   END DO
   
   D_MULTIFLOQUET = ID%D_BARE
@@ -125,9 +95,7 @@ PROGRAM MULTIMODEFLOQUET
      D_MULTIFLOQUET = D_MULTIFLOQUET*(2*FIELDS(r)%N_Floquet+1)
   END DO
 
-  write(*,*) D_MULTIFLOQUET
-
-  DO m=1,1
+  DO m=1,1!28
 
      ! --- SET DRIVING PARAMETERS 
      FIELDS(2)%omega = 0.2 + (m-1)*2.0/128

@@ -28,7 +28,7 @@
 
 \begin{document}
 \maketitle
-
+\tableofcontents
 %\section{Introduction}
 \section{Introduction}
 
@@ -369,6 +369,71 @@ where \verb total_frequencies   is the total number of driving fields (including
 The library includes  C++ interfaces for each one of the subroutines defined. These interfaces are declared in files with the same name as the ones containing the Fortran declarations, but with the particle \verb _C  appended before the ending extension \verb .f90 .  Similarly,  wrapper subroutine are named using the corresponding Fortran names and appending the particle \verb _c  at the end of the name. For example, the file \verb MultimodeFloquetTE_C.f90   is paired with the file \verb MultimodeFloquet.f90  and defines the subroutine \verb MULTIMODETIMEEVOLUTIONOPERATOR_C , which is used in \verb c++   using \verb multimodetimeevolutionoperator_c_  followed by the declared list of arguments (see example at \verb examples/CPP/main_qubit.cpp .
 
 The prototype of all function enabled for C++ are declared in the header file \verb include/MultimodeFloquet.h . This scheme lets us to establish a line-by-line  correspondence between the Fortran and C++ source codes.
+
+
+\section{Python wrappers}
+
+The library includes an interface to Python, which is implemented using CTYPES. Similarly to the C++ wrappers, for Python we define a function for each one of the functionalities of the library. This set of functions is declared in the file \verb src/openmmf.py , which should be copied to the python working directory. The Python wrappers call the C++ wrappers which are compiled in the file libmultimodefloquet.so. The user should make sure that the correct path to this file is set in \verb src/openmmf.py .
+
+The python wrapper requires to define the equivalent ot the \verb atom and \verb mode  derived data types, which are:
+
+\begin{verbatim}
+class atom_c_T(ctypes.Structure):
+    _fields_ = [
+                ("id_system", c_int),
+                ("d_bare", c_int)            
+            ]
+\end{verbatim}
+and
+\begin{verbatim}
+class mode_c_T(ctypes.Structure):
+    c_dcmplx = ctypes.c_double*2
+    _fields_ = [
+                ("omega",     c_double),
+                ("x",         c_dcmplx),
+                ("y",         c_dcmplx),
+                ("z",         c_dcmplx),            
+                ("phi_x",     c_double),
+                ("phi_y",     c_double),
+                ("phi_z",     c_double),
+                ("N_Floquet", c_int)
+            ]
+\end{verbatim}
+respectively.
+
+Each python wrapper function in \verb src/openmmf.py  takes numpy input parameters and define the set of ctype pointers required to call the corresponding C++ wrapper function. Let's examine the instruction to build the multimode Floquet Hamiltonian:
+
+\begin{verbatim}
+def multimodefloquetmatrix(id,modes_num,fields,info):
+ 
+    id_p              = ctypes.pointer(id)
+    nm                = c_int(modes_num.size)
+    total_frequencies = c_int(np.sum(modes_num))    
+    info              = c_int(info)
+    modes_num_p       = modes_num.ctypes.data_as(POINTER(c_int))
+    fields_p          = ctypes.pointer(fields)
+    h_floquet_size =    
+    openmmfC.multimodefloquetmatrix_c_python_(id_p,ctypes.byref(nm),
+                 ctypes.byref(total_frequencies),
+				   modes_num_p,fields_p,ctypes.byref(info))
+ 
+    return h_floquet_size
+\end{verbatim}
+The input parameter \verb mode_num  is an numpy array of integers that, as before, defines the number of driving mode and harmonics. Alos, the input parameter \verb info  is a numpy integer. \verb id  is an instance of the class \verb atom_c_T  and \verb fields  is an instance of the class \verb modes_c_T . This functions calls \verb openmmfC.multimodefloquetmatrix_c_python_  passing all parameters by reference. 
+
+The ctypes wrappers rely on the equivalence between the data types in Fortran, C++ and Python, which should be observed rigourosly following the Table \ref{tb:datatypes}
+
+\begin{table}[!h]
+\centering
+\begin{tabular}[t]{|c|c|c|c|}\firsthline
+\textbf{Fortran}          & \textbf{C++}    & \textbf{ctypes}          & \textbf{numpy} \\  \hline
+integer          & int    & $ctypes.c_int$    & numpy.int32 \\ \hline
+double precision & double & $ctypes.c_double$ & numpy.double \\ \hline
+complex*16 & std::<complex> & $c_dcmplx = ctypes.c_double*2$ & np.complex \\ \hline
+\end{tabular}
+\caption{\label{tb:datatypes} Equivalence between the numerical data types in Fortran, C++, Ctypes and numpy.}
+\end{table}
+
 
 \section{Bugs and known limitations}
 
@@ -1357,6 +1422,114 @@ SUBROUTINE VARCRCPACKING(N,DIM,UPLO,zero,A,VALUES,COLUMNS,ROWINDEX,INFO)
   INTEGER,    DIMENSION(N+1), INTENT(OUT) :: ROWINDEX
 
 \end{verbatim}
+
+
+\section{Python Wrappers prototypes}
+
+%#===================================================================
+%#   // GENERAL INIT SUBROUTINE
+%#===================================================================
+\subsection{Initialisation}
+\verb def floquetinit(id,*argsv,info):
+\verb id  is an instance of the class \verb atom_c_T  , declared as \verb id = openmmf.atom_c_T(). \verb info = 0  is an python integer.
+
+This function can be take several forms to define different physical systems. 
+
+To declare a qubit type use \verb openmmf.floquetinit(id,'qubit',info=info) .
+
+To declare an alkali atom and one option of the electronic ground state hyperfine manifold use \verb openmmf.floquetinit(id,alkali_name,manifold,info=info), 
+with \verb alkali_name  taking any of the values \verb '87Rb', '85Rb','123Cs', '41K', '23Na'  , and \verb manifold  one of \verb 'U', 'L','B'  , to define the Lower, Upper or Both hyperfine manifoldds of the electronic ground state, respectively.
+
+To define a spin of total angular momentum $S$, use \verb openmmf.floquetinit(id,'spin',S,info=info)
+
+To define an arbitrary system with $N$ energy levels use \verb openmmf.floquetinit(id,'lattice',N,info=info)
+
+
+%#===================================================================
+%#   EVALUATE THE HAMILTONIAN COMPONENTS OF PRE-DEFINED SYSTEMS. 
+%#===================================================================
+\verb def sethamiltoniancomponents(id,modes_num,fields,info):
+id is an instance of atom_c_T
+modes_num an numpy.array
+fields an instance of modes_c_T
+#===================================================================
+#   // BUILDING FLOQUET MATRIX OF GENERIC MODEL
+#===================================================================
+def multimodefloquetmatrix(id,modes_num,fields,info):
+
+
+#===================================================================
+#  // CALCULATE THE SPECTRUM OF THE FLOQUET HAMILTONIAN
+#===================================================================
+def lapack_fulleigenvalues(U_F,h_floquet_size,e_floquet,info):    
+
+#===================================================================
+#   EVALUATES THE TIME AVERAGE TRANSITIONS PROBABILITIES
+#===================================================================
+def multimodetransitionavg(h_floquet_size,fields,modes_num,U_F,e_floquet,d_bare,p_avg,info):
+
+
+
+#===================================================================
+# FOURIER COMPONENTS OF THE TRANSFORMATION BETWEEN THE DRESSED AND THE BARE BASIS
+# U_B2D is of dimension [D_bare*D_floquet]
+#===================================================================
+def multimodefloquettransformation(modes_num, U_F,e_floquet,d_bare,fields,t1, U_B2D,info): 
+
+
+#===================================================================
+# CALCULATE THE MICROMOTION OPERATOR
+# U_B2D is of dimension [D_bare*D_bare]
+#===================================================================
+def multimodemicromotion(id,h_floquet_size,modes_num,U_F,e_floquet,d_bare,fields,t1, U_B2D,info):
+
+
+
+#===================================================================
+# COMP. ROUTINE: EVALUATE THE TIME EVOULUTION OPERATOR BETWEEN T1 AND T2 USING THE FOURIER DECOMPOSITION
+# OF THE MICROMOTION OPERATOR, WHICH IS STORE IN U_F.
+#===================================================================
+def multimodetimeevolutionoperator(h_floquet_size,modes_num,U_F,e_floquet,d_bare,fields,t1,t2,U_AUX,info):
+
+
+
+#===================================================================
+# DRIVER ROUTINE: EVALUATE THE TIME EVOULUTION OPERATOR BETWEEN T1 AND T2
+#===================================================================
+def timeevolutionoperator(id,d_bare,modes_num,fields,t1,t2,U,info):
+
+
+#===================================================================
+#  // DEFINITION OF DRESSED BASIS WITH ALL FIELDS
+#===================================================================
+def dressedbasis(h_floquet_size,id,modes_num,fields,U_FD,e_dressed,info):
+
+
+#===================================================================
+#  // DEFINITION OF DRESSED BASIS WITH A SUBSET OF THE FIELDS
+#===================================================================
+def dressedbasis_subset(id,dressingfields_indices,modes_num,fields,U_FD,e_dressed,info):
+
+
+#===================================================================
+#  EVALUATE THE FOURIER COMPONENTS OF THE MICROMOTION OPERATOR USING THE DRESSING FIELDS
+#===================================================================
+def micromotionfourierdressedbasis(id,dressingfields_indices,modes_num,fields,U_FD,e_dressed,info):
+
+
+
+#===================================================================
+#  EVALUATE THE MICROMOTION OPERATOR USING THE DRESSING FIELDS
+#===================================================================
+def micromotiondressedbasis(id,modes_num,dressingfields_indices,fields,t1,U,info):
+
+#===================================================================
+#  DEALLOCATE ALL MEMORY ARRAYS
+#===================================================================
+
+
+
+
 
 \bibliography{LibraryBib}
 

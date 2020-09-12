@@ -1,4 +1,4 @@
-!export LD_LIBRARY_PATH="/opt/intel/compilers_and_libraries_2017/linux/mkl/lib/intel64"; 
+!export LD_LIBRARY_PATH="/opt/intel/compilers_and_libraries/linux/mkl/lib/intel64:../../lib/"; 
 PROGRAM MULTIMODEFLOQUET
 
   USE ATOMIC_PROPERTIES
@@ -28,13 +28,12 @@ PROGRAM MULTIMODEFLOQUET
   COMPLEX*16, DIMENSION(:), ALLOCATABLE :: VALUES
   !PARAMETERS TO DIAGONALIZE THE SPARSE MATRIX WITH MKL
   DOUBLE PRECISION :: E_L,E_R
-  INTEGER          :: D_MULTIFLOQUET,r,N_
+  INTEGER          :: D_MULTIFLOQUET,r
 
 
   OPEN(UNIT=3,FILE="qubit_oscillation_SP.dat",ACTION="WRITE")
   OPEN(UNIT=4,FILE="qubit_avgtransition_SP.dat",ACTION="WRITE")
 
-  N_ = 128
   INFO = 0
   CALL FLOQUETINIT(ID,'qubit',INFO)
   ALLOCATE(ENERGY(SIZE(J_Z,1)))
@@ -47,11 +46,11 @@ PROGRAM MULTIMODEFLOQUET
   DEALLOCATE(ENERGY)
   
   
-  ALLOCATE(MODES_NUM(3))
+  ALLOCATE(MODES_NUM(2))
 
   MODES_NUM(1) = 1 !(STATIC FIELD)
-  MODES_NUM(2) = 2 !(DRIVING BY fundamental frequency omega)  
-  MODES_NUM(3) = 1 !(DRIVING BY first HARMONIC (2*omega))
+  MODES_NUM(2) = 1 !(DRIVING BY TWO HARMONICS)  
+  !MODES_NUM(3) = 1 !(DRIVING BY TWO HARMONICS)
 
   
   TOTAL_FREQUENCIES = SUM(MODES_NUM,1)
@@ -76,52 +75,37 @@ PROGRAM MULTIMODEFLOQUET
   FIELDS(2)%phi_y = 0.0
   FIELDS(2)%phi_z = 0.0
   FIELDS(2)%omega = 1.0
-  FIELDS(2)%N_Floquet = 2
+  FIELDS(2)%N_Floquet = 7
 
-  FIELDS(3)%X     = 2.0
-  FIELDS(3)%Y     = 1.0
-  FIELDS(3)%Z     = 3.0
-  FIELDS(3)%phi_x = 1.0
-  FIELDS(3)%phi_y = 0.0
-  FIELDS(3)%phi_z = 0.0
-  FIELDS(3)%omega = 1.0
-  FIELDS(3)%N_Floquet = 2
-
-  FIELDS(4)%X     = 2.0
-  FIELDS(4)%Y     = 0.0
-  FIELDS(4)%Z     = 0.0
-  FIELDS(4)%phi_x = 0.0
-  FIELDS(4)%phi_y = 0.0
-  FIELDS(4)%phi_z = 0.0
-  FIELDS(4)%omega = 1.0
-  FIELDS(4)%N_Floquet = 2
-
+!!$  FIELDS(3)%X     = 2.0
+!!$  FIELDS(3)%Y     = 0.0
+!!$  FIELDS(3)%Z     = 0.0
+!!$  FIELDS(3)%phi_x = 0.0
+!!$  FIELDS(3)%phi_y = 0.0
+!!$  FIELDS(3)%phi_z = 0.0
+!!$  FIELDS(3)%omega = 1.0
+!!$  FIELDS(3)%N_Floquet = 8
 
   D_MULTIFLOQUET = ID%D_BARE
   DO r=1,TOTAL_FREQUENCIES
      D_MULTIFLOQUET = D_MULTIFLOQUET*(2*FIELDS(r)%N_Floquet+1)
   END DO
 
-  DO m=1,N_,8
+  DO m=1,128
 
      ! --- SET DRIVING PARAMETERS 
-     FIELDS(2)%omega = 0.2 + (m-1)*2.0/N_
+     FIELDS(2)%omega = 0.2 + (m-1)*2.0/128
      CALL SETHAMILTONIANCOMPONENTS(ID,size(modes_num,1),total_frequencies,MODES_NUM,FIELDS,INFO)
 
      !--- FIND THE MULTIMODE FLOQUET SPECTRUM 
      CALL MULTIMODEFLOQUETMATRIX_SP(ID,SIZE(MODES_NUM,1),total_frequencies,MODES_NUM,FIELDS,VALUES,ROW_INDEX,COLUMN,INFO)
-!     write(*,*) real(VALUES)
-!     WRITE(*,*) ROW_INDEX
-!     WRITE(*,*) COLUMN
-     
-     E_L = -6.0
-     E_R =  6.0
+     E_L = -50.0
+     E_R =  50.0
      ALLOCATE(E_FLOQUET(D_MULTIFLOQUET))
      ALLOCATE(U_F(D_MULTIFLOQUET,D_MULTIFLOQUET))
      E_FLOQUET = 0.0
      U_F = 0.0
      CALL MKLSPARSE_FULLEIGENVALUES(D_MULTIFLOQUET,SIZE(VALUES,1),VALUES,ROW_INDEX,COLUMN,E_L,E_R,E_FLOQUET,U_F,INFO)
-     write(*,*) e_floquet
 
      !--- EVALUATE THE AVERAGE TRANSITION PROBATILIBIES IN THE BARE BASIS
      P_AVG = 0.0
@@ -130,8 +114,8 @@ PROGRAM MULTIMODEFLOQUET
          
      !--- EVALUATE TIME-EVOLUTION OPERATOR IN THE BARE BASIS
      T1 = 0.0
-     DO r=1,1!N_
-        T2 = r*32.0*4.0*atan(1.0)/N_
+     DO r=1,128
+        T2 = r*32.0*4.0*atan(1.0)/128
         CALL MULTIMODETIMEEVOLUTINOPERATOR(SIZE(U_F,1),SIZE(MODES_NUM,1),MODES_NUM,U_F,E_FLOQUET,ID%D_BARE,FIELDS,T1,T2,U_AUX,INFO) 
         P_AVG = ABS(U_AUX)**2
         WRITE(3,*) t2,FIELDS(2)%OMEGA,ABS(U_AUX)**2

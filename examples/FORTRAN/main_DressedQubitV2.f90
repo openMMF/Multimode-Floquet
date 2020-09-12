@@ -28,7 +28,7 @@ PROGRAM MULTIMODEFLOQUET
   INTEGER                                       :: DRESSINGFIELDS ! NUMBER OF DRESSING FIELDS
   INTEGER,          DIMENSION(:), ALLOCATABLE   :: DRESSINGFIELDS_INDICES ! IDENTITY OF THE DRESSING FIELDS
 
-
+  INTEGER M__,N__
 
 
   ! ===================================================
@@ -78,16 +78,16 @@ PROGRAM MULTIMODEFLOQUET
   FIELDS(2)%phi_y     = 0.0
   FIELDS(2)%phi_z     = 0.0
   FIELDS(2)%omega     = 1.0
-  FIELDS(2)%N_Floquet = 5
+  FIELDS(2)%N_Floquet = 3
   
-  FIELDS(3)%X         = 0.2*FIELDS(2)%X
+  FIELDS(3)%X         = 0.125*FIELDS(2)%X/2.0
   FIELDS(3)%Y         = 0.0
-  FIELDS(3)%Z         = FIELDS(2)%X
+  FIELDS(3)%Z         = 0.125*FIELDS(2)%X/2.0
   FIELDS(3)%phi_x     = 0.0
   FIELDS(3)%phi_y     = 0.0
   FIELDS(3)%phi_z     = 0.0
   FIELDS(3)%omega     = FIELDS(2)%X/2.0
-  FIELDS(3)%N_Floquet = 5
+  FIELDS(3)%N_Floquet = 3
 
   D_MULTIFLOQUET = ID%D_BARE
   DO r=1,TOTAL_FREQUENCIES
@@ -133,7 +133,7 @@ PROGRAM MULTIMODEFLOQUET
 
 
   CALL MICROMOTIONFOURIERDRESSEDBASIS(ID,DRESSINGFIELDS_INDICES,MODES_NUM,FIELDS,U_FD,E_DRESSED,INFO)
-  write(*,*) e_dressed, size(E_dressed,1)
+  !write(*,*) e_dressed, size(E_dressed,1)
   
   !=================================================================================
   !== MULTIMODE FLOQUET DRESSED BASIS AND TIME-EVOLUTION OPERATOR IN THE BARE BASIS
@@ -144,28 +144,29 @@ PROGRAM MULTIMODEFLOQUET
   ALLOCATE(U_F1(ID%D_BARE,ID%D_BARE))
   ALLOCATE(U_F2(ID%D_BARE,ID%D_BARE))
   
-
-  DO r=1,64
+  N__=64
+  M__ =512
+  DO r=1,N__,4
 
 !!$!========= FIND THE MULTIMODE FLOQUET SPECTRUM 
       
-     !FIELDS(3)%omega     = FIELDS(1)%Z - 0.1*FIELDS(2)%X + 0.1*2.0*(r-1)*FIELDS(2)%X/128
-     FIELDS(3)%omega     = FIELDS(1)%Z - FIELDS(2)%X + 2.0*(r-1)*FIELDS(2)%X/64
+
+     FIELDS(3)%omega     = FIELDS(1)%Z - FIELDS(2)%X + 2.0*(r-1)*FIELDS(2)%X/N__
      CALL MULTIMODEFLOQUETMATRIX(ID,size(modes_num,1),total_frequencies,MODES_NUM,FIELDS,INFO)          
      ALLOCATE(E_FLOQUET(SIZE(H_FLOQUET,1)))
      E_FLOQUET = 0.0  
-     CALL LAPACK_FULLEIGENVALUES(H_FLOQUET,SIZE(H_FLOQUET,1),E_FLOQUET,INFO)
      U_F = H_FLOQUET ! FOURIER DECOMPOSITION OF THE STATES DRESSED BY MODE NUMBER 
+     CALL LAPACK_FULLEIGENVALUES(U_F,SIZE(U_F,1),E_FLOQUET,INFO)
      DEALLOCATE(H_FLOQUET)
 
      
      ! ===== EVALUATE TIME-EVOLUTION OPERATOR 
 
      T1 = 0.0
-     DO m=1,512
-        T2 = (m-1)*16.0*20.0/128.0
-!     DO m=1,2048,4
-!        T2 = (m-1)*16.0*20.0/128.0
+     DO m=1,M__,4
+        T2 = (m-1)*1600.0/128
+
+
         
         ! ===== EVALUATE TIME-EVOLUTION OPERATOR  IN THE BARE BASIS
         U_aux = 0.0

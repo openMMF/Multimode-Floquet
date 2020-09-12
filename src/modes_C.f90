@@ -26,7 +26,9 @@ MODULE MODES_4F
   USE ISO_C_BINDING
   TYPE(MODE),DIMENSION(:),ALLOCATABLE :: COUPLING
   TYPE(ATOM)                          :: ATOM_
-  INTEGER(C_INT),BIND(C,name="h_floquet_size") :: H_FLOQUET_SIZE
+  INTEGER(C_INT),TARGET,BIND(C,name="h_floquet_size") :: H_FLOQUET_SIZE
+  !COMPLEX*16,POINTER,DIMENSION(:,:) :: H_FLOQUET_C  ! pointer to access the internal H_FLOQUET matrix and make it visible to C++ 
+  INTEGER,POINTER :: H_FLOQUET_C  ! pointer to access the internal H_FLOQUET matrix and make it visible to C++ 
   LOGICAL COUPLINGALLOCATED 
   
   
@@ -65,9 +67,6 @@ SUBROUTINE COUPLINGINIT_C(DB,NF,ATOM__C,COUPLING_C,INFO)
      ALLOCATE(COUPLING(NF))
      COUPLINGALLOCATED = .TRUE.
      DO r=1,NF
-       ! ALLOCATE(COUPLING(r)%VALUES(DB*DB))
-       ! ALLOCATE(COUPLING(r)%COLUMN(DB*DB))
-       ! ALLOCATE(COUPLING(r)%ROW(DB*DB))
         ALLOCATE(COUPLING(r)%V(DB,DB))
      END DO
      ALLOCATE(ATOM_%E_BARE(DB))
@@ -75,9 +74,6 @@ SUBROUTINE COUPLINGINIT_C(DB,NF,ATOM__C,COUPLING_C,INFO)
   
   DO r=1,NF
      COUPLING(r)%OMEGA  = COUPLING_C(r)%OMEGA
-     !COUPLING(r)%VALUES = 0.0
-     !COUPLING(r)%ROW    = 0
-     !COUPLING(r)%COLUMN = 0
      COUPLING(r)%X      = COUPLING_C(r)%X
      COUPLING(r)%Y      = COUPLING_C(r)%Y
      COUPLING(r)%Z      = COUPLING_C(r)%Z

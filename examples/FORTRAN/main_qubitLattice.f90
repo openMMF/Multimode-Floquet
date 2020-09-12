@@ -21,7 +21,7 @@ PROGRAM MULTIMODEFLOQUET
   DOUBLE PRECISION                              :: T1,T2
 
   DOUBLE PRECISION m_, eta,  phi1,  phi2 ,  gamma, dt,TotalTime,W2_0,W3_0
-
+  INTEGER N_
 
 
 
@@ -86,7 +86,7 @@ PROGRAM MULTIMODEFLOQUET
      FIELDS(2)%phi_y = 0.0
      FIELDS(2)%phi_z = phi1 
      FIELDS(2)%omega = 0.1
-     FIELDS(2)%N_Floquet = 13
+     FIELDS(2)%N_Floquet = 3
      
      FIELDS(3)%X     =  0.0
      FIELDS(3)%Y     =  2.0*eta
@@ -95,15 +95,15 @@ PROGRAM MULTIMODEFLOQUET
      FIELDS(3)%phi_y = phi2 - pi/2
      FIELDS(3)%phi_z = phi2
      FIELDS(3)%omega = gamma*FIELDS(2)%OMEGA
-     FIELDS(3)%N_Floquet = 13
+     FIELDS(3)%N_Floquet = 3
      
      CALL SETHAMILTONIANCOMPONENTS(ID,size(modes_num,1),total_frequencies,MODES_NUM,FIELDS,INFO)
 
      ! ----- INITIAL STATE
      H_0 = (2.0*eta*m_ - 2.0*COS(phi1) - 2.0*COS(phi2))*J_z + eta*2.0*SIN(phi1)*J_x + eta*2.0*SIN(phi2)*DCMPLX(0.0,1.0)*J_y
      CALL LAPACK_FULLEIGENVALUES(H_0,SIZE(H_0,1),E_0,INFO)
-     WRITE(*,*) H_0(:,1)
-     WRITE(*,*) E_0
+     !WRITE(*,*) H_0(:,1)
+     !WRITE(*,*) E_0
     
      !--- FIND THE MULTIMODE FLOQUET SPECTRUM 
      CALL MULTIMODEFLOQUETMATRIX(ID,size(modes_num,1),total_frequencies,MODES_NUM,FIELDS,INFO)
@@ -121,19 +121,20 @@ PROGRAM MULTIMODEFLOQUET
      
      !--- EVALUATE TIME-EVOLUTION OPERATOR IN THE BARE BASIS
      T1 = 0.0
-     dt = 1.0E-3
+     dt = 100.0!1.0E-3
      T2 = T1 + dt
      CALL MULTIMODETIMEEVOLUTINOPERATOR(SIZE(U_F,1),SIZE(MODES_NUM,1),MODES_NUM,U_F,E_FLOQUET,ID%D_BARE,FIELDS,T1,T2,U_dt,INFO) 
      U_AUX = Qubit_IDENTITY
      TotalTime = 10000.0
-     DO r=1,256*4096*8!int(TotalTime/dt)
+     N_ = int(TotalTime/dt)
+     DO r=1,N_
         dh2 = 2.0*eta*FIELDS(2)%OMEGA*(                 J_x*cos(fields(2)%omega*T2+phi1) + J_z*sin(fields(2)%omega*T2+phi1))!*dt
         dh3 = 2.0*eta*FIELDS(3)%OMEGA*(DCMPLX(0.0,-1.0)*J_y*cos(fields(3)%omega*T2+phi2) + J_z*sin(fields(3)%omega*T2+phi2))!*dt
         U_AUX = MATMUL(U_dt,U_AUX)
         W2 = W2 + MATMUL(TRANSPOSE(CONJG(U_AUX)),MATMUL(dh2,U_AUX))
         W3 = W3 + MATMUL(TRANSPOSE(CONJG(U_AUX)),MATMUL(dh3,U_AUX))     
         T2 = T2 + dt
-        !IF(MOD(r,2000).EQ.0) WRITE(3,*) i_,t2,ABS(U_AUX)**2,W2,W3
+        IF(MOD(r,2000).EQ.0) WRITE(3,*) i_,t2,ABS(U_AUX)**2,W2,W3
         W2_0 = DOT_PRODUCT(H_0(:,1),MATMUL(W2,H_0(:,1)))
         W3_0 = DOT_PRODUCT(H_0(:,1),MATMUL(W3,H_0(:,1)))
 

@@ -12,6 +12,8 @@
 *.log
 *.blg	
 *.mod
+*.so
 #*#
 *~
 nbproject/
+src/__pycache__/

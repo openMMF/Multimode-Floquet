@@ -1,0 +1,114 @@
+running build
+running config_cc
+unifing config_cc, config, build_clib, build_ext, build commands --compiler options
+running config_fc
+unifing config_fc, config, build_clib, build_ext, build commands --fcompiler options
+running build_src
+build_src
+building extension "test3" sources
+f2py options: []
+f2py:> /tmp/tmphcmeslzt/src.linux-x86_64-3.7/test3module.c
+creating /tmp/tmphcmeslzt/src.linux-x86_64-3.7
+Reading fortran codes...
+	Reading file 'Floquet_init.f90' (format:free)
+Post-processing...
+	Block: test3
+			Block: set_atomic_parameters
+In: :test3:Floquet_init.f90:set_atomic_parameters
+get_useparameters: no module atomic_properties info used by set_atomic_parameters
+In: :test3:Floquet_init.f90:set_atomic_parameters
+get_useparameters: no module types info used by set_atomic_parameters
+			Block: deallocateall
+In: :test3:Floquet_init.f90:deallocateall
+get_useparameters: no module arrays info used by deallocateall
+			Block: floquetinitinterface
+				Block: floquetinit
+				Block: floquetinit_qubit
+In: :test3:Floquet_init.f90:floquetinitinterface:floquetinit_qubit
+get_useparameters: no module physical_constants info used by floquetinit_qubit
+In: :test3:Floquet_init.f90:floquetinitinterface:floquetinit_qubit
+get_useparameters: no module atomic_properties info used by floquetinit_qubit
+In: :test3:Floquet_init.f90:floquetinitinterface:floquetinit_qubit
+get_useparameters: no module subinterface info used by floquetinit_qubit
+In: :test3:Floquet_init.f90:floquetinitinterface:floquetinit_qubit
+get_useparameters: no module arrays info used by floquetinit_qubit
+In: :test3:Floquet_init.f90:floquetinitinterface:floquetinit_qubit
+get_useparameters: no module subinterface_lapack info used by floquetinit_qubit
+In: :test3:Floquet_init.f90:floquetinitinterface:floquetinit_qubit
+get_useparameters: no module types info used by floquetinit_qubit
+				Block: floquetinit_spin
+In: :test3:Floquet_init.f90:floquetinitinterface:floquetinit_spin
+get_useparameters: no module physical_constants info used by floquetinit_spin
+In: :test3:Floquet_init.f90:floquetinitinterface:floquetinit_spin
+get_useparameters: no module atomic_properties info used by floquetinit_spin
+In: :test3:Floquet_init.f90:floquetinitinterface:floquetinit_spin
+get_useparameters: no module subinterface info used by floquetinit_spin
+In: :test3:Floquet_init.f90:floquetinitinterface:floquetinit_spin
+get_useparameters: no module arrays info used by floquetinit_spin
+In: :test3:Floquet_init.f90:floquetinitinterface:floquetinit_spin
+get_useparameters: no module subinterface_lapack info used by floquetinit_spin
+In: :test3:Floquet_init.f90:floquetinitinterface:floquetinit_spin
+get_useparameters: no module types info used by floquetinit_spin
+				Block: floquetinit_mbh
+In: :test3:Floquet_init.f90:floquetinitinterface:floquetinit_mbh
+get_useparameters: no module physical_constants info used by floquetinit_mbh
+In: :test3:Floquet_init.f90:floquetinitinterface:floquetinit_mbh
+get_useparameters: no module atomic_properties info used by floquetinit_mbh
+In: :test3:Floquet_init.f90:floquetinitinterface:floquetinit_mbh
+get_useparameters: no module subinterface info used by floquetinit_mbh
+In: :test3:Floquet_init.f90:floquetinitinterface:floquetinit_mbh
+get_useparameters: no module arrays info used by floquetinit_mbh
+In: :test3:Floquet_init.f90:floquetinitinterface:floquetinit_mbh
+get_useparameters: no module subinterface_lapack info used by floquetinit_mbh
+In: :test3:Floquet_init.f90:floquetinitinterface:floquetinit_mbh
+get_useparameters: no module types info used by floquetinit_mbh
+				Block: floquetinit_alkali
+In: :test3:Floquet_init.f90:floquetinitinterface:floquetinit_alkali
+get_useparameters: no module physical_constants info used by floquetinit_alkali
+In: :test3:Floquet_init.f90:floquetinitinterface:floquetinit_alkali
+get_useparameters: no module atomic_properties info used by floquetinit_alkali
+In: :test3:Floquet_init.f90:floquetinitinterface:floquetinit_alkali
+get_useparameters: no module subinterface info used by floquetinit_alkali
+In: :test3:Floquet_init.f90:floquetinitinterface:floquetinit_alkali
+get_useparameters: no module arrays info used by floquetinit_alkali
+In: :test3:Floquet_init.f90:floquetinitinterface:floquetinit_alkali
+get_useparameters: no module subinterface_lapack info used by floquetinit_alkali
+In: :test3:Floquet_init.f90:floquetinitinterface:floquetinit_alkali
+get_useparameters: no module types info used by floquetinit_alkali
+			Block: sethamiltoniancomponents
+In: :test3:Floquet_init.f90:sethamiltoniancomponents
+get_useparameters: no module arrays info used by sethamiltoniancomponents
+In: :test3:Floquet_init.f90:sethamiltoniancomponents
+get_useparameters: no module atomic_properties info used by sethamiltoniancomponents
+In: :test3:Floquet_init.f90:sethamiltoniancomponents
+get_useparameters: no module types info used by sethamiltoniancomponents
+In: :test3:Floquet_init.f90:sethamiltoniancomponents
+get_useparameters: no module subinterface_lapack info used by sethamiltoniancomponents
+			Block: floquetinit_old
+In: :test3:Floquet_init.f90:floquetinit_old
+get_useparameters: no module physical_constants info used by floquetinit_old
+In: :test3:Floquet_init.f90:floquetinit_old
+get_useparameters: no module atomic_properties info used by floquetinit_old
+In: :test3:Floquet_init.f90:floquetinit_old
+get_useparameters: no module subinterface info used by floquetinit_old
+In: :test3:Floquet_init.f90:floquetinit_old
+get_useparameters: no module arrays info used by floquetinit_old
+In: :test3:Floquet_init.f90:floquetinit_old
+get_useparameters: no module subinterface_lapack info used by floquetinit_old
+In: :test3:Floquet_init.f90:floquetinit_old
+get_useparameters: no module types info used by floquetinit_old
+Post-processing (stage 2)...
+	Block: test3
+		Block: unknown_interface
+			Block: set_atomic_parameters
+			Block: deallocateall
+			Block: floquetinitinterface
+				Block: floquetinit_qubit
+				Block: floquetinit_spin
+				Block: floquetinit_mbh
+				Block: floquetinit_alkali
+			Block: sethamiltoniancomponents
+			Block: floquetinit_old
+Building modules...
+	Building module "test3"...
+		Constructing wrapper function "set_atomic_parameters"...

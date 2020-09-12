@@ -1,4 +1,4 @@
-//export LD_LIBRARY_PATH="/opt/intel/compilers_and_libraries_2017/linux/mkl/lib/intel64"; 
+//export LD_LIBRARY_PATH="/opt/intel/compilers_and_libraries/linux/mkl/lib/intel64"; 
 #include <iostream>
 #include <complex>
 #include <stdio.h>
@@ -30,8 +30,8 @@ int main(){
   FILE *disco0;
   FILE *disco1;
 
-  disco0 = fopen("qubit_bareoscillation.dat","w");
-  disco1 = fopen("qubit_dressedoscillation.dat","w");
+  disco0 = fopen("qubit_bareoscillation_V1.dat","w+");
+  disco1 = fopen("qubit_dressedoscillation_V1.dat","w+");
 
   info   = 0;
   jtotal = 2;
@@ -66,14 +66,14 @@ int main(){
   fields[0].omega = 0.0;
   fields[0].N_Floquet = 0;
 
-  fields[1].x     = 0.125;
+  fields[1].x     = 0.125/2.0;
   fields[1].y     = 0.0;
   fields[1].z     = 0.0;
   fields[1].phi_x = 0.0;
   fields[1].phi_y = 0.0;
   fields[1].phi_z = 0.0;
   fields[1].omega = 1.0;
-  fields[1].N_Floquet = 5;
+  fields[1].N_Floquet = 2;
 
   fields[2].x     = 0.125*fields[1].x/2.0;
   fields[2].y     = 0.0; 
@@ -82,12 +82,12 @@ int main(){
   fields[2].phi_y = 0.0;
   fields[2].phi_z = 0.0;
   fields[2].omega = real(fields[1].x)/2.0;
-  fields[2].N_Floquet = 6;
+  fields[2].N_Floquet = 2;
 
   //printf("%i %i \n",d_bare,total_frequencies);
   
   sethamiltoniancomponents_c_(&id,&nm,&total_frequencies,modes_num,fields,&info);
-         
+  
   // =================================================================================
   // ==== DEFINITION OF THE DRESSING FIELDS AND DRESSED BASIS
   // =================================================================================
@@ -103,12 +103,20 @@ int main(){
     dressingfloquetdimension = dressingfloquetdimension*(2*fields[dressingfields_indices[m]].N_Floquet + 1);
   }
   dcmplx * U_FD = new dcmplx [dressingfloquetdimension*dressingfloquetdimension];
+  double * P_FD = new double [dressingfloquetdimension*dressingfloquetdimension];
   double * e_dressed = new double [dressingfloquetdimension];
   
   dressedbasis_subset_c_(&id,&dressingfloquetdimension,&dressingfields,&nm,dressingfields_indices,modes_num,fields, U_FD, e_dressed,&info);
-
-  
-  
+  /* 
+  m = 0;
+  for(r=0;r<dressingfloquetdimension;r++){
+    for(l=0;l<dressingfloquetdimension;l++){
+      printf("%f ",pow(abs(U_FD[m]),2));
+      m +=1;
+    }
+    printf("\n");
+  }
+  */
   int index0 = d_bare*fields[1].N_Floquet;
   
   int nm_ = dressingfields; // number of dressing fields
@@ -138,28 +146,27 @@ int main(){
   
   
   //==== ALLOCATE ARRAYS FOR THE MICROMOTION OPERATORS IN THE EXTENDED AND ORIGINAL HILBERT SPACES.
-  
-  dcmplx * U_F1     = new dcmplx [d_bare*dressingfloquetdimension]; // for the fourier components of the dresseds states at time t1
-  dcmplx * U_F2     = new dcmplx [d_bare*dressingfloquetdimension]; // for the fourier components of the dressed states at time t2
+   
   dcmplx * U_F1_red = new dcmplx [d_bare*d_bare];                   // selection of a single dressed manifold at time t1
   dcmplx * U_F2_red = new dcmplx [d_bare*d_bare];                   // selection of a single dressed manifold at time t2
-  
+  dcmplx * U_T      = new dcmplx [d_bare*d_bare]; // U_aux
+	
   // ! ========= FIND THE MULTIMODE FLOQUET SPECTRUM 
-  
-  for(r=0;r<6;r++){
+  //printf("%d %d\n",d_bare,dressingfloquetdimension);
+  int n_ = 64;
+  int m_ = 512;
+  for(r=0;r<n_;r+=4){
 
     // ====== SET THE DRESSING FREQUENCY
 
-    fields[2].omega = real(fields[1].x)/4.0 + r*real(fields[1].x)/64.0;     
+    fields[2].omega = real(fields[0].z) - real(fields[1].x) + 2.0*r*real(fields[1].x)/n_;     
     sethamiltoniancomponents_c_(&id,&nm,&total_frequencies,modes_num,fields,&info); // every time a field parameter is modified, we should run this function
 
     //!--- FIND THE MULTIMODE FLOQUET SPECTRUM 
     
-    multimodefloquetmatrix_c_(&id,&nm,&total_frequencies,modes_num,fields,&info); // in this function we calculate the dimension of the multimode 
-                                                                                  // floquet hilbert space: h_floquet_size 
+    multimodefloquetmatrix_c_(&id,&nm,&total_frequencies,modes_num,fields,&info);   // floquet hilbert space: h_floquet_size 
+                                                                                    // which is the value of the global variable h_floquet_size    
 
-
-                                                                                  // which is the value of the global variable h_floquet_size    
     double * e_floquet = new double [h_floquet_size];
     dcmplx * U_F =  new dcmplx [h_floquet_size*h_floquet_size];    
 
@@ -178,54 +185,102 @@ int main(){
     // ======= EVALUATE TIME-EVOLUTION OPERATOR IN THE BARE BASIS       
     t1 = 0.0;
     t2 = 0.0;
-    for(m=0;m<1;m++){
-      t2 = m*16.0*100/128.0;
+    
+    for(j=0;j<m_;j+=4){
+      t2 = j*1600/128;
       multimodetimeevolutionoperator_c_(&h_floquet_size,&nm,modes_num,U_F,e_floquet,&d_bare,fields,&t1,&t2,U_AUX,&info);
-      
+      m = 0;
+      /*for(i=0;i<d_bare;i++){
+	for(l=0;l<d_bare;l++){
+	  printf("%f ",pow(abs(U_AUX[m]),2));
+	  m +=1;
+	}
+	printf("\n");
+      }
+      printf("\n");
+      */
       for(i=0;i<d_bare*d_bare;i++){
 	P[i] = abs(U_AUX[i])*abs(U_AUX[i]);
       }   
       
-    //  fprintf(disco0,"%8.3E  %f  %f  %f  %f  %f \n",fields[2].omega,t2,P[0],P[1],P[2],P[3]);
-            
+      fprintf(disco0,"%8.3E  %f  %f  %f  %f  %f \n",fields[2].omega,t2,P[0],P[1],P[2],P[3]);
+      
       //!=================================================================================
       //!== TRANSFORM THE TIME-EVOLUTION OPERATOR TO THE DRESSED BASIS
       //!=================================================================================
       //       
       //!== BUILD THE TIME-DEPENDENT TRANSFORMATION BETWEEN THE BARE AND THE RF DRESSED BASIS: U_F1
       //       
-      info =0  ;
-      //multimodemicromotion_c_(&id,&dressingfloquetdimension,&nm_,modes_num_,U_FD,e_dressed,&d_bare,fields_,&t1,U_F1_red,&info); 
       
-      multimodefloquettransformation_c_(&dressingfloquetdimension,&nm_,modes_num_,U_FD,e_dressed,&d_bare,fields_,&t1,U_F1,&info); 
-      multimodefloquettransformation_c_(&dressingfloquetdimension,&nm_,modes_num_,U_FD,e_dressed,&d_bare,fields_,&t2,U_F2,&info); 
+      info =0;         
+      multimodemicromotion_c_(&id,&dressingfloquetdimension,&nm_,modes_num_,U_FD,e_dressed,&d_bare,fields_,&t1,U_F1_red,&info);
+      multimodemicromotion_c_(&id,&dressingfloquetdimension,&nm_,modes_num_,U_FD,e_dressed,&d_bare,fields_,&t2,U_F2_red,&info);
+      /*m = 0;
+     
+	for(i=0;i<d_bare;i++){
+	for(l=0;l<d_bare;l++){
+	printf("%f ",pow(abs(U_F1_red[m]),2));
+	m +=1;
+	}
+	printf("\n");
+      }
+      printf("\n");
       
-      //! ====== SINGLE OUT ONE BARE SUBSPACE
-      
-      index0 = d_bare*d_bare*(((dressingfloquetdimension/d_bare) - 1)/2);
+      m = 0;
       for(i=0;i<d_bare;i++){
-	for(j=0;j<d_bare;j++){
-	  U_F1_red[i*d_bare+j] = U_F1[index0 + i*d_bare + j];
-	  U_F2_red[i*d_bare+j] = U_F2[index0 + i*d_bare + j];
+	for(l=0;l<d_bare;l++){
+	  printf("%f ",pow(abs(U_F2_red[m]),2));
+	  m +=1;
+	}
+	printf("\n");
+      }
+      printf("\n");
+      */
+      //! ====== CALCULATE THE TIME-EVOLUTION OPERATOR IN THE DRESSED BASIS USING THE PREVIOUS ONE CALCULATED IN THE BARE BASIS
+      /*
+      dcmplx U_L[d_bare][d_bare]; // U_F1_red
+      dcmplx U_R[d_bare][d_bare]; // U_F2_red
+      dcmplx U_T[d_bare][d_bare]; // U_aux
+
+      for(i=0;i<d_bare;i++){
+	for(l=0;l<d_bare;l++){
+	  U_L[i][l] = U_F1_red[i*d_bare+l];
+	  U_R[i][l] = U_F2_red[i*d_bare+l];
+	  U_T[i][l] = U_AUX[i*d_bare+l];
 	}
       }
-      
-      //! ====== CALCULATE THE TIME-EVOLUTION OPERATOR IN THE DRESSED BASIS USING THE PREVIOUS ONE CALCULATED IN THE BARE BASIS
-      /*      char mm[]={"N"};      
-      matmul_c(mm,U_AUX,&d_bare,&d_bare,U_F1_red,&d_bare,&d_bare,U_AUX,&info);
-      char mm2[]={"TC"};      
-      matmul_c(mm2,U_F2_red,&d_bare,&d_bare,U_AUX,&d_bare,&d_bare,U_AUX,&info);*/
-
+      */
       i =4;
-      matmul_c(&i,U_AUX,&d_bare,&d_bare,U_F1_red,&d_bare,&d_bare,U_AUX,&info);
-      i = 2;
-      matmul_c(&i,U_F2_red,&d_bare,&d_bare,U_AUX,&d_bare,&d_bare,U_AUX,&info);
-
-      for(i=0;i<d_bare*d_bare;i++){
-	P[i] = abs(U_F[i])*abs(U_F[i]);
+      info = 0;
+      matmul_c(&i,U_AUX,&d_bare,&d_bare,U_F1_red,&d_bare,&d_bare,U_T,&info);
+      /*m = 0;
+      for(i=0;i<d_bare;i++){
+	for(l=0;l<d_bare;l++){
+	  printf("%f ",pow(abs(U_T[m]),2));
+	  m +=1;
+	}
+	printf("\n");
       }
-        
-      //fprintf(disco1,"%8.3E  %f  %f  %f  %f  %f \n",fields[2].omega,t2,P[0],P[1],P[2],P[3]);
+      printf("\n");
+      */
+      i = 2;
+      matmul_c(&i,U_F2_red,&d_bare,&d_bare,U_T,&d_bare,&d_bare,U_AUX,&info);
+      m = 0;
+      /*
+	for(i=0;i<d_bare;i++){
+	for(l=0;l<d_bare;l++){
+	  printf("%f ",pow(abs(U_AUX[m]),2));
+	  m +=1;
+	}
+	printf("\n");
+      }
+      printf("\n");
+      */      
+      for(i=0;i<d_bare*d_bare;i++){
+	P[i] = abs(U_AUX[i])*abs(U_AUX[i]);
+      }
+      
+      fprintf(disco1,"%8.3E  %f  %f  %f  %f  %f \n",fields[2].omega,t2,P[0],P[1],P[2],P[3]);
       //printf("%8.3E  %f  %f  %f  %f  %f \n",fields[2].omega,t2,P[0],P[1],P[2],P[3]);
       //write_matrix_c_(P,&d_bare);        
       

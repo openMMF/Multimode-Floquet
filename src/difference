@@ -1,0 +1,81 @@
+16d15
+<   USE QUICKSORTINTERFACE !(Modules.f90)
+31c30
+<   INTEGER,          DIMENSION(:),   ALLOCATABLE :: ROW,COLUMN,ARRAYI_AUX,ROW_OLD,COLUMN_OLD,ROW_INDEX,INDEX_ORDERROW,INDEX_ORDERROW_
+---
+>   INTEGER,          DIMENSION(:),   ALLOCATABLE :: ROW,COLUMN,ARRAYI_AUX,ROW_OLD,COLUMN_OLD,ROW_INDEX,INDEX_ORDERROW
+51c50
+<   !INFO       = 0
+---
+>   INFO       = 0
+53c52
+<   counter    = 1
+---
+> 
+92,96d90
+< 
+<         IF(ALLOCATED(FIELDS(m)%VALUES)) DEALLOCATE(FIELDS(m)%VALUES)
+<         IF(ALLOCATED(FIELDS(m)%ROW)) DEALLOCATE(FIELDS(m)%ROW)
+<         IF(ALLOCATED(FIELDS(m)%COLUMN)) DEALLOCATE(FIELDS(m)%COLUMN)
+< 
+231c225
+<         !WRITE(*,*) REAL(VALUES)
+---
+>         !     WRITE(*,*) REAL(VALUES)
+253,257c247
+<      IF(info.eq.6) THEN ! values, row, column representation of the H matrix
+<         ALLOCATE(VALUES_(SIZE(VALUES,1)))
+<         ALLOCATE(ROW_INDEX_(SIZE(ROW,1)))
+<         ALLOCATE(COLUMN_(SIZE(COLUMN,1)))
+< 
+---
+>      IF(info.eq.6) THEN
+261,262d250
+<         INFO       = D_MULTIFLOQUET
+<         
+263a252,254
+> 
+> 
+> 
+270c261
+< !        WRITE(*,*) REAL(VALUES)
+---
+>      !    WRITE(*,*) REAL(VALUES)
+277,280d267
+<         !write(*,*) ROW
+<         !write(*,*) INDEX_ORDERROW
+<         !write(*,*) ROW(INDEX_ORDERROW)
+< 
+282a270
+>         VALUES = VALUES(INDEX_ORDERROW)
+285c273
+<         !write(*,*) real(values)
+---
+>         !     write(*,*)
+314,331c302
+<         m = 1
+<         do r=2,size(row_index,1)
+<            counter = row_index(r)-row_index(r-1)-1
+< 
+< !           write(*,*) row_index(r)-row_index(r-1),m,m+counter
+<            ALLOCATE(INDEX_ORDERROW_(counter+1))           
+< !           write(*,*) INDEX_ORDERROW(m:m+counter)
+<            CALL QUICK_SORT_INTEGERS(INDEX_ORDERROW(m:m+counter),INDEX_ORDERROW_,counter+1)
+<            INDEX_ORDERROW(m:m+counter) = INDEX_ORDERROW((m-1)+INDEX_ORDERROW_)
+<            COLUMN(m:m+counter)         = COLUMN((m-1)+INDEX_ORDERROW_)
+<            m = m + counter + 1
+<            DEALLOCATE(INDEX_ORDERROW_)
+<         end do
+<         VALUES = VALUES(INDEX_ORDERROW)
+<  
+<         !write(*,*) INDEX_ORDERROW
+<         !write(*,*) COLUMN
+<         
+---
+>         !     write(*,*) row_index(1:10)
+361,363d331
+<   !write(*,*) SIZE(VALUES_,1)
+<   !write(*,*) SIZE(ROW_INDEX_,1)
+<   !write(*,*) SIZE(COLUMN_,1)
+365a334
+> 

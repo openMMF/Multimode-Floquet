@@ -9,8 +9,8 @@ PROGRAM MULTIMODEFLOQUET
 
 
   IMPLICIT NONE
-  TYPE(MODE),       DIMENSION(:),   ALLOCATABLE :: FIELDS
   TYPE(ATOM)                                       ID
+  TYPE(MODE),       DIMENSION(:),   ALLOCATABLE :: FIELDS
   INTEGER,          DIMENSION(:),   ALLOCATABLE :: MODES_NUM
   INTEGER                                          TOTAL_FREQUENCIES,D_MULTIFLOQUET
   INTEGER                                          INFO,m,INDEX0,r,D_BARE
@@ -31,8 +31,7 @@ PROGRAM MULTIMODEFLOQUET
   INTEGER,    DIMENSION(:),ALLOCATABLE :: MODES_NUM_
   ! ===================================================
 
-
-
+  INTEGER M__,N__
  
   OPEN(UNIT=3,file="qubit_bareoscillation_DRIVER.dat", action="write")
   OPEN(UNIT=4,file="qubit_dressedoscillation_DRIVER.dat", action="write")
@@ -71,14 +70,14 @@ PROGRAM MULTIMODEFLOQUET
   FIELDS(1)%omega     = 0.0
   FIELDS(1)%N_Floquet = 0
 
-  FIELDS(2)%X         = 0.125
+  FIELDS(2)%X         = 0.125/2.0
   FIELDS(2)%Y         = 0.0
   FIELDS(2)%Z         = 0.0
   FIELDS(2)%phi_x     = 0.0
   FIELDS(2)%phi_y     = 0.0
   FIELDS(2)%phi_z     = 0.0
   FIELDS(2)%omega     = 1.0
-  FIELDS(2)%N_Floquet = 5
+  FIELDS(2)%N_Floquet = 2
   
   FIELDS(3)%X         = 0.125*FIELDS(2)%X/2.0
   FIELDS(3)%Y         = 0.0
@@ -87,7 +86,7 @@ PROGRAM MULTIMODEFLOQUET
   FIELDS(3)%phi_y     = 0.0
   FIELDS(3)%phi_z     = 0.0
   FIELDS(3)%omega     = FIELDS(2)%X/2.0
-  FIELDS(3)%N_Floquet = 3
+  FIELDS(3)%N_Floquet = 2
 
   D_MULTIFLOQUET = ID%D_BARE
   DO r=1,TOTAL_FREQUENCIES
@@ -143,8 +142,8 @@ PROGRAM MULTIMODEFLOQUET
   CALL SETHAMILTONIANCOMPONENTS(ID,size(modes_num,1),total_frequencies,MODES_NUM,FIELDS,INFO)
   
   !==== MICROMOTION OPERATORS EXTENDED BASIS
-  ALLOCATE(U_F1(ID%D_BARE,SIZE(U_FD,1)))
-  ALLOCATE(U_F2(ID%D_BARE,SIZE(U_FD,1)))
+  !ALLOCATE(U_F1(ID%D_BARE,SIZE(U_FD,1)))
+  !ALLOCATE(U_F2(ID%D_BARE,SIZE(U_FD,1)))
   !==== MICROMOTION OPERATOR 
   ALLOCATE(U_F1_red(ID%D_BARE,ID%D_BARE))
   ALLOCATE(U_F2_red(ID%D_BARE,ID%D_BARE))
@@ -153,20 +152,22 @@ PROGRAM MULTIMODEFLOQUET
   !   CALL WRITE_MATRIX(REAL(FIELDS(m)%V))
   !END DO
 
-  DO r=1,64
+  N__ = 64
+  M__ = 512
+  DO r=1,N__,4
 
 !!$!========= FIND THE MULTIMODE FLOQUET SPECTRUM 
       
-     FIELDS(3)%omega     = FIELDS(2)%X/4.0 + (r-1)*FIELDS(2)%X/64
+     FIELDS(3)%omega     = FIELDS(1)%Z - FIELDS(2)%X + 2.0*(r-1)*FIELDS(2)%X/N__
      
      ! ===== EVALUATE TIME-EVOLUTION OPERATOR 
 
      T1 = 0.0
-     DO m=64,64!128,128         
-        T2 = (m-1)*16.0*100.0/128
+     DO m=1,M__,4         
+        T2 = (m-1)*1600.0/128
         
         ! ===== EVALUATE TIME-EVOLUTION OPERATOR  IN THE BARE BASIS
-        CALL TIMEEVOLUTIONOPERATOR(ID,D_BARE,SIZE(MODES_NUM,1),MODES_NUM,FIELDS,T1,T2,U_AUX,INFO) 
+        CALL TIMEEVOLUTIONOPERATOR(ID,D_BARE,SIZE(MODES_NUM,1),SIZE(MODES_NUM,1),MODES_NUM,FIELDS,T1,T2,U_AUX,INFO) 
         WRITE(3,*) FIELDS(3)%OMEGA,t2,ABS(U_AUX)**2
         
 !!$     !=================================================================================
@@ -183,6 +184,8 @@ PROGRAM MULTIMODEFLOQUET
         WRITE(4,*) FIELDS(3)%OMEGA,t2,ABS(U_AUX)**2
 
      END DO
+     WRITE(3,*)
+     WRITE(4,*)
   END DO
   
 END PROGRAM MULTIMODEFLOQUET
