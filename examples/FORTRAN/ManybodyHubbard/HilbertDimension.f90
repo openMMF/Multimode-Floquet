@@ -23,7 +23,7 @@ DOUBLE PRECISION FUNCTION  D_H(N_SITES,N_PARTICLES,stats)
          IF(N_PARTICLES.GT.1) THEN
             N_ = N_SITES+N_PARTICLES-1;
             K_ = N_PARTICLES;
-            
+            write(*,*) N_,k_
             Num = 1.0;
             do while (n_.gt.0) 
                 Num = Num*n_;
