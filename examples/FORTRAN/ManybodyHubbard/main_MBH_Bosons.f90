@@ -21,91 +21,120 @@ PROGRAM MANYBODYHUBBARD
   INTEGER         , DIMENSION(:,:), ALLOCATABLE :: states_occ
   DOUBLE PRECISION                              :: T1,T2
 
-  INTEGER index,N_BODIES,N_SITES,i_
-
-  DOUBLE PRECISION t1_h,t2_h,mu,d_h
-  
-  DOUBLE PRECISION t,u,t_driv,omega
+  INTEGER index,N_BODIES,N_SITES,i_,M_
+  DOUBLE PRECISION t,u,t_driv,omega,D_H
 
   OPEN(UNIT=3,FILE="ManyboydHubbard_Bosons.dat",ACTION="WRITE")
-  OPEN(UNIT=3,FILE="ManyboydHubbard_Fermions.dat",ACTION="WRITE")
-
+  
   INFO = 0
-  N_BODIES = 2
+  N_BODIES = 5
+  
   N_SITES  = 7
-  D_BARE = D_H(N_SITES,N_BODIES,'F') 
-  !D_BARE = INT(D_H(N_SITES,N_BODIES,'B'))
-  write(*,*) D_Bare
+  
+  
+  
+  D_BARE = D_H(N_SITES,N_BODIES,'F')  ! D_H EVALUATES THE NUMBER OF STATES  
+  write(*,*) '# Number of lattice sites:         ', N_SITES
+  write(*,*) '# Number of particles:             ', N_BODIES
+  write(*,*) '# Number of states Bosonic states  ', D_BARE
+  write(*,*)
+  write(*,*)
+
+  
+  
   CALL FLOQUETINIT(ID,'lattice',0.1d1*D_BARE,INFO)
 
-
-  ALLOCATE(E_BARE(D_BARE))
-  ALLOCATE(H_BARE(D_BARE,D_BARE))
-  ALLOCATE(H_J(D_BARE,D_BARE))
-  ALLOCATE(H_U(D_BARE,D_BARE))
-  ALLOCATE(MODES_NUM(2))
-  ALLOCATE(states_occ(D_BARE,N_SITES))
+  ALLOCATE(E_BARE(D_BARE))             ! STORE THE ENERGY SPECTRUM
+  ALLOCATE(H_BARE(D_BARE,D_BARE))      ! STORE THE BARE HAMILTONIAN
+  ALLOCATE(H_J(D_BARE,D_BARE))         ! STORE THE TUNNENING MATRIX
+  ALLOCATE(H_U(D_BARE,D_BARE))         ! STORES THE ONSITE INTERACTION
+  ALLOCATE(MODES_NUM(2))               ! NUMBER OF DRIVING MODES
+  
+  
+  ALLOCATE(states_occ(D_BARE,N_SITES)) ! STORES THE STATES USING OCCUPATION NUMBER 
 
    ! CREATE THE BASIS OF STATES
-  CALL Manybody_basis(D_BARE,N_SITES,N_BODIES,'F',states_occ,INFO)
-  call write_matrix_int(states_occ)
-!  CALL Manybody_basis(D_BARE,N_SITES,N_BODIES,'B',states_occ,INFO)
-!  
+  CALL Manybody_basis(D_BARE,N_SITES,N_BODIES,'B',states_occ,INFO)
+  !call write_matrix_int(states_occ)
+  
+  
+  
 !  ! EVALUATE THE TUNNELING TERM OF THE HAMILTONIAN
-!  CALL Tunneling(D_BARE,N_SITES,N_BODIES,STATES_OCC,H_J,INFO)
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  CALL Tunneling_B(D_BARE,N_SITES,N_BODIES,STATES_OCC,H_J,INFO)
 !  !CALL WRITE_MATRIX(abs(h_j))
 !  !! EVALUATE THE ON-SITE INTERACTION
-!  CALL Onsite_twobody(D_BARE,N_SITES,N_BODIES,STATES_OCC,H_U,INFO)
+  
+  CALL Onsite_twobody_B(D_BARE,N_SITES,N_BODIES,STATES_OCC,H_U,INFO)
 !  !CALL WRITE_MATRIX(abs(h_u))
 !
-!  MODES_NUM(1) = 1 !(STATIC FIELD)
-!  MODES_NUM(2) = 1 !(DRIVING BY ONE HARMONIC)
+  !NOW DEFINE THE DRIVING 
+  MODES_NUM(1) = 1 !(STATIC FIELD)
+  MODES_NUM(2) = 1 !(DRIVING BY ONE HARMONIC)
 !  
-!  TOTAL_FREQUENCIES = SUM(MODES_NUM,1)
-!  ALLOCATE(FIELDS(TOTAL_FREQUENCIES))
-!  DO m=1,TOTAL_FREQUENCIES
-!     ALLOCATE(FIELDS(m)%V(D_BARE,D_BARE))
-!     FIELDS(m)%V = 0.0
-!  END DO
-!  
-!  
-!  t      = 1.0
-!  u      = 0.0
-!  t_driv = 1.0
-!  omega  = 1.0
-!  FIELDS(1)%V         = -t*H_J + u*H_U
-!  FIELDS(1)%omega     = 0.0
-!  FIELDS(1)%N_Floquet = 0
-!
-!  FIELDS(2)%V         = t_driv*H_J
-!  FIELDS(2)%omega     = omega
-!  FIELDS(2)%N_Floquet = 2
-!
-!  H_BARE = FIELDS(1)%V
-!  CALL LAPACK_FULLEIGENVALUES(H_BARE,D_BARE,E_BARE,INFO)
-!  DO r=1,SIZE(E_BARE,1)
-!     WRITE(*,*) FIELDS(2)%omega,r,E_BARE(r)
-!  END DO
-!  WRITE(*,*)
-!  WRITE(*,*)
-!  CALL MULTIMODEFLOQUETMATRIX(ID,size(modes_num,1),total_frequencies,MODES_NUM,FIELDS,INFO)
+  TOTAL_FREQUENCIES = SUM(MODES_NUM,1)
+  ALLOCATE(FIELDS(TOTAL_FREQUENCIES))
+  DO m=1,TOTAL_FREQUENCIES
+     ALLOCATE(FIELDS(m)%V(D_BARE,D_BARE))
+     FIELDS(m)%V = 0.0
+  END DO
+  
+  ! HUBBARD MODEL PARAMETERS
+  t      = 1.0
+  u      = 0.5
+  
+  !DRIVING PARAMETERS
+  t_driv = 0.2
+  omega  = 1.0
+
+  ! DEFINE THE TOTAL STATIC HAMILTONIAN USIING THE TUNNELING AND ON-SITE INTERACTIONS
+  FIELDS(1)%V         = -t*H_J + u*H_U
+  FIELDS(1)%omega     = 0
+  FIELDS(1)%N_Floquet = 0
+  
+  ! DEFINE THE DRIVING TERM OF THE HAMILTONIAN.
+  FIELDS(2)%V         = t_driv*H_J
+  FIELDS(2)%omega     = omega
+  FIELDS(2)%N_Floquet = 2
+  
+  write(*,*) '# Hubbard parameters (t,u):',t,u
+  write(*,*) '# Driving parameters (t_driving,omega,N_Floquet):',t_driv,omega,FIELDS(2)%N_Floquet
+  write(*,*) '# Floquet spectrum as a function of the driving frequency (first column))'
+
+
+  ! EVALUATE THE SPECTRUM OF THE STATIC HAMILTONIAN
+  H_BARE = FIELDS(1)%V
+  CALL LAPACK_FULLEIGENVALUES(H_BARE,D_BARE,E_BARE,INFO)
+  M_=32
+  DO m=1,M_ ! SCAN DRIVING FREQUENCY
+    FIELDS(2)%omega     = 0.1 + (m-1)*1.0/M_
+    CALL MULTIMODEFLOQUETMATRIX(ID,size(modes_num,1),total_frequencies,MODES_NUM,FIELDS,INFO)
 !  !CALL WRITE_MATRIX(ABS(H_FLOUET()))
 !
-!  ALLOCATE(E_FLOQUET(SIZE(H_FLOQUET,1)))
-!  ALLOCATE(U_F(SIZE(H_FLOQUET,1),SIZE(H_FLOQUET,1)))
-!  E_FLOQUET = 0.0   
+    ALLOCATE(E_FLOQUET(SIZE(H_FLOQUET,1)))
+    ALLOCATE(U_F(SIZE(H_FLOQUET,1),SIZE(H_FLOQUET,1)))
+    E_FLOQUET = 0.0   
 !  
-!  CALL LAPACK_FULLEIGENVALUES(H_FLOQUET,SIZE(H_FLOQUET,1),E_FLOQUET,INFO)
-!  U_F = H_FLOQUET ! FOURIER DECOMPOSITION OF THE STATES DRESSED BY MODE NUMBER 
-!  DEALLOCATE(H_FLOQUET)
-!  !WRITE(*,*) SIZE(U_F,1)
-!  DO r=1,SIZE(U_F,1)
-!     WRITE(*,*) FIELDS(2)%omega,r,E_FLOQUET(r)
-!  END DO
+    CALL LAPACK_FULLEIGENVALUES(H_FLOQUET,SIZE(H_FLOQUET,1),E_FLOQUET,INFO)
+    U_F = H_FLOQUET ! FOURIER DECOMPOSITION OF THE STATES DRESSED BY MODE NUMBER 
+    WRITE(*,*) FIELDS(2)%omega,E_FLOQUET
+    DEALLOCATE(H_FLOQUET)
+    DEALLOCATE(E_FLOQUET)
+    DEALLOCATE(U_F)
+    
+  END DO
    
 END PROGRAM MANYBODYHUBBARD
 
-SUBROUTINE Tunneling(D_BARE,N_SITES,N_BODIES,STATE,H_J,INFO)
+SUBROUTINE Tunneling_B(D_BARE,N_SITES,N_BODIES,STATE,H_J,INFO)
    
   USE CREATIONDESTRUCTION
   IMPLICIT NONE    
@@ -148,9 +177,9 @@ SUBROUTINE Tunneling(D_BARE,N_SITES,N_BODIES,STATE,H_J,INFO)
      END DO
   END DO
 
-END SUBROUTINE Tunneling
+END SUBROUTINE Tunneling_B
 
-SUBROUTINE Onsite_twobody(D_BARE,N_SITES,N_BODIES,STATE,H_U,INFO)
+SUBROUTINE Onsite_twobody_B(D_BARE,N_SITES,N_BODIES,STATE,H_U,INFO)
 
     USE CREATIONDESTRUCTION
   
@@ -174,7 +203,7 @@ SUBROUTINE Onsite_twobody(D_BARE,N_SITES,N_BODIES,STATE,H_U,INFO)
         END DO
     END DO
 
-END SUBROUTINE Onsite_twobody
+END SUBROUTINE Onsite_twobody_B
 
 SUBROUTINE Tunneling_F(D_BARE,N_SITES,N_BODIES,STATE,H_J,INFO)
    
@@ -205,14 +234,18 @@ SUBROUTINE Tunneling_F(D_BARE,N_SITES,N_BODIES,STATE,H_J,INFO)
   T_DOWN = 0
   H_J    = 0
   T      = 0
-  DO k_=1,N_SITES-1 ! loop though all sites
+  DO k_=1,N_SITES ! loop though all sites
     DO l_=1,2 ! loop through spin up and spin down
         N = D_BARE(l_)
         DO J_=1,N ! Nested loop through all spin up/down states
-            DO I_=J_+1,N
+            DO I_=J_,N
                 STATE_J = STATE(J_ + (l_-1)*D_BARE(1),:) 
                 STATE_I = STATE(I_ + (l_-1)*D_BARE(1),:) 
                 NEW_STATE = TUNNELING_F_(k_,STATE_J)
+                
+                
+                
+                
                 !write(*,*) NEW_STATE,dot_product((NEW_STATE-STATE_I),(NEW_STATE-STATE_I))
                 IF(dot_product((NEW_STATE-STATE_I),(NEW_STATE-STATE_I)).EQ.0) THEN
                     IF(l_.EQ.1) THEN
@@ -276,16 +309,13 @@ SUBROUTINE Onsite_twobody_F(D_BARE,N_SITES,N_BODIES,STATE,H_U,INFO)
   N_(3) = D_BARE(1)*D_BARE(2)
   ALLOCATE(T(N_(3),N_(3)))
     
-  DO k_=1,N_SITES-1 ! loop though all sites
-    DO l_ = 1,2 ! loop through spin up and spin down
-        N = D_BARE(l_)
-        DO J_=1,N
-            IF(l_.EQ.1) T_UP(J_,J_) = STATE(J_,k_)
-            IF(l_.EQ.2) T_DOWN(J_,J_) = STATE(J_,k_)
-        END DO
+  !write(*,*) N_ 
+  T = 0.0
+  DO l_=1,N_(2)
+      DO k_=1,N_(1)
+          !write(*,*) N_,(l_-1)*N_(1)+k_,(l_-1)*N_(1)+k_,DOT_PRODUCT(STATE(k_,:),STATE(N_(1)+l_,:))
+        T((l_-1)*N_(1)+k_,(l_-1)*N_(1)+k_) = DOT_PRODUCT(STATE(k_,:),STATE(N_(1)+l_,:))
     END DO
-    CALL TENSORMULT(N_,T_UP,T_DOWN,T,INFO)
-    H_U = H_U + T
   END DO
-
+  H_U = T
 END SUBROUTINE Onsite_twobody_F

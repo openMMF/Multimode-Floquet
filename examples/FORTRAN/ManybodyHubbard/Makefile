@@ -28,11 +28,12 @@ MMFINC = ../../../include/
 
 all: ManybodyHubbard #
 
-ManybodyHubbard: subset.f90 HilbertDimension.f90 main_MBH.f90
+ManybodyHubbard: subset.f90 HilbertDimension.f90 main_MBH_Fermions.f90
 	$(GF) -c bvec.f90
 	$(GF) -c subset.f90
 	$(GF) -c HilbertDimension.f90
-	$(GF) -o ManybodyHubbard  bvec.o subset.o HilbertDimension.o  main_MBH.f90 -I$(MMFINC) -L$(MMFLIB) -lmultimodefloquet  $(GFFLAGS) 
+	$(GF) -o ManybodyHubbard_Fermions  bvec.o subset.o HilbertDimension.o  main_MBH_Fermions.f90 -I$(MMFINC) -L$(MMFLIB) -lmultimodefloquet  $(GFFLAGS) 
+	$(GF) -o ManybodyHubbard_Bosons  bvec.o subset.o HilbertDimension.o  main_MBH_Bosons.f90 -I$(MMFINC) -L$(MMFLIB) -lmultimodefloquet  $(GFFLAGS) 
 
 
 ############################
