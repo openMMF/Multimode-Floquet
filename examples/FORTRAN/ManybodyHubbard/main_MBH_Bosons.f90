@@ -27,7 +27,7 @@ PROGRAM MANYBODYHUBBARD
   OPEN(UNIT=3,FILE="ManybodyHubbard_Bosons.dat",ACTION="WRITE")
   
   INFO = 0
-  N_BODIES = 5
+  N_BODIES = 7
   
   N_SITES  = 3
   
