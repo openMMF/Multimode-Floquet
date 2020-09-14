@@ -1487,11 +1487,12 @@ def multimodemicromotion(id,h_floquet_size,modes_num,U_F,e_floquet,d_bare,fields
 
 
 #===================================================================
-# COMP. ROUTINE: EVALUATE THE TIME EVOULUTION OPERATOR BETWEEN T1 AND T2 USING THE FOURIER DECOMPOSITION
+# COMP. ROUTINE: EVALUATE THE TIME EVOULUTION OPERATOR BETWEEN T1 AND T2 
+# USING THE FOURIER DECOMPOSITION
 # OF THE MICROMOTION OPERATOR, WHICH IS STORE IN U_F.
 #===================================================================
-def multimodetimeevolutionoperator(h_floquet_size,modes_num,U_F,e_floquet,d_bare,fields,t1,t2,U_AUX,info):
-
+def multimodetimeevolutionoperator(h_floquet_size,modes_num,U_F,e_floquet,d_bare,
+            fields,t1,t2,U_AUX,info):
 
 
 #===================================================================
@@ -1515,9 +1516,8 @@ def dressedbasis_subset(id,dressingfields_indices,modes_num,fields,U_FD,e_dresse
 #===================================================================
 #  EVALUATE THE FOURIER COMPONENTS OF THE MICROMOTION OPERATOR USING THE DRESSING FIELDS
 #===================================================================
-def micromotionfourierdressedbasis(id,dressingfields_indices,modes_num,fields,U_FD,e_dressed,info):
-
-
+def micromotionfourierdressedbasis(id,dressingfields_indices,modes_num,fields,
+           U_FD,e_dressed,info):
 
 #===================================================================
 #  EVALUATE THE MICROMOTION OPERATOR USING THE DRESSING FIELDS
