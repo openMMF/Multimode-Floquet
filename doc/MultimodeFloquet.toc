@@ -25,4 +25,5 @@
 \contentsline {section}{\numberline {12}COMPUTATIONAL SUBROUTINES}{11}
 \contentsline {section}{\numberline {13}DRIVER SUBROUTINES}{17}
 \contentsline {subsection}{\numberline {13.1}Utility subroutines}{20}
-\contentsline {section}{\numberline {14}Python Wrappers prototypes}{23}
+\contentsline {section}{\numberline {14}C++ Wrappers prototypes: src/MultimodeFloquet.h}{23}
+\contentsline {section}{\numberline {15}Python Wrappers prototypes}{24}

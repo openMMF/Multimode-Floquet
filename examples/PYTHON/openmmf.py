@@ -7,7 +7,7 @@ Created on Tue Aug 25 09:44:01 2020
 """
 
 import ctypes 
-from ctypes import CDLL, POINTER, c_int, c_double,c_char_p#,c_int_p,c_double_p
+from ctypes import CDLL, POINTER, c_int, c_double,c_char_p
 from numpy import empty
 import numpy as np
 from numpy.ctypeslib import ndpointer

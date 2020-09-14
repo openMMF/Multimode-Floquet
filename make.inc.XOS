@@ -16,8 +16,9 @@ CFLAGS = -O3
 #  and desired compiler options for your machine. 
 GF         = gfortran
 GFFLAGS    =  -llapack -lblas -g 
-BARRYFLAGS =  -dynamiclib # to generate object files that are boundled 
-                          # in a dynamic library	
+
+# to generate object files that will be  boundled in a dynamic library
+BARRYFLAGS =  -dynamiclib 
 
 
 #  Define LDFLAGS to the desired linker options for your machine.
@@ -30,7 +31,7 @@ LDFLAGS =
 AR         = ar
 ARFLAGS    = urv
 RANLIB     = ranlib
-SHAREFLAGS = -dynamiclib
+SHAREFLAGS = -dynamiclib -llapack -lblas
 DYLIB_NAME = libmultimodefloquet.dylib
 
 

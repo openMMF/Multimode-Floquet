@@ -1423,68 +1423,295 @@ SUBROUTINE VARCRCPACKING(N,DIM,UPLO,zero,A,VALUES,COLUMNS,ROWINDEX,INFO)
 
 \end{verbatim}
 
+\section{C++ Wrappers prototypes: src/MultimodeFloquet.h}
+
+\begin{verbatim}
+struct mode_c{
+  double omega;
+  dcmplx x,y,z;
+  double phi_x,phi_y,phi_z;
+  int N_Floquet;
+};
+
+struct atom_c{
+  int id_system;
+  int d_bare;
+};
+
+
+extern "C" {
+
+  // DIMENSION OF THE MULTIMODE FLOQUET MATRIX. CALCULATED INTERNALLY
+  int h_floquet_size;
+  int h_floquet_c; // Floquet matrix in the bare basis
+
+  // GENERAL INIT SUBROUTINE
+  void floquetinit_qubit_c_ (atom_c *id, int *lenght_name, char * atomicspecie,                                      int * info);
+  void floquetinit_spin_c_  (atom_c *id, int *lenght_name, char * atomicspecie, double * jtotal,                     int * info);
+  void floquetinit_alkali_c_(atom_c *id, int *lenght_name, char * atomicspecie, int * lenght_name2, char * manifold, int * info);
+  
+       
+  // SET HAMILTONIAN OF SPIN-LIKE MODELS
+  void  sethamiltoniancomponents_c_(atom_c *id,int * nm, int * total_frequencies,int * modes_num,mode_c * fields,int * info);
+  
+  
+  // BUILDING FLOQUET MATRIX OF GENERIC MODEL
+  void    multimodefloquetmatrix_c_       (atom_c *id,int * nm, int * total_frequencies,int * modes_num,mode_c * fields, int * info);
+  void get_h_floquet_c_(int * h, dcmplx * values, int* info);
+  int     multimodefloquetmatrix_c_python_(atom_c *id,int * nm, int * total_frequencies,int * modes_num,mode_c * fields,int * info);
+  void multimodefloquetmatrix_sp_c_       (atom_c *id,int * nm, int * total_frequencies,int * modes_num,mode_c * fields, int * info);
+  void multimodefloquetmatrix_python_sp_c_(atom_c *id,int * nm, int * total_frequencies,int * modes_num,mode_c * fields, int * h_f,int * info);
+  void get_h_floquet_sp_c_(int * h_f, dcmplx * values, int * row_index, int * column, int * info);
+
+  
+  // CALCULATE THE SPECTRUM OF THE FLOQUET HAMILTONIAN
+  void   lapack_fulleigenvalues_c_(dcmplx * u_f,int * h_floquet_size,double * e_floquet,int *info);
+  void mklsparse_fulleigenvalues_c_(int * h_floquet_size,double * e_l,double * e_r,double * e_floquet,dcmplx *U_F, int * info);
+  void matmul_c_(int * op, dcmplx * a, int * ra, int * ca, dcmplx * b, int * rb, int * cb, dcmplx * c,int * info);
+  
+  
+  // CONTSRUCTION OF THE TIME-EVOLUTION OPERATOR
+  void         multimodetransitionavg_c_(int * h_floquet_size,int * nm,mode_c * fields,int * modes_num,dcmplx * U_F,double * e_floquet,int * d_bare,double * p_avg,int *info);
+  void multimodefloquettransformation_c_(int * h_floquet_size,int * nm,int * modes_num,dcmplx * U_F,double * e_floquet,int * d_bare,mode_c * fields,double * t1,dcmplx * U_B2D,int * info); 
+  void multimodemicromotion_c_(atom_c *id,int * h_floquet_size,int * nm,int * modes_num,dcmplx * U_F,double * e_floquet,int * d_bare,mode_c * fields,double * t1,dcmplx * U_B2D,int * info); 
+  void multimodetimeevolutionoperator_c_(int * h_floquet_size,int * nm,int * modes_num,dcmplx * U_F,double * e_floquet,int * d_bare,mode_c * fields,double * t1,double * t2,dcmplx * U_AUX,int * info);
+  void timeevolutionoperator_c_(atom_c *id, int *d_bare, int *nm, int *nf, int * modes_num, mode_c *field, double *t1, double *t2, dcmplx *U, int *info); 
+
+    
+  // DEFINITION OF DRESSED BASIS
+  void            dressedbasis_c_(int * h_floquet_size,atom_c *id,int * nm, int * modes_num,mode_c * fields, dcmplx * U_FD, double * e_dressed,int * info); 
+  void  dressedbasis_subset_c_(atom_c *id , int * dressingfloquetdimension,int * dressingfields, int * nm, int * dressingfields_indices, int * modes_num,mode_c * fields, dcmplx * U_FD, double * e_dressed,int * info);
+  void  dressedbasis_subset_sp_c_(atom_c * id, int * dressingfloquetdimension,int * dressingfields,int * nm, int * dressingfields_indices, int * modes_num,mode_c * fields, dcmplx * U_FD, double * e_dressed,int * info);
+  void  dressedbasis_sp_c_(int h_floquet_size, atom_c *id, int * nm, int * modes_num, mode_c * fields, dcmplx * U_FD, double * e_dressed, int * info);
+  void micromotionfourierdressedbasis_c_(atom_c *id , int *DF, int * dressingfields_indices, int * nm, int * modes_num, int *nf, mode_c * fields,int * nd,dcmplx * U_FD, double *e_dressed,int * info);
+  void micromotiondressedbasis_c_(atom_c *id , int * modes_num, int * dressingfields_indices, mode_c * fields, double T1, dcmplx * U, int * info);
+
+    
+  // UTILITY FUNCTIONS: WRITE MATRICES ON THE SCREEN
+  void write_matrix_c_(double *A,int * A_dim);
+  void rec_write_matrix_c_(double *A,int * A_dim1, int * A_dim2);
+  
+  
+  // deallocate all arrays allocated with fortran
+  void deallocateall_c_(int *id);
+\end{verbatim}
 
 \section{Python Wrappers prototypes}
 
-%#===================================================================
-%#   // GENERAL INIT SUBROUTINE
-%#===================================================================
-%\subsection{Initialisation}
-%\verb def floquetinit(id,*argsv,info):
-%\verb id  is an instance of the class \verb atom_c_T  , declared as \verb id = openmmf.atom_c_T(). \verb info = 0  is an python integer.
+OPENMMF includes a set of wrappers to use the library with Python, defined in the file \verb src/openmmf.py  , The wrapper use CTYPES to pass on parameters to the C++ wrappers. In order for this to work, you should make sure that the openmmf dynamical library is loaded correctly, e.g. using the instruction:\\
+openmmfC=ctypes.CDLL('../lib/libmultimodefloquet.so')\\
+near the top of \verb src/openmmf.py . Make sure the path is correct.
 
-%This function can be take several forms to define different physical systems. 
+The wrappers were developed and tested using: Python 3.7.6, ctypes 1.1.0, numpy 1.16.2, scipy 1.4.1 and matplotlib 3.0.3.
 
-%To declare a qubit type use \verb openmmf.floquetinit(id,'qubit',info=info) .
-
-%To declare an alkali atom and one option of the electronic ground state hyperfine manifold use \verb openmmf.floquetinit(id,alkali_name,manifold,info=info), 
-%with \verb alkali_name  taking any of the values \verb '87Rb', '85Rb','123Cs', '41K', '23Na'  , and \verb manifold  one of \verb 'U', 'L','B'  , to define the Lower, Upper or Both hyperfine manifoldds of the electronic ground state, respectively.
-
-%To define a spin of total angular momentum $S$, use \verb openmmf.floquetinit(id,'spin',S,info=info)
-
-%To define an arbitrary system with $N$ energy levels use \verb openmmf.floquetinit(id,'lattice',N,info=info)
-
-
-%#===================================================================
-%#   EVALUATE THE HAMILTONIAN COMPONENTS OF PRE-DEFINED SYSTEMS. 
-%#===================================================================
-%\verb def sethamiltoniancomponents(id,modes_num,fields,info):
-%id is an instance of atom_c_T
-%modes_num an numpy.array
-%fields an instance of modes_c_T
 \begin{verbatim}
+
+#===================================================================
+#   // GENERAL CLASSES
+#===================================================================
+
+
+class atom_c_T(ctypes.Structure):
+    _fields_ = [
+                ("id_system", c_int),
+                ("d_bare", c_int)            
+            ]
+
+#===================================================================
+#===================================================================
+
+class mode_c_T(ctypes.Structure):
+    c_dcmplx = ctypes.c_double*2
+    _fields_ = [
+                ("omega",     c_double),
+                ("x",         c_dcmplx),
+                ("y",         c_dcmplx),
+                ("z",         c_dcmplx),            
+                ("phi_x",     c_double),
+                ("phi_y",     c_double),
+                ("phi_z",     c_double),
+                ("N_Floquet", c_int)
+            ]
+
+
+
+#===================================================================
+#   // GENERAL INIT SUBROUTINE
+#===================================================================
+
+openmmf.floquetinit(id,*argsv,info):
+        Parameters: id: atom_c_T
+                       Identifies the type of system
+                    *argsv: array
+                       Depending on the system of inters
+                    info: int
+                       Error/success flag
+
+This function supports the following calls:
+
+openmmf.floquetinit(id,qubit,info=info)
+       qubit: str
+             'qubit' to define a two-level system
+       info: int
+             Error/success flag
+
+openmmf.floquetinit(id,alkali,manifold,info=info)
+        alkali: str
+                '87Rb', '23Na' atomic specie
+        manifold: str
+                 Manifold of the hyperfine splitting
+                'L' : Lower with total angular moment F = I-J
+                'U' : Upper with total angular momentum F= I+J
+                'B' : both manifods
+       info: int
+             Error/success flag
+                
+
+openmmf.floquetinit(id,system,L,info=info)
+        system: str
+                'spin'   single particle with total angular momentum 2*L
+                'lattice' quantum system with L sites/states 
+        L: np.double
+                define
+       info: int
+             Error/success flag
+
+
+#===================================================================
+#   EVALUATE THE HAMILTONIAN COMPONENTS OF PRE-DEFINED SYSTEMS. 
+#===================================================================
+openmmf.sethamiltoniancomponents(id,modes_num,fields,info):
+        id: atom_c_T instance
+        modes_num: 1D np.array([],dtype=np.int32)
+               define the number of fundamental frequencies and modes
+               the total number of modes is nm = np.sum(modes_num)
+        fields: instance of openmmf.mode_c_T*nm 
+               equivalent to the FORTRAN data derived type FIELDS
+        info: int
+             Error/success flag
+        
 #===================================================================
 #   // BUILDING FLOQUET MATRIX OF GENERIC MODEL
 #===================================================================
-def multimodefloquetmatrix(id,modes_num,fields,info):
+openmmf.multimodefloquetmatrix(id,modes_num,fields,info):
+        id: atom_c_T instance
+        modes_num: 1D np.array([],dtype=np.int32)
+               define the number of fundamental frequencies and modes
+               the total number of modes is nm = np.sum(modes_num)
+        fields: instance of openmmf.mode_c_T*nm 
+               equivalent to the FORTRAN data derived type FIELDS
+        info: int
+             Error/success flag
 
+
+openmmf.get_h_floquet(h_floquet_size, info):
+        h_floquet_size: int
+               size of the multimode Floquet matrx
+        returns the multimode floquet matrix
+
+openmmf.multimodefloquetmatrix_sp(id,modes_num,fields,info):
+        id: atom_c_T instance
+        modes_num: 1D np.array([],dtype=np.int32)
+               define the number of fundamental frequencies and modes
+               the total number of modes is nm = np.sum(modes_num)
+        fields: instance of openmmf.mode_c_T*nm 
+               equivalent to the FORTRAN data derived type FIELDS
+        info: int
+             Error/success flag
+
+openmmf.get_h_floquet_sp(h_floquet_size, info):
+        h_floquet_size: int
+               size of the multimode Floquet matrx
+        returns VALUE,ROW,COLUMN arrays to represent a sparse multimode floquet matrix
 
 #===================================================================
 #  // CALCULATE THE SPECTRUM OF THE FLOQUET HAMILTONIAN
 #===================================================================
-def lapack_fulleigenvalues(U_F,h_floquet_size,e_floquet,info):    
+openmmf.lapack_fulleigenvalues(U_F,h_floquet_size,e_floquet,info):    
+        U_F: 1D np.array([],dtype=np.complex)
+             h_floquet_size x h_floquet_size matrix of eigenvectors            
+        h_floquet_size: int
+               size of the multimode Floquet matrx
+        e_floquet: 1D np.array([],dtype=np.complex)
+               array of size h_floquet_size containing the eigenvalues of
+               the multimode Floquet Hamiltonian
+        info: int
+             Error/success flag
 
 #===================================================================
 #   EVALUATES THE TIME AVERAGE TRANSITIONS PROBABILITIES
 #===================================================================
-def multimodetransitionavg(h_floquet_size,fields,modes_num,U_F,e_floquet,d_bare,p_avg,info):
-
-
+openmmf.multimodetransitionavg(h_floquet_size,fields,modes_num,U_F,e_floquet,d_bare,p_avg,info):
+        h_floquet_size: int
+               size of the multimode Floquet matrx
+        fields: instance of openmmf.mode_c_T*nm 
+               equivalent to the FORTRAN data derived type FIELDS
+        modes_num: 1D np.array([],dtype=np.int32)
+               define the number of fundamental frequencies and modes
+               the total number of modes is nm = np.sum(modes_num)
+        U_F: 1D np.array([],dtype=np.complex)
+             h_floquet_size x h_floquet_size matrix of eigenvectors            
+        e_floquet: 1D np.array([],dtype=np.complex)
+               array containing the eigenvalues of the multimode Floquet
+               Hamiltonian
+        d_bare: int
+              Hilbert space dimension of the static system
+        p_avg: 1D np.array([],dtype=np.double)
+             d_bare x d_bare Matrix of the time-average state occupationrs                          
+        info: int
+             Error/success flag
 
 #===================================================================
 # FOURIER COMPONENTS OF THE TRANSFORMATION BETWEEN THE DRESSED AND THE BARE BASIS
 # U_B2D is of dimension [D_bare*D_floquet]
 #===================================================================
-def multimodefloquettransformation(modes_num, U_F,e_floquet,d_bare,fields,t1, U_B2D,info): 
+openmmf.multimodefloquettransformation(modes_num, U_F,e_floquet,d_bare,fields,t1, U_B2D,info): 
+        modes_num: 1D np.array([],dtype=np.int32)
+               define the number of fundamental frequencies and modes
+               the total number of modes is nm = np.sum(modes_num)
+        U_F: 1D np.array([],dtype=np.complex)
+             h_floquet_size x h_floquet_size Matrix of eigenvectors            
+        e_floquet: 1D np.array([],dtype=np.complex)
+               array containing the eigenvalues of the multimode Floquet
+               Hamiltonian
+        d_bare: int
+              Hilbert space dimension of the static system
+        fields: instance of openmmf.mode_c_T*nm 
+               equivalent to the FORTRAN data derived type FIELDS
+        t1: np.double
+             instant of time to evaluate the micromotion operator
+        U_B2D: 1D np.array([],dtype=np.complex)
+             d_bare x d_bare Matrix of the time-average state occupationrs                          
+        info: int
+             Error/success flag
 
 
 #===================================================================
 # CALCULATE THE MICROMOTION OPERATOR
 # U_B2D is of dimension [D_bare*D_bare]
 #===================================================================
-def multimodemicromotion(id,h_floquet_size,modes_num,U_F,e_floquet,d_bare,fields,t1, U_B2D,info):
-
-
+openmmf.multimodemicromotion(id,h_floquet_size,modes_num,U_F,e_floquet,d_bare,fields,t1, U_B2D,info):
+        id: atom_c_T instance
+        h_floquet_size: int
+               size of the multimode Floquet matrx
+        modes_num: 1D np.array([],dtype=np.int32)
+               define the number of fundamental frequencies and modes
+               the total number of modes is nm = np.sum(modes_num)
+        U_F: 1D np.array([],dtype=np.complex)
+             h_floquet_size x h_floquet_size Matrix of eigenvectors            
+        e_floquet: 1D np.array([],dtype=np.complex)
+               array containing the eigenvalues of the multimode Floquet
+               Hamiltonian
+        d_bare: int
+              Hilbert space dimension of the static system
+        fields: instance of openmmf.mode_c_T*nm 
+               equivalent to the FORTRAN data derived type FIELDS
+        t1: np.double
+             instant of time to evaluate the micromotion operator
+        U_B2D: 1D np.array([],dtype=np.complex)
+             d_bare x d_bare Matrix of the time-average state occupationrs                          
+        info: int
+             Error/success flag
 
 #===================================================================
 # COMP. ROUTINE: EVALUATE THE TIME EVOULUTION OPERATOR BETWEEN T1 AND T2 
@@ -1493,42 +1720,176 @@ def multimodemicromotion(id,h_floquet_size,modes_num,U_F,e_floquet,d_bare,fields
 #===================================================================
 def multimodetimeevolutionoperator(h_floquet_size,modes_num,U_F,e_floquet,d_bare,
             fields,t1,t2,U_AUX,info):
+        h_floquet_size: int
+               size of the multimode Floquet matrx
+        modes_num: 1D np.array([],dtype=np.int32)
+               define the number of fundamental frequencies and modes
+               the total number of modes is nm = np.sum(modes_num)
+        U_F: 1D np.array([],dtype=np.complex)
+             h_floquet_size x h_floquet_size Matrix of eigenvectors            
+        e_floquet: 1D np.array([],dtype=np.complex)
+               array containing the eigenvalues of the multimode Floquet
+               Hamiltonian
+        d_bare: int
+              Hilbert space dimension of the static system
+        fields: instance of openmmf.mode_c_T*nm 
+               equivalent to the FORTRAN data derived type FIELDS
+        t1: np.double
+             instant of time to evaluate the time-evolution operator
+        t2: np.double
+             instant of time to evaluate the time-evolution operator
+        U_AUX: 1D np.array([],dtype=np.complex)
+             d_bare x d_bare Matrix of the time-evolution operator
+        info: int
+             Error/success flag
 
 
 #===================================================================
 # DRIVER ROUTINE: EVALUATE THE TIME EVOULUTION OPERATOR BETWEEN T1 AND T2
 #===================================================================
 def timeevolutionoperator(id,d_bare,modes_num,fields,t1,t2,U,info):
+        id: atom_c_T instance
+        d_bare: int
+              Hilbert space dimension of the static system
+        modes_num: 1D np.array([],dtype=np.int32)
+               define the number of fundamental frequencies and modes
+               the total number of modes is nm = np.sum(modes_num)
+        fields: instance of openmmf.mode_c_T*nm 
+               equivalent to the FORTRAN data derived type FIELDS
+        t1: np.double
+             instant of time to evaluate the time evolution operator
+        t2: np.double
+             instant of time to evaluate the time evolution operator
+        U: 1D np.array([],dtype=np.complex)
+             d_bare x d_bare Matrix of the time-evolution operator
+        info: int
+             Error/success flag
 
 
 #===================================================================
 #  // DEFINITION OF DRESSED BASIS WITH ALL FIELDS
 #===================================================================
 def dressedbasis(h_floquet_size,id,modes_num,fields,U_FD,e_dressed,info):
+        h_floquet_size: int
+               size of the multimode Floquet matrx
+        id: atom_c_T instance
+        modes_num: 1D np.array([],dtype=np.int32)
+               define the number of fundamental frequencies and modes
+               the total number of modes is nm = np.sum(modes_num)
+        fields: instance of openmmf.mode_c_T*nm 
+               equivalent to the FORTRAN data derived type FIELDS
+        U_FD: 1D np.array([],dtype=np.complex)
+             d_bare x d_bare Matrix of the time-average state occupationrs                          
+        e_dressed: 1D np.array([],dtype=np.complex)
+               array containing the eigenvalues of the multimode Floquet
+               Hamiltonian
+        info: int
+             Error/success flag
+
+def dressedbasis_sp(h_floquet_size,id,modes_num,fields,U_FD,e_dressed,info):
+        h_floquet_size: int
+               size of the multimode Floquet matrx
+        id: atom_c_T instance
+        modes_num: 1D np.array([],dtype=np.int32)
+               define the number of fundamental frequencies and modes
+               the total number of modes is nm = np.sum(modes_num)
+        fields: instance of openmmf.mode_c_T*nm 
+               equivalent to the FORTRAN data derived type FIELDS
+        U_FD: 1D np.array([],dtype=np.complex)
+             d_bare x d_bare Matrix of the time-average state occupationrs                          
+        e_dressed: 1D np.array([],dtype=np.complex)
+               array containing the eigenvalues of the multimode Floquet
+               Hamiltonian
+        info: int
+             Error/success flag
 
 
 #===================================================================
 #  // DEFINITION OF DRESSED BASIS WITH A SUBSET OF THE FIELDS
 #===================================================================
 def dressedbasis_subset(id,dressingfields_indices,modes_num,fields,U_FD,e_dressed,info):
+        id: atom_c_T instance
+        dressingfields_indices: 1D np.array([],dtype=np.int32)
+               define the index of dressing fields
+        modes_num: 1D np.array([],dtype=np.int32)
+               define the number of fundamental frequencies and modes
+               the total number of modes is nm = np.sum(modes_num)
+        fields: instance of openmmf.mode_c_T*nm 
+               equivalent to the FORTRAN data derived type FIELDS
+        U_FD: 1D np.array([],dtype=np.complex)
+             h_floquet_size x h_floquet_size Matrix of eigenvectors            
+        e_dressed: 1D np.array([],dtype=np.complex)
+               array containing the eigenvalues of the multimode Floquet
+               Hamiltonian
+        info: int
+             Error/success flag
 
+
+def dressedbasis_subset_sp(id,dressingfields_indices,modes_num,fields,U_FD,e_dressed,info):
+        id: atom_c_T instance
+        dressingfields_indices: 1D np.array([],dtype=np.int32)
+               define the index of dressing fields
+        modes_num: 1D np.array([],dtype=np.int32)
+               define the number of fundamental frequencies and modes
+               the total number of modes is nm = np.sum(modes_num)
+        fields: instance of openmmf.mode_c_T*nm 
+               equivalent to the FORTRAN data derived type FIELDS
+        U_FD: 1D np.array([],dtype=np.complex)
+             h_floquet_size x h_floquet_size Matrix of eigenvectors            
+        e_dressed: 1D np.array([],dtype=np.complex)
+               array containing the eigenvalues of the multimode Floquet
+               Hamiltonian
+        info: int
+             Error/success flag
+
+
+     
 
 #===================================================================
 #  EVALUATE THE FOURIER COMPONENTS OF THE MICROMOTION OPERATOR USING THE DRESSING FIELDS
 #===================================================================
 def micromotionfourierdressedbasis(id,dressingfields_indices,modes_num,fields,
            U_FD,e_dressed,info):
+        id: atom_c_T instance
+        dressingfields_indices: 1D np.array([],dtype=np.int32)
+               define the index of dressing fields
+        modes_num: 1D np.array([],dtype=np.int32)
+               define the number of fundamental frequencies and modes
+               the total number of modes is nm = np.sum(modes_num)
+        fields: instance of openmmf.mode_c_T*nm 
+               equivalent to the FORTRAN data derived type FIELDS
+        U_FD: 1D np.array([],dtype=np.complex)
+              
+        e_dressed: 1D np.array([],dtype=np.complex)
+               array containing the eigenvalues of the multimode Floquet
+               Hamiltonian
+        info: int
+             Error/success flag
 
 #===================================================================
 #  EVALUATE THE MICROMOTION OPERATOR USING THE DRESSING FIELDS
 #===================================================================
 def micromotiondressedbasis(id,modes_num,dressingfields_indices,fields,t1,U,info):
+        id: atom_c_T instance
+        modes_num: 1D np.array([],dtype=np.int32)
+               define the number of fundamental frequencies and modes
+               the total number of modes is nm = np.sum(modes_num)
+        dressingfields_indices: 1D np.array([],dtype=np.int32)
+               define the index of dressing fields
+        fields: instance of openmmf.mode_c_T*nm 
+               equivalent to the FORTRAN data derived type FIELDS
+        t1: np.double
+             instant of time to evaluate the micromotion operator
+        U : 1D np.array([],dtype=np.complex)
+             
+        info: int
+             Error/success flag
 
 #===================================================================
 #  DEALLOCATE ALL MEMORY ARRAYS
 #===================================================================
 def deallocateall(id):
-
+        id: atom_c_T instance
 
 
 \end{verbatim}
