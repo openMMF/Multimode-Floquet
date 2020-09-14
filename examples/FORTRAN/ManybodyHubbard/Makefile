@@ -1,21 +1,27 @@
-#export LD_LIBRARY_PATH="/opt/intel/compilers_and_libraries_2017/linux/mkl/lib/intel64"
-# SET FORTRAN AND CPP COMPILERS
-CPP = g++
-CC  = gcc
-GF  = gfortran
-AR  = ar 
-RANLIB = ranlib
+#export LD_LIBRARY_PATH="/opt/intel/compilers_and_libraries/linux/mkl/lib/intel64:../../lib/"
+TOPSRCDIR = ../../../
+include $(TOPSRCDIR)/make.inc
 
-# SET REQUIRED FLAGS
-GFFLAGS    =  -lgsl -lgslcblas  -llapack -lblas -g
-GFFLAGS_SP =  -m64  -w -fno-second-underscore -x f77-cpp-input  -lpthread -lm -ldl -lgsl -lgslcblas -O3 -llapack -lblas -g
-MKLFLAGS   =  -lmkl_gf_lp64 -lmkl_sequential -lmkl_core
-CFLAGS     =  -lgsl -lgslcblas   -static
+#SET MULTIMODEFLOQUET LIBRARY PATH
+MMFLIB = ../../lib/
+#SET MULTIMODEFLOQUET INCLUDE PATH
+MMFINC = ../../include/
 
-#SET MKL-intel LIBRARY PATH
-MKLLIBS = /opt/intel/compilers_and_libraries/linux/mkl/lib/intel64
-#SET MKL-intel INCLUDE PATH
-MKLINC = /opt/intel/compilers_and_libraries/linux/mkl/include	
+###################################
+# MAKE CPP EXAMPLES
+###################################
+
+ifndef BUILD_MKL
+BUILD_MKL_ = no
+all : ManybodyHubbard 
+endif
+
+ifdef BUILD_MKL
+BUILD_MKL_ = yes
+all: ManybodyHubbard
+endif
+
+
 
 #SET MULTIMODEFLOQUET LIBRARY PATH
 MMFLIB = ../../../lib/
@@ -33,8 +39,8 @@ ManybodyHubbard: subset.f90 HilbertDimension.f90 main_MBH_Fermions.f90
 	$(GF) -c subset.f90
 	$(GF) -c HilbertDimension.f90
 	$(GF) -c HubbardHamiltonian.f90
-	$(GF) -o ManybodyHubbard_Fermions  bvec.o subset.o HilbertDimension.o HubbardHamiltonian.o main_MBH_Fermions.f90 -I$(MMFINC) -L$(MMFLIB) -lmultimodefloquet  $(GFFLAGS) -L$(MKLLIBS) -I$(MKLINC) $(GFFLAGS_SP) $(MKLFLAGS)
-	$(GF) -o ManybodyHubbard_Bosons  bvec.o subset.o HilbertDimension.o HubbardHamiltonian.o main_MBH_Bosons.f90 -I$(MMFINC) -L$(MMFLIB) -lmultimodefloquet  $(GFFLAGS) -L$(MKLLIBS) -I$(MKLINC) $(GFFLAGS_SP) $(MKLFLAGS)
+	$(GF) -o ManybodyHubbard_Fermions  bvec.o subset.o HilbertDimension.o HubbardHamiltonian.o main_MBH_Fermions.f90 -I$(MMFINC) -L$(MMFLIB) -lmultimodefloquet  $(GFFLAGS) -L$(MKLLIBS) -I$(MKLINC) $(MKLFLAGS)
+	$(GF) -o ManybodyHubbard_Bosons  bvec.o subset.o HilbertDimension.o HubbardHamiltonian.o main_MBH_Bosons.f90 -I$(MMFINC) -L$(MMFLIB) -lmultimodefloquet  $(GFFLAGS) -L$(MKLLIBS) -I$(MKLINC) $(MKLFLAGS)
 
 
 ############################

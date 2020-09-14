@@ -1,23 +1,6 @@
 #export LD_LIBRARY_PATH="/opt/intel/compilers_and_libraries/linux/mkl/lib/intel64:../../lib/"
-# SET FORTRAN AND CPP COMPILERS
-SHELL := /bin/bash 
-
-CPP = g++
-CC  = gcc
-GF  = gfortran
-AR  = ar 
-RANLIB = ranlib
-
-# SET REQUIRED FLAGS
-GFFLAGS    =  -lgsl -lgslcblas  -llapack -lblas -g
-GFFLAGS_SP =  -m64  -w -fno-second-underscore -x f77-cpp-input  -lpthread -lm -ldl -lgsl -lgslcblas -O3 -llapack -lblas -g
-MKLFLAGS   =  -lmkl_gf_lp64 -lmkl_sequential -lmkl_core
-CFLAGS     =  -lgsl -lgslcblas   -static
-
-#SET MKL-intel LIBRARY PATH
-MKLLIBS = /opt/intel/compilers_and_libraries/linux/mkl/lib/intel64
-#SET MKL-intel INCLUDE PATH
-MKLINC = /opt/intel/compilers_and_libraries/linux/mkl/include	
+TOPSRCDIR = ../../
+include $(TOPSRCDIR)/make.inc
 
 #SET MULTIMODEFLOQUET LIBRARY PATH
 MMFLIB = ../../lib/
@@ -28,8 +11,16 @@ MMFINC = ../../include/
 # MAKE CPP EXAMPLES
 ###################################
 
+ifndef BUILD_MKL
+BUILD_MKL_ = no
+all : Example_lib_f 
+endif
 
-all: Example_lib_f Example_lib_f_sp 
+ifdef BUILD_MKL
+BUILD_MKL_ = yes
+all: Example_lib_f Example_lib_f_sp
+endif
+
 
 Example_lib_f: main_lattice.f90 main_qubit.f90 main_qubit_DRIVER.f90 main_spin_DRIVER.f90 main_DressedQubit.f90 main_DressedQubit_DRIVER.f90 main_87Rb_RFMW_DRIVER.f90 main_qubitLattice_DRIVER.f90 main_QuantumInterference.f90 main_qubit_Shirley.f90 main_halfspin_DRIVER.f90 main_DressedQubitV2.f90 
 
@@ -50,12 +41,11 @@ Example_lib_f: main_lattice.f90 main_qubit.f90 main_qubit_DRIVER.f90 main_spin_D
 	$(GF) -o doublepeaksearch     DoublePeakSearch.f90 -I$(MMFINC) -L$(MMFLIB) -lmultimodefloquet  $(GFFLAGS) -L$(MKLLIBS) -I$(MKLINC) $(GFFLAGS_SP) $(MKLFLAGS)
 
 Example_lib_f_sp: main_qubit_SP.f90 main_DressedQubit_SP.f90  main_qubitLattice_SP.f90  main_qubit_noise_SP.f90 main_qubit_SP_TEST.f90
-	$(GF) -o  qubit_sp        main_qubit_SP.f90        -I$(MMFINC) -L$(MMFLIB) -lmultimodefloquet -L$(MKLLIBS) -I$(MKLINC) $(GFFLAGS_SP) $(MKLFLAGS)
-	$(GF) -o  qubit_sp_test   main_qubit_SP_TEST.f90   -I$(MMFINC) -L$(MMFLIB) -lmultimodefloquet -L$(MKLLIBS) -I$(MKLINC) $(GFFLAGS_SP) $(MKLFLAGS)
-	$(GF) -o  dressedqubit_sp main_DressedQubit_SP.f90 -I$(MMFINC) -L$(MMFLIB) -lmultimodefloquet -L$(MKLLIBS) -I$(MKLINC) $(GFFLAGS_SP) $(MKLFLAGS)
-	$(GF) -o qubitL_SP        main_qubitLattice_SP.f90 -I$(MMFINC) -L$(MMFLIB) -lmultimodefloquet -L$(MKLLIBS) -I$(MKLINC) $(GFFLAGS_SP) $(MKLFLAGS)
-	$(GF) -o qubit_noise_SP   main_qubit_noise_SP.f90  -I$(MMFINC) -L$(MMFLIB) -lmultimodefloquet -L$(MKLLIBS) -I$(MKLINC) $(GFFLAGS_SP) $(MKLFLAGS)
-#$(GF) -o test_SP   main_MKL_SP.f90  -I$(MMFINC) -L$(MMFLIB) -lmultimodefloquet -L$(MKLLIBS) -I$(MKLINC) $(GFFLAGS_SP) $(MKLFLAGS)
+	$(GF) -o  qubit_sp        main_qubit_SP.f90        -I$(MMFINC) -L$(MMFLIB) -lmultimodefloquet -L$(MKLLIBS) -I$(MKLINC) $(GFFLAGS) $(MKLFLAGS)
+	$(GF) -o  qubit_sp_test   main_qubit_SP_TEST.f90   -I$(MMFINC) -L$(MMFLIB) -lmultimodefloquet -L$(MKLLIBS) -I$(MKLINC) $(GFFLAGS) $(MKLFLAGS)
+	$(GF) -o  dressedqubit_sp main_DressedQubit_SP.f90 -I$(MMFINC) -L$(MMFLIB) -lmultimodefloquet -L$(MKLLIBS) -I$(MKLINC) $(GFFLAGS) $(MKLFLAGS)
+	$(GF) -o qubitL_SP        main_qubitLattice_SP.f90 -I$(MMFINC) -L$(MMFLIB) -lmultimodefloquet -L$(MKLLIBS) -I$(MKLINC) $(GFFLAGS) $(MKLFLAGS)
+	$(GF) -o qubit_noise_SP   main_qubit_noise_SP.f90  -I$(MMFINC) -L$(MMFLIB) -lmultimodefloquet -L$(MKLLIBS) -I$(MKLINC) $(GFFLAGS) $(MKLFLAGS)
 
 
 ############################
@@ -66,17 +56,9 @@ clean:
 	rm qubit dressedqubit qubit_sp dressedqubit_sp spin_driver dressedqubit_DRIVER qubit_driver qubitL qubitL_driver qubitL_SP qubit_noise_SP qubit_shirley shakenlattice twophoton dressedqubitV2 fermionicspin KitaevLattice qubit_sp_test doublepeaksearch rb87rfmw
 
 
-
 ############################
 # TEST
 ############################
-#test:
-#ifneq (doublepeaksearch, "")
-#	echo "testing doublepeaksearch"
-#	./doublepeaksearch
-#else
-#	echo "no doublepeaksearch"
-#endif
 
 BUILD_DIR = ./build
 TEST_DIR  = ./
@@ -86,7 +68,7 @@ test_executables:= $(patsubst $(TEST_DIR)/%.f90, $(BUILD_DIR)/%, $(test_sources)
 run_executables:= $(patsubst $(TEST_DIR)/%.f90, $(TEST_LIST)/%, $(test_sources))
 
 $(BUILD_DIR)/%: $(TEST_DIR)/%.f90
-	$(GF) -o $@ $<  -I$(MMFINC) -L$(MMFLIB) -lmultimodefloquet  -L$(MKLLIBS) -I$(MKLINC) $(GFFLAGS_SP) $(MKLFLAGS)  
+	$(GF) -o $@ $<  -I$(MMFINC) -L$(MMFLIB) -lmultimodefloquet  -L$(MKLLIBS) -I$(MKLINC) $(GFFLAGS) $(MKLFLAGS)  
 
 
 $(TEST_LIST)/%: $(BUILD_DIR)/%

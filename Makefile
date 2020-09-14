@@ -1,32 +1,29 @@
-#export LD_LIBRARY_PATH="/opt/intel/compilers_and_libraries_2017/linux/mkl/lib/intel64"
-# SET FORTRAN AND CPP COMPILERS
-CPP = g++
-CC  = gcc
-GF  = gfortran
-AR  = ar 
-RANLIB = ranlib
+#
+#  Top Level Makefile for LAPACK
+#  Version 3.4.1
+#  April 2012
+#
 
-# SET REQUIRED FLAGS
-GFFLAGS    =  -llapack -lblas -g
-GFFLAGS_SP =  -m64  -w -fno-second-underscore -x f77-cpp-input  -lpthread -lm -ldl  -llapack -lblas -g
-MKLFLAGS   =  -lmkl_gf_lp64 -lmkl_sequential -lmkl_core
-CFLAGS     =  -static
-BARRYFLAGS =  -g -fPIC
-
-#SET MKL-intel LIBRARY PATH
-MKLLIBS = /opt/intel/compilers_and_libraries/linux/mkl/lib/intel64
-#SET MKL-intel INCLUDE PATH
-MKLINC = /opt/intel/compilers_and_libraries/linux/mkl/include	
+TOPSRCDIR = .
+include $(TOPSRCDIR)/make.inc
 
 ###################################
 # MAKE LIBRARY AND ALL EXECUTABLES
 ###################################
 
-all:  lib lib_lapack all_examples
+ifndef BUILD_MKL
+BUILD_MKL_ = no
+all : lib_lapack Example_lib Example_lib_c lib_msg
+endif
 
-all_examples: Example_lib Example_lib_sp Example_lib_c Example_lib_c_sp
+ifdef BUILD_MKL
+BUILD_MKL_ = yes
+all: lib Example_lib Example_lib_sp Example_lib_c Example_lib_c_sp  lib_msg
+endif
 
-
+###################################
+# build openmmf with lapack and MKL
+###################################
 lib:build/modes.o build/modes_C.o build/Modules.o build/Modules_release.o build/delta_kr.o build/Floquet.o \
  build/I_and_J_representations.o build/F_representation.o build/LapackEigenValues.o \
  build/MKLSparseEigenValues.o build/util.o build/quick-sort-index-table.o build/VarCRSPacking.o \
@@ -38,12 +35,15 @@ lib:build/modes.o build/modes_C.o build/Modules.o build/Modules_release.o build/
  build/MultimodeHamiltonian_C.o build/LapackEigenValues_C.o build/MultimodeTransitionAVG_C.o \
  build/MultimodeMicroMotion_C.o build/MultimodeFloquetTE_DRIVER_C.o build/MultimodeFloquetTE_C.o \
  build/MultimodeDressedBasis_C.o build/MultimodeDressedBasis_SP_C.o build/MKLSparseEigenValues_C.o 
-	$(AR) -urv lib/libmultimodefloquet.a build/*.o
+	$(AR) -$(ARFLAGS) lib/libmultimodefloquet.a build/*.o
 	$(RANLIB) lib/libmultimodefloquet.a
-	$(GF) -shared -fPIC build/*.o -o lib/libmultimodefloquet.so
+	$(GF) $(SHAREFLAGS) build/*.o -o lib/$(DYLIB_NAME)
 	cp *.mod ./include/
+	rm *.mod
 
-#build/VarCRSPacking.o build/sparse_utils.o
+###################################
+# ==== build openmmf with lapack 
+###################################
 lib_lapack :build/modes.o build/modes_C.o  build/Modules.o build/Modules_release.o build/delta_kr.o build/Floquet.o \
  build/I_and_J_representations.o build/F_representation.o build/LapackEigenValues.o \
  build/util.o build/quick-sort-index-table.o build/VarCRSPacking.o \
@@ -54,34 +54,46 @@ lib_lapack :build/modes.o build/modes_C.o  build/Modules.o build/Modules_release
  build/util_c.o build/Floquet_init_C.o \
  build/MultimodeHamiltonian_C.o build/LapackEigenValues_C.o build/MultimodeTransitionAVG_C.o \
  build/MultimodeMicroMotion_C.o build/MultimodeFloquetTE_DRIVER_C.o build/MultimodeFloquetTE_C.o \
- build/MultimodeDressedBasis_C.o  build/MKLSparseEigenValues_C.o 
-	$(AR) -urv lib/libmultimodefloquet.a build/*.o
+ build/MultimodeDressedBasis_C.o 
+	$(AR) $(ARFLAGS) lib/libmultimodefloquet.a build/*.o
 	$(RANLIB) lib/libmultimodefloquet.a
-	$(GF) -shared -fPIC build/*.o -o lib/libmultimodefloquet.so
+	$(GF) $(SHAREFLAGS) build/*.o -o lib/$(DYLIB_NAME)
 	cp *.mod ./include/
-#	cp src/*.h ./include
+	rm *.mod
 
 
+###############################################
+# ==== build FORTRAN examples that require LAPACK ONLY
+###############################################
 Example_lib: ./examples/FORTRAN/main_qubit.f90  ./examples/FORTRAN/main_DressedQubit.f90 
-	$(GF) $(BARRYFLAGS) -o ./examples/FORTRAN/qubit  ./examples/FORTRAN/main_qubit.f90 -I./include/ -L./lib/ -lmultimodefloquet $(GFFLAGS) -L$(MKLLIBS) -I$(MKLINC) $(GFFLAGS_SP) $(MKLFLAGS)
-	$(GF) $(BARRYFLAGS) -o ./examples/FORTRAN/dressedqubit  ./examples/FORTRAN/main_DressedQubit.f90 -I./include/ -L./lib/ -lmultimodefloquet $(GFFLAGS) -L$(MKLLIBS) -I$(MKLINC) $(GFFLAGS_SP) $(MKLFLAGS)
+	$(GF)  -o ./examples/FORTRAN/qubit  ./examples/FORTRAN/main_qubit.f90 -I./include/ -L./lib/ -lmultimodefloquet $(GFFLAGS) -L$(MKLLIBS) -I$(MKLINC) $(GFFLAGS_SP) $(MKLFLAGS)
+	$(GF)  -o ./examples/FORTRAN/dressedqubit  ./examples/FORTRAN/main_DressedQubit.f90 -I./include/ -L./lib/ -lmultimodefloquet $(GFFLAGS) -L$(MKLLIBS) -I$(MKLINC) $(GFFLAGS_SP) $(MKLFLAGS)
 
+###############################################
+# ==== build FORTRAN examples that require MKL 
+###############################################
 Example_lib_sp: ./examples/FORTRAN/main_qubit_SP.f90 ./examples/FORTRAN/main_DressedQubit_SP.f90
-	$(GF) $(BARRYFLAGS) -o ./examples/FORTRAN/qubit_sp  ./examples/FORTRAN/main_qubit_SP.f90 -I./include/ -L./lib/ -lmultimodefloquet -L$(MKLLIBS) -I$(MKLINC) $(GFFLAGS_SP) $(MKLFLAGS)
-	$(GF) $(BARRYFLAGS) -o ./examples/FORTRAN/dressedqubit_sp  ./examples/FORTRAN/main_DressedQubit_SP.f90 -I./include/ -L./lib/ -lmultimodefloquet -L$(MKLLIBS) -I$(MKLINC) $(GFFLAGS_SP) $(MKLFLAGS)
-
+	$(GF)  -o ./examples/FORTRAN/qubit_sp  ./examples/FORTRAN/main_qubit_SP.f90 -I./include/ -L./lib/ -lmultimodefloquet -L$(MKLLIBS) -I$(MKLINC) $(GFFLAGS_SP) $(MKLFLAGS)
+	$(GF)  -o ./examples/FORTRAN/dressedqubit_sp  ./examples/FORTRAN/main_DressedQubit_SP.f90 -I./include/ -L./lib/ -lmultimodefloquet -L$(MKLLIBS) -I$(MKLINC) $(GFFLAGS_SP) $(MKLFLAGS)
+###############################################
+# ==== build C++ examples that require LAPACK ONLY
+###############################################
 Example_lib_c: ./examples/CPP/main_qubit.cpp  ./examples/CPP/main_DressedQubit.cpp 
-	$(CPP) $(CPPBARRYFLAGS) -o ./examples/CPP/qubit  ./examples/CPP/main_qubit.cpp -I./include/ -L./lib/ -lmultimodefloquet -lgfortran $(GFFLAGS) -L$(MKLLIBS) -I$(MKLINC) $(GFFLAGS_SP) $(MKLFLAGS)
-	$(CPP) $(CPPBARRYFLAGS) -o ./examples/CPP/dressedqubit  ./examples/CPP/main_DressedQubit.cpp -I./include/ -L./lib/ -lmultimodefloquet -lgfortran $(GFFLAGS) -L$(MKLLIBS) -I$(MKLINC) $(GFFLAGS_SP) $(MKLFLAGS)
+	$(CPP)  -o ./examples/CPP/qubit  ./examples/CPP/main_qubit.cpp -I./include/ -L./lib/ -lmultimodefloquet -lgfortran $(GFFLAGS) -L$(MKLLIBS) -I$(MKLINC) $(GFFLAGS_SP) $(MKLFLAGS)
+	$(CPP)  -o ./examples/CPP/dressedqubit  ./examples/CPP/main_DressedQubit.cpp -I./include/ -L./lib/ -lmultimodefloquet -lgfortran $(GFFLAGS) -L$(MKLLIBS) -I$(MKLINC) $(GFFLAGS_SP) $(MKLFLAGS)
 
+
+###############################################
+# ==== build FORTRAN examples that require MKL
+###############################################
 Example_lib_c_sp: ./examples/CPP/main_qubit_sp.cpp ./examples/CPP/main_DressedQubit_SP.cpp
-	$(CPP) $(CPPBARRYFLAGS) -o  ./examples/CPP/qubit_sp         ./examples/CPP/main_qubit_sp.cpp        -I./include/ -L./lib/ -lmultimodefloquet -lgfortran -L$(MKLLIBS) -I$(MKLINC) $(GFFLAGS_SP) $(MKLFLAGS)         
-	$(CPP) $(CPPBARRYFLAGS) -o  ./examples/CPP/dressedqubit_sp  ./examples/CPP/main_DressedQubit_SP.cpp -I./include/ -L./lib/ -lmultimodefloquet -lgfortran -L$(MKLLIBS) -I$(MKLINC) $(GFFLAGS_SP) $(MKLFLAGS)
-
+	$(CPP)  -o  ./examples/CPP/qubit_sp         ./examples/CPP/main_qubit_sp.cpp        -I./include/ -L./lib/ -lmultimodefloquet -lgfortran -L$(MKLLIBS) -I$(MKLINC) $(GFFLAGS_SP) $(MKLFLAGS)         
+	$(CPP)  -o  ./examples/CPP/dressedqubit_sp  ./examples/CPP/main_DressedQubit_SP.cpp -I./include/ -L./lib/ -lmultimodefloquet -lgfortran -L$(MKLLIBS) -I$(MKLINC) $(GFFLAGS_SP) $(MKLFLAGS)
 
 ####################################
 # BUILD OBJECT FILES FOR CPP WRAPPER
 #####################################
+
 build/util_c.o: build/util.o build/modes.o src/util_c.f90
 	$(GF) $(BARRYFLAGS) -c -o $@ build/modes.o build/util.o src/util_c.f90 
 
@@ -125,21 +137,6 @@ build/MKLSparseEigenValues_C.o: build/MKLSparseEigenValues.o src/MKLSparseEigenv
 	$(GF) $(BARRYFLAGS) -c -o $@ src/MKLSparseEigenvalues_C.f90  
 
 
-#build/util_c.o
-#build/modes_C.o
-#build/Floquet_init_C.o
-#build/MultimodeHamiltonian_SP_C.o
-#build/MultimodeHamiltonian_C.o
-#build/LapackEigenValues_C.o
-#build/MultimodeTransitionAVG_C.o
-#build/MultimodeMicroMotion_C.o
-#build/MultimodeFloquetTE_DRIVER_C.o
-#build/MultimodeFloquetTE_C.o
-#build/MultimodeDressedBasis_C.o
-#build/MultimodeDressedBasis_SP_C.o
-#build/MKLSparseEigenValues_C.o
-
-
 ############################
 # BUILD FORTRAN OBJECT FILES
 ############################
@@ -149,9 +146,6 @@ build/modes.o: src/modes.f90
 
 build/Modules.o: src/Modules.f90
 	$(GF) $(BARRYFLAGS) -c -o $@ src/Modules.f90  
-
-# build/Modules_release.o: build/Modules.o src/Modules_release.f90
-# (GF) -c -o $@ src/Modules_release.f90  -g
 
 build/Modules_release.o: build/Modules.o src/AlkaliAtoms_parameters.f90
 	$(GF) $(BARRYFLAGS) -c -o $@ src/AlkaliAtoms_parameters.f90  
@@ -217,34 +211,18 @@ build/MultimodeFloquet.o:src/MultimodeFloquet.f90
 	$(GF) $(BARRYFLAGS) -o $@ -c -O3 src/MultimodeFloquet.f90  
 
 
-
-#build/modes.o
-#build/Modules.o
-#build/Modules_release.o
-#build/delta_kr.o
-#build/Floquet.o
-#build/I_and_J_representations.o
-#build/F_representation.o
-#build/LapackEigenValues.o
-#build/MKLSparseEigenValues.o
-#build/util.o
-#build/quick-sort-index-table.o
-#build/VarCRSPacking.o
-#build/sparse_utils.o
-#build/MultimodeHamiltonian_SP.o
-#build/MultimodeHamiltonian.o
-#build/MultimodeFloquetTE.o
-#build/MultimodeFloquetTE_DRIVER.o
-#build/MultimodeMicroMotion.o
-#build/MultimodeMicroMotionDressedBasis.o
-#build/MultimodeTransitionAVG.o
-#build/MultimodeDressedBasis.o
-#build/MultimodeDressedBasis_SP.o
-#build/MultimodeFloquet.o
-
 ############################
 # CLEAN
 ############################
 
+.PHONY: clean
 clean:
 	rm build/*.o ./*mod  include/*.mod lib/*.a lib/*.so
+
+.PHONY: lib_msg
+lib_msg:
+	@echo "========================================================"
+	@echo "openmmf build. The static and dynamic libraries are in "
+	@echo "./lib and include and mod files are in ./include "
+	@echo "using MKL-intel? $(BUILD_MKL_)"
+	@echo "========================================================"

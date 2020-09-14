@@ -81,7 +81,7 @@ PROGRAM MULTIMODEFLOQUET
   FIELDS(2)%phi_y     = 0.0
   FIELDS(2)%phi_z     = 0.0
   FIELDS(2)%omega     = 1.0
-  FIELDS(2)%N_Floquet = 3
+  FIELDS(2)%N_Floquet = 2
   
   FIELDS(3)%X         = 0.125*FIELDS(2)%X/2.0
   FIELDS(3)%Y         = 0.0
@@ -90,7 +90,7 @@ PROGRAM MULTIMODEFLOQUET
   FIELDS(3)%phi_y     = 0.0
   FIELDS(3)%phi_z     = 0.0
   FIELDS(3)%omega     = FIELDS(2)%X/2.0
-  FIELDS(3)%N_Floquet = 3
+  FIELDS(3)%N_Floquet = 2
 
   D_MULTIFLOQUET = ID%D_BARE
   DO r=1,TOTAL_FREQUENCIES
