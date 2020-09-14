@@ -26,4 +26,3 @@
 \contentsline {section}{\numberline {13}DRIVER SUBROUTINES}{17}
 \contentsline {subsection}{\numberline {13.1}Utility subroutines}{20}
 \contentsline {section}{\numberline {14}Python Wrappers prototypes}{23}
-\contentsline {subsection}{\numberline {14.1}Initialisation}{23}

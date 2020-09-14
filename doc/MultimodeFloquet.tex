@@ -1429,29 +1429,30 @@ SUBROUTINE VARCRCPACKING(N,DIM,UPLO,zero,A,VALUES,COLUMNS,ROWINDEX,INFO)
 %#===================================================================
 %#   // GENERAL INIT SUBROUTINE
 %#===================================================================
-\subsection{Initialisation}
-\verb def floquetinit(id,*argsv,info):
-\verb id  is an instance of the class \verb atom_c_T  , declared as \verb id = openmmf.atom_c_T(). \verb info = 0  is an python integer.
+%\subsection{Initialisation}
+%\verb def floquetinit(id,*argsv,info):
+%\verb id  is an instance of the class \verb atom_c_T  , declared as \verb id = openmmf.atom_c_T(). \verb info = 0  is an python integer.
 
-This function can be take several forms to define different physical systems. 
+%This function can be take several forms to define different physical systems. 
 
-To declare a qubit type use \verb openmmf.floquetinit(id,'qubit',info=info) .
+%To declare a qubit type use \verb openmmf.floquetinit(id,'qubit',info=info) .
 
-To declare an alkali atom and one option of the electronic ground state hyperfine manifold use \verb openmmf.floquetinit(id,alkali_name,manifold,info=info), 
-with \verb alkali_name  taking any of the values \verb '87Rb', '85Rb','123Cs', '41K', '23Na'  , and \verb manifold  one of \verb 'U', 'L','B'  , to define the Lower, Upper or Both hyperfine manifoldds of the electronic ground state, respectively.
+%To declare an alkali atom and one option of the electronic ground state hyperfine manifold use \verb openmmf.floquetinit(id,alkali_name,manifold,info=info), 
+%with \verb alkali_name  taking any of the values \verb '87Rb', '85Rb','123Cs', '41K', '23Na'  , and \verb manifold  one of \verb 'U', 'L','B'  , to define the Lower, Upper or Both hyperfine manifoldds of the electronic ground state, respectively.
 
-To define a spin of total angular momentum $S$, use \verb openmmf.floquetinit(id,'spin',S,info=info)
+%To define a spin of total angular momentum $S$, use \verb openmmf.floquetinit(id,'spin',S,info=info)
 
-To define an arbitrary system with $N$ energy levels use \verb openmmf.floquetinit(id,'lattice',N,info=info)
+%To define an arbitrary system with $N$ energy levels use \verb openmmf.floquetinit(id,'lattice',N,info=info)
 
 
 %#===================================================================
 %#   EVALUATE THE HAMILTONIAN COMPONENTS OF PRE-DEFINED SYSTEMS. 
 %#===================================================================
-\verb def sethamiltoniancomponents(id,modes_num,fields,info):
-id is an instance of atom_c_T
-modes_num an numpy.array
-fields an instance of modes_c_T
+%\verb def sethamiltoniancomponents(id,modes_num,fields,info):
+%id is an instance of atom_c_T
+%modes_num an numpy.array
+%fields an instance of modes_c_T
+\begin{verbatim}
 #===================================================================
 #   // BUILDING FLOQUET MATRIX OF GENERIC MODEL
 #===================================================================
@@ -1526,9 +1527,11 @@ def micromotiondressedbasis(id,modes_num,dressingfields_indices,fields,t1,U,info
 #===================================================================
 #  DEALLOCATE ALL MEMORY ARRAYS
 #===================================================================
+def deallocateall(id):
 
 
 
+\end{verbatim}
 
 
 \bibliography{LibraryBib}
