@@ -298,17 +298,24 @@ The micromotion operator at T1 is then stored as the square matrix \verb U_FD_1 
 
 \section{Typical performance}
 The efficiency of the library is limited by the capability to solve the eigenvalue problem of the multimode Floquet Hamiltonian. Fig. \ref{fig:performance}(a) compares the execution times for a single diagonalisation of the Floquet HamiltonianBosonic and Fermionic Hubbard models, as functions of the size of the matrix (red and blue data/lines). The source codes can be found in \verb examples/FORTRAN/MANYBODYHUBBARD/  and the model Hamiltonian are:
-
 \begin{eqnarray}
-H_{Bosons}(t)   =  \frac{t}{2}\sum_{<i,j>} b_i b_j^\daggera +b_i^\dagger b_j + (t + \delta t \cos(\omega t)) n_j n_j \nonumber \\
-H_{Fermions}(t) =  \frac{t}{2}\sum_{<i,j>} b_i b_j^\daggera +b_i^\dagger b_j + (t+ \delta t \cos(\omega t)) n_j n_j \nonumber \\
-\end{equarray}
-with the bosonic and fermionic operators, respectively. To vary the size of the Floquet Hamiltonian we increase the number of Floquet
+H_{Bosons}(t)   &=&  (t+ \Delta t \cos(\omega t + \phi))\sum_{<i,j>}   b_i b_j^\dagger  + \frac{u}{2}\sum_j  n_j(n_j-1) \nonumber \\
+H_{Fermions}(t) &=&   (t+ \Delta t \cos(\omega t + \phi)) \sum_{i,\sigma} (f_{i,\sigma} f_{i+1,\sigma}^\dagger +  f_{i+1,\sigma}^\dagger f_{i,\sigma})  + u \sum_j n_{j,\uparrow} n_{j,\downarrow} \nonumber 
+\end{eqnarray}
+and we use the parameters $t=1, u=0.5, \phi = 0.0, \omega = 1.0, \Delta t = 0.2$. To vary the size of the Floquet Hamiltonian we increase the number of Floquet manifolds. 
 
 For these tests, the library performs two tasks: evaluates the Floquet Hamiltonian and use LAPACK to obtain the spectrum (only once for each matrix size). The Hamiltonian corresponds to a periodically driven Hubbard model (with near-neighbour tunnelling and on-site interaction) and the matrix dimension is given by the number of Floquet manifolds.
 
-Figure \ref{fig:performance}(b) shows the execution time required to evaluate a single time-step of the time-evolution operator ofdriven qubit with a noisy background. In this case we use a DRIVER subroutine and build a sparse representation of the multimode Hamiltonian. In contrast to the previous test, we observe that the matrix building and diagonalisation take about the same fraction of the total time. However, a direct comparison of the total times between these two examples is not straightforward since the structure of the Floquet matrix of the two problems is significantly different. These results give us a rough idea of the scaling of the execution time with the matrix size, as well as the possible performance bottlenecks. These tests were performed using a DELL XPS with an Intel Core i7 vPro @ 2.7 GHz and 8GB of RAM. The machine runs on Linux Mint 17.2 Rafaela, with gcc-4.9.4
-a
+Figure \ref{fig:performance}(b) shows the execution time required to evaluate a single time-step of the time-evolution operator of driven qubit with a noisy background. The Hamiltonian of this system is:
+\begin{equation}
+H = \hbar \omega_0 S_z + \hbar \Omega S_x \cos (\omega t + \phi) + \sum_\ell \Delta_i \cos(\ell \omega/N t + \phi_i)
+\end{equation}
+with $N$ the number of frequencies contributing to the noisy field, $\Delta_i$ and $\phi_i$ random amplitudes and phases, respectively. With this, the noise frequency is limited up to the driving frequency $\omega$. The matrix size reflects the number of components of the noisy driving. 
+
+In this case we use a DRIVER subroutine and build a sparse representation of the multimode Hamiltonian. In contrast to the previous test, we observe that the matrix building and diagonalisation take about the same fraction of the total time. However, a direct comparison of the total times between these two examples is not straightforward since the structure of the Floquet matrix of the two problems is significantly different. 
+
+These results give us a rough idea of the scaling of the execution time with the matrix size, as well as the possible performance bottlenecks. These tests were performed using a DELL XPS with an Intel Core i7 vPro @ 2.7 GHz and 8GB of RAM. The machine runs on Linux Mint 17.2 Rafaela, with gcc-4.9.4
+
 
 \section{Default system types}
 \label{sec:InitOptions}
@@ -393,7 +400,56 @@ CALL SETHAMILTONIANCOMPONENTS(ID,size(modes_num,1),total_frequencies,MODES_NUM,F
 \end{verbatim}
 where \verb total_frequencies   is the total number of driving fields (including a static component). For a complete example see the source code at \verb examples/FORTRAN/main_87Rb.f90 .
 
+\section{List of examples}
+\subsection{Python}
+Build the examples running \verb make  in the folder \verb examples/PYTHON  .
 
+\begin{tabular}{p{5.5cm}p{9.5cm}}
+main\_87Rb.py & Evaluates the time-evolution and spectrum of a driven atom of 87Rb.\\
+main\_DressedQubit.py  & Evaluates the time evolution of a dressed qubit in the bare and dressed basis. \\
+main\_floquetinit.py  & Illustrates the optional systems.\\
+main\_qubit\_driver.py  & Evaluates the tim-evolution operator of a driven qubit using a DRIVER subroutine.\\
+main\_qubit.py  & Evaluates the time-evolution operator of a driven qubit.\\
+main\_qubit\_sp.py & Evaluatese the time-evolution operator of driven qubit using the sparse representation of the Hamiltonian.\\  
+openmmf.py  & Defines the Python wrappers. 
+\end{tabular}
+\subsection{C++}
+Build the examples running \verb make  in the folder \verb examples/CPP  . 
+
+\begin{tabular}{p{5.5cm}p{9.5cm}}
+main\_DressedQubit.cpp  & Evaluates the time evolution of a dressed qubit in the bare and dressed basis. \\
+main\_DressedQubit\_SP.cpp & Evaluates the time evolution of a dressed qubit in the bare and dressed basis using the sparse representation of the Hamiltonnian. \\
+main\_qubit\_driver.cpp & Evaluates the tim-evolution operator of a driven qubit using a DRIVER subroutine.\\
+main\_qubit.cpp  & Evaluates the time-evolution operator of a driven qubit.\\
+main\_qubit\_sp.cpp & Evaluatese the time-evolution operator of driven qubit using the sparse representation of the Hamiltonian.\\  
+MultimodeFloquet.h & Prototype of the C++ wrapper functios. 
+\end{tabular}
+\subsection{Fortran}
+Build the examples running \verb make  in the folder \verb examples/FORTRAN  . 
+
+\begin{tabular}{p{5.5cm}p{9.5cm}}
+main\_qubit\_Shirley.f90 & Evaluates the time-evolution operator of a driven qubit with parameters as in the classical paper by Jon Shirley.\\
+main\_qubit.f90  & Evaluates the time-evolution operator of a driven qubit.\\
+main\_qubit\_SP.f90& Evaluatese the time-evolution operator of driven qubit using the sparse representation of the Hamiltonian.\\  
+main\_qubit\_DRIVER.f90 & Evaluates the tim-evolution operator of a driven qubit using a DRIVER subroutine.\\
+main\_QuantumInterference.f90 & Evaluates the time-evolution of a bichromatically driven qubit. \\
+main\_qubit\_noise\_SP.f90 & Evaluates the time-evolution operator of a driven qubit ina noisy environment. Uses a sparse representation of the Hamiltonian. \\
+main\_halfspin\_DRIVER.f90  & Evaluates the time-evolution operator of a two-level system (defined with 'spin') using a DRIVER subroutine, \\
+main\_spin\_DRIVER.f90  & Evaluates the time-evolution operator of a L-level system (defined with 'spin') using a DRIVER subroutine, \\
+main\_lattice.f90  &  evaluates the spectrum and micromotion of a driven lattice  with two sites in the unit cell. \\
+main\_threesiteslattice.f90 & evaluates the spectrum and micromotion of a driven lattice  with three sites in the unit cell. \\
+main\_qubitLattice.f90 & Evaluates the time-evolution of a bichromatically driven qubit as in   Eq. (20), arxiv 1612.02143. \\
+main\_qubitLattice\_SP.f90 & Evaluates the time-evolution of a bichromatically driven qubit as in Eq. (20), arxiv 1612.02143, using a sparse representation of the Hamiltonian.  \\
+main\_qubitLattice\_DRIVER.f90& Evaluates the time-evolution of a bichromatically driven qubit as in Eq. (20), arxiv 1612.02143, using a DRIVER subroutine.  \\
+main\_DressedQubit.f90  & Evaluates the time evolution of a dressed qubit in the bare and dressed basis. \\
+main\_DressedQubitV2.f90 & Evaluates the time evolution of a dressed qubit in the bare and dressed basis. \\
+main\_DressedQubit\_SP.f90 & Evaluates the time evolution of a dressed qubit in the bare and dressed basis using the sparse representation of the Hamiltonnian. \\
+main\_DressedQubit\_DRIVER.f90  & Evaluates the time evolution of a dressed qubit in the bare and dressed basis using a DRIVER subroutine.. \\
+main\_87Rb\_RFMW\_DRIVER.f90 & Evaluates the time-evolution operator of 87Rb dressed by a RF field and driven by a MW field, using the dressed basis. \\
+DoublePeakSearch.f90   &  Evaluates the time-evolution operator of 87Rb dressed by a RF field and driven by a MW field, using the dressed basis. \\
+Manybody/main\_MBH\_Bosons.f90 & Evaluates the spectrum of the Bosonic Hubbard model with time-dependent tunnelling.\\
+Manybody/main\_MBH\_Fermions.f90 & Evaluates the spectrum of the Fermionic Hubbard model with time-dependent tunnelling.\\
+\end{tabular}
 \section{C++ wrappers}
 
 The library includes  C++ interfaces for each one of the subroutines defined. These interfaces are declared in files with the same name as the ones containing the Fortran declarations, but with the particle \verb _C  appended before the ending extension \verb .f90 .  Similarly,  wrapper subroutine are named using the corresponding Fortran names and appending the particle \verb _c  at the end of the name. For example, the file \verb MultimodeFloquetTE_C.f90   is paired with the file \verb MultimodeFloquet.f90  and defines the subroutine \verb MULTIMODETIMEEVOLUTIONOPERATOR_C , which is used in \verb c++   using \verb multimodetimeevolutionoperator_c_  followed by the declared list of arguments (see example at \verb examples/CPP/main_qubit.cpp .
@@ -476,6 +532,9 @@ If you find any bug please contact the developing team using the github hosting 
 
 This work has been supported by the EPSRC grants EP/I010394/1 and EP/M013294/1.
 
+\bibliography{LibraryBib}
+
+\newpage
 \section{MODULES}
 
 In this section we provide the header of each one of the subroutines of the library, including the argument declaration, to help the user to identify the type of variable expected by each function.
@@ -504,7 +563,7 @@ MODULE physical_constants
 END MODULE physical_constants
 
 \end{verbatim}
-
+\newpage
 \subsection{Arrays}
 
 The module \verb ARRAYS  provides global definitions of matrices. When using the module, the user cannot define variables using any of the names declared in this module. 
@@ -525,7 +584,7 @@ To deallocate these arrays, the user can invoke the call:
 CALL DEALLOCATEALL(ID)
 \end{verbatim}
 where the variable \verb TYPE(ATOM)  \verb ID  defines the type of problem.
-
+\newpage
 \subsection{Atomic properties}
 
 The \verb ATOMIC_PROPERTIES  module defines the default physical parameters of common alkali atomic species used in the context of ultracold atomic physics. 
@@ -600,7 +659,7 @@ MODULE ATOMIC_PROPERTIES
   
 END MODULE ATOMIC_PROPERTIES
 \end{verbatim}
-
+\newpage
 \subsection{MKL}
 
 \begin{verbatim}
@@ -616,7 +675,7 @@ MODULE FEAST
   complex*16, DIMENSION(:,:), ALLOCATABLE :: X      ! matrix with eigenvectore
 END MODULE FEAST
 \end{verbatim}
-
+\newpage
 \section{DERIVED TYPES (src/modes.f90)}
 \label{sec:derivedtypes}
 The derived type defined 
@@ -646,7 +705,7 @@ MODULE TYPES
 
 END MODULE TYPES
 \end{verbatim}
-
+\newpage
 \section{COMPUTATIONAL SUBROUTINES}
 
 
@@ -1044,7 +1103,7 @@ SUBROUTINE MULTIMODETRANSITIONAVG(D,NM,FIELD,MODES_NUM,U_F_MODES,
 \begin{center}
 \rule{12cm}{1pt}
 \end{center}
-
+\newpage
 \section{DRIVER SUBROUTINES}
 \begin{verbatim}
 
@@ -1225,7 +1284,7 @@ SUBROUTINE MICROMOTIONDRESSEDBASIS(ID,MODES_NUM,DRESSINGFIELDS_INDICES,FIELDS,
 
 \end{verbatim}
 
-
+\newpage
 \subsection{Utility subroutines}
 \begin{verbatim}
 
@@ -1455,7 +1514,7 @@ SUBROUTINE VARCRCPACKING(N,DIM,UPLO,zero,A,VALUES,COLUMNS,ROWINDEX,INFO)
   INTEGER,    DIMENSION(N+1), INTENT(OUT) :: ROWINDEX
 
 \end{verbatim}
-
+\newpage
 \section{C++ Wrappers prototypes: src/MultimodeFloquet.h}
 
 \begin{verbatim}
@@ -1489,46 +1548,71 @@ extern "C" {
   
   
   // BUILDING FLOQUET MATRIX OF GENERIC MODEL
-  void    multimodefloquetmatrix_c_       (atom_c *id,int * nm, int * total_frequencies,int * modes_num,mode_c * fields, int * info);
+  void    multimodefloquetmatrix_c_       (atom_c *id,int * nm, int * total_frequencies,
+           int * modes_num,mode_c * fields, int * info);
   void get_h_floquet_c_(int * h, dcmplx * values, int* info);
-  int     multimodefloquetmatrix_c_python_(atom_c *id,int * nm, int * total_frequencies,int * modes_num,mode_c * fields,int * info);
-  void multimodefloquetmatrix_sp_c_       (atom_c *id,int * nm, int * total_frequencies,int * modes_num,mode_c * fields, int * info);
-  void multimodefloquetmatrix_python_sp_c_(atom_c *id,int * nm, int * total_frequencies,int * modes_num,mode_c * fields, int * h_f,int * info);
+  int     multimodefloquetmatrix_c_python_(atom_c *id,int * nm, int * total_frequencies,
+          int * modes_num,mode_c * fields,int * info);
+  void multimodefloquetmatrix_sp_c_       (atom_c *id,int * nm, int * total_frequencies,
+          int * modes_num,mode_c * fields, int * info);
+  void multimodefloquetmatrix_python_sp_c_(atom_c *id,int * nm, int * total_frequencies,
+          int * modes_num,mode_c * fields, int * h_f,int * info);
   void get_h_floquet_sp_c_(int * h_f, dcmplx * values, int * row_index, int * column, int * info);
 
   
   // CALCULATE THE SPECTRUM OF THE FLOQUET HAMILTONIAN
-  void   lapack_fulleigenvalues_c_(dcmplx * u_f,int * h_floquet_size,double * e_floquet,int *info);
-  void mklsparse_fulleigenvalues_c_(int * h_floquet_size,double * e_l,double * e_r,double * e_floquet,dcmplx *U_F, int * info);
-  void matmul_c_(int * op, dcmplx * a, int * ra, int * ca, dcmplx * b, int * rb, int * cb, dcmplx * c,int * info);
+  void   lapack_fulleigenvalues_c_(dcmplx * u_f,int * h_floquet_size,
+           double * e_floquet,int *info);
+  void mklsparse_fulleigenvalues_c_(int * h_floquet_size,
+           double * e_l,double * e_r,double * e_floquet,dcmplx *U_F, int * info);
+  void matmul_c_(int * op, dcmplx * a, int * ra, int * ca, 
+           dcmplx * b, int * rb, int * cb, dcmplx * c,int * info);
   
   
   // CONTSRUCTION OF THE TIME-EVOLUTION OPERATOR
-  void         multimodetransitionavg_c_(int * h_floquet_size,int * nm,mode_c * fields,int * modes_num,dcmplx * U_F,double * e_floquet,int * d_bare,double * p_avg,int *info);
-  void multimodefloquettransformation_c_(int * h_floquet_size,int * nm,int * modes_num,dcmplx * U_F,double * e_floquet,int * d_bare,mode_c * fields,double * t1,dcmplx * U_B2D,int * info); 
-  void multimodemicromotion_c_(atom_c *id,int * h_floquet_size,int * nm,int * modes_num,dcmplx * U_F,double * e_floquet,int * d_bare,mode_c * fields,double * t1,dcmplx * U_B2D,int * info); 
-  void multimodetimeevolutionoperator_c_(int * h_floquet_size,int * nm,int * modes_num,dcmplx * U_F,double * e_floquet,int * d_bare,mode_c * fields,double * t1,double * t2,dcmplx * U_AUX,int * info);
-  void timeevolutionoperator_c_(atom_c *id, int *d_bare, int *nm, int *nf, int * modes_num, mode_c *field, double *t1, double *t2, dcmplx *U, int *info); 
+  void         multimodetransitionavg_c_(int * h_floquet_size,int * nm,mode_c * fields,
+      int * modes_num,dcmplx * U_F,double * e_floquet,int * d_bare,double * p_avg,int *info);
+  void multimodefloquettransformation_c_(int * h_floquet_size,int * nm,int * modes_num,
+      dcmplx * U_F,double * e_floquet,int * d_bare,mode_c * fields,double * t1,dcmplx * U_B2D,int * info); 
+  void multimodemicromotion_c_(atom_c *id,int * h_floquet_size,int * nm,int * modes_num,
+      dcmplx * U_F,double * e_floquet,int * d_bare,mode_c * fields,double * t1,dcmplx * U_B2D,int * info); 
+  void multimodetimeevolutionoperator_c_(int * h_floquet_size,int * nm,int * modes_num,
+      dcmplx * U_F,double * e_floquet,int * d_bare,mode_c * fields,double * t1,double * t2,dcmplx * U_AUX,int * info);
+  void timeevolutionoperator_c_(atom_c *id, int *d_bare, int *nm, int *nf, int * modes_num, 
+      mode_c *field, double *t1, double *t2, dcmplx *U, int *info); 
 
     
   // DEFINITION OF DRESSED BASIS
-  void            dressedbasis_c_(int * h_floquet_size,atom_c *id,int * nm, int * modes_num,mode_c * fields, dcmplx * U_FD, double * e_dressed,int * info); 
-  void  dressedbasis_subset_c_(atom_c *id , int * dressingfloquetdimension,int * dressingfields, int * nm, int * dressingfields_indices, int * modes_num,mode_c * fields, dcmplx * U_FD, double * e_dressed,int * info);
-  void  dressedbasis_subset_sp_c_(atom_c * id, int * dressingfloquetdimension,int * dressingfields,int * nm, int * dressingfields_indices, int * modes_num,mode_c * fields, dcmplx * U_FD, double * e_dressed,int * info);
-  void  dressedbasis_sp_c_(int h_floquet_size, atom_c *id, int * nm, int * modes_num, mode_c * fields, dcmplx * U_FD, double * e_dressed, int * info);
-  void micromotionfourierdressedbasis_c_(atom_c *id , int *DF, int * dressingfields_indices, int * nm, int * modes_num, int *nf, mode_c * fields,int * nd,dcmplx * U_FD, double *e_dressed,int * info);
-  void micromotiondressedbasis_c_(atom_c *id , int * modes_num, int * dressingfields_indices, mode_c * fields, double T1, dcmplx * U, int * info);
+  void            dressedbasis_c_(int * h_floquet_size,atom_c *id,int * nm, 
+                                  int * modes_num,mode_c * fields, dcmplx * U_FD, 
+                                  double * e_dressed,int * info); 
+  void  dressedbasis_subset_c_(atom_c *id , int * dressingfloquetdimension,
+                               int * dressingfields, int * nm, int * dressingfields_indices, 
+                               int * modes_num,mode_c * fields, dcmplx * U_FD, 
+                               double * e_dressed,int * info);
+  void  dressedbasis_subset_sp_c_(atom_c * id, int * dressingfloquetdimension,
+                                  int * dressingfields,int * nm, int * dressingfields_indices,
+                                  int * modes_num,mode_c * fields, dcmplx * U_FD, 
+                                  double * e_dressed,int * info);
+  void  dressedbasis_sp_c_(int h_floquet_size, atom_c *id, int * nm, int * modes_num, 
+                           mode_c * fields, dcmplx * U_FD, double * e_dressed, 
+                           int * info);
+  void micromotionfourierdressedbasis_c_(atom_c *id , int *DF, int * dressingfields_indices, 
+                                         int * nm, int * modes_num, int *nf, mode_c * fields,
+                                         int * nd,dcmplx * U_FD, double *e_dressed,int * info);
+  void micromotiondressedbasis_c_(atom_c *id , int * modes_num, int * dressingfields_indices, 
+                                  mode_c * fields, double T1, dcmplx * U, int * info);
 
     
   // UTILITY FUNCTIONS: WRITE MATRICES ON THE SCREEN
   void write_matrix_c_(double *A,int * A_dim);
   void rec_write_matrix_c_(double *A,int * A_dim1, int * A_dim2);
-  
+
   
   // deallocate all arrays allocated with fortran
   void deallocateall_c_(int *id);
 \end{verbatim}
-
+\newpage
 \section{Python Wrappers prototypes}
 
 OPENMMF includes a set of wrappers to use the library with Python, defined in the file \verb src/openmmf.py  , The wrapper use CTYPES to pass on parameters to the C++ wrappers. In order for this to work, you should make sure that the openmmf dynamical library is loaded correctly, e.g. using the instruction:\\
@@ -1928,6 +2012,5 @@ def deallocateall(id):
 \end{verbatim}
 
 
-\bibliography{LibraryBib}
 
 \end{document}
