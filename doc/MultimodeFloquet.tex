@@ -22,47 +22,53 @@
 
 \newcommand{\text}[1]{\textrm{\tiny{#1}}}
 
-\title{The openMMF library: open source software for multimode driven quantum systems \\ User manual}
+\title{The openMMF library: an open source software for multimode driven quantum systems \\ User manual \\ V0.5}
 %\author{G. A. Sinuco-Le\'on  \\ \small{\textit{Department of Physics and Astronomy, University of Sussex,Brighton, BN1 9QH, UK}}} 
 \date{\today.}
 
 \begin{document}
 \maketitle
 \tableofcontents
-%\section{Introduction}
-\section{Introduction}
-
 
 \section{How to build the library and compile the examples}
 
-The openMMF source code includes a \verb Makefile file for compiling and building the library. The user must ensure that the  system's path to the LAPACK and (optionally) the MKL-intel libraries can be found by the \verb Makefile  script.  
+The openMMF source code includes a \verb Makefile file for compiling and building the library. The user must ensure that \verb make.inc  sets correctly the system's path to the LAPACK and (optionally) the MKL-intel libraries and linking/compiling options. 
 
-When the paths are set correctly, compiling the library requires invoking a single \verb make  command with the following options:
+When the paths are set correctly, compiling the library requires invoking a single \verb make  command, which will build the library. To indicate whether the MKL library can be used, the user should indicate so in \verb make.inc  . The \verb make  builing options are:
 
 \begin{itemize}
+\item \verb make            :  Compiles the library and selected Fortran and C++ examples 
 \item \verb make  \verb lib :  compiles the library including support for sparse matrices. This option requires the LAPACK and MKL-intel libraries.
 \item \verb make  \verb lib_lapack : compiles the library without support for sparse matrices. This option requires LAPACK.
-\item \verb make  \verb all_examples : complies all examples under the folders \verb examples/CPP  and  \verb examples/FORTRAN .
+\item \verb make  \verb Examples_lib : compilies examples under the folder \verb examples/FORTRAN , which uses LAPACK
+\item \verb make  \verb Examples_lib_sp : compilies examples under the folder \verb examples/FORTRAN , which uses the MKL library
+\item \verb make  \verb Examples_lib_c : compilies examples under the folder \verb examples/CPP  , which uses LAPACK
+\item \verb make  \verb Examples_lib_c_sp : compilies examples under the folder \verb examples/CPP , which uses the MKL library
 \item \verb make  : run the options \verb lib   and \verb all_examples .
 \end{itemize} 
-All options of the \verb make   command produces the static library \verb libopenmmf  saving it in the folder \verb ~/lib . A number of \verb .mod  files produced with the building process are moved to the folder \verb ~/include   and they are required for running the  application.
+All options of the \verb make   command produces static and dynamical libraries \verb libopenmmf.a  and \verb libopenmmf.so  in the folder \verb ~/lib . A number of \verb .mod  files produced with the building process are moved to the folder \verb ~/include   and they are required for running the  application.
 
-The Fortran examples that only require the support of the LAPACK library are compiled with:
+The examples that only require the support of the LAPACK library are compiled with:
 \begin{verbatim}
 gfortran -o out SourceCode.f90 -I$(INCLUDE_OPENMMF) -L$(LIB_OPENMMF) -lopenmmf $(GFFLAGS)
+g++      -o out SourceCode.cpp -I$(INCLUDE_OPENMMF) -L$(LIB_OPENMMF) -lopenmmf -lgfortran $(GFFLAGS)
 \end{verbatim}
 while code that requires support from the MKL library is compiled by:
 \begin{verbatim}
 gfortran -o out SourceCode.f90 -I$(INCLUDE_OPENMMF) -L$(LIB_OPENMMF) -lopenmmf 
-                               -L$(MKLLIBS) -I$(MKLINC) $(GFFLAGS_SP) $(MKLFLAGS)
+                               -L$(MKLLIBS) -I$(MKLINC) $(MKLFLAGS)
+g++      -o out SourceCode.cpp -I$(INCLUDE_OPENMMF) -L$(LIB_OPENMMF) -lopenmmf -lgfortran
+                               -L$(MKLLIBS) -I$(MKLINC) $(MKLFLAGS)
 \end{verbatim}
-The variables \verb MKLLIBS  , \verb MKLINC  , \verb GFFLAGS  , \verb GFFLAGS_SP  and \verb MKLFLAGS  are defined in the file \verb Makefile . The environmental variables  \verb INCLUDE_OPENMMF   and  \verb LIB_OPENMMF   indicate the paths to the  include and library directories  of the openMMF library. Compilation of \verb C++   source code follows the same formula, using the additional flag \verb -lgfortran   and the corresponding compiler \verb g++ . For an explicit example of usage in this case see the building script under \verb examples/CPP/Makefile .
 
-When running  applications that use the MKL-intel library, the environmental variable \verb LD_LIBRARY_PATH   must indicate the path to such a library, which can be done with the shell command:
+
+The variables \verb MKLLIBS  , \verb MKLINC  , \verb GFFLAGS  ,   and \verb MKLFLAGS  are defined in the file \verb Makefile . The environmental variables  \verb INCLUDE_OPENMMF   and  \verb LIB_OPENMMF   indicate the paths to the  include and library directories  of the openMMF library. Compilation of \verb C++   source code follows the same formula, using the additional flag \verb -lgfortran   and the corresponding compiler \verb g++ . For an explicit example of usage in this case see the building script under \verb examples/CPP/Makefile .
+
+When running  applications, the environmental variable \verb LD_LIBRARY_PATH   must indicate the path to such a library, which can be done with the shell command:
 \begin{verbatim}
-export LD_LIBRARY_PATH="/opt/intel/compilers_and_libraries_2017/linux/mkl/lib/intel64  
+export LD_LIBRARY_PATH="/opt/intel/compilers_and_libraries/linux/mkl/lib/intel64:./lib"  
 \end{verbatim}
-which assumes that the library is installed in the default folder corresponding to the MKL version installed in the system. 
+which assumes default folder location of the MKL library and that \verb libopenmmf  is located in \verb ./lib  .
 
 
 \section{What does the library calculate and how? }
@@ -290,6 +296,19 @@ The micromotion operator at T1 is then stored as the square matrix \verb U_FD_1 
 
 \end{verbatim}
 
+\section{Typical performance}
+The efficiency of the library is limited by the capability to solve the eigenvalue problem of the multimode Floquet Hamiltonian. Fig. \ref{fig:performance}(a) compares the execution times for a single diagonalisation of the Floquet HamiltonianBosonic and Fermionic Hubbard models, as functions of the size of the matrix (red and blue data/lines). The source codes can be found in \verb examples/FORTRAN/MANYBODYHUBBARD/  and the model Hamiltonian are:
+
+\begin{eqnarray}
+H_{Bosons}(t)   =  \frac{t}{2}\sum_{<i,j>} b_i b_j^\daggera +b_i^\dagger b_j + (t + \delta t \cos(\omega t)) n_j n_j \nonumber \\
+H_{Fermions}(t) =  \frac{t}{2}\sum_{<i,j>} b_i b_j^\daggera +b_i^\dagger b_j + (t+ \delta t \cos(\omega t)) n_j n_j \nonumber \\
+\end{equarray}
+with the bosonic and fermionic operators, respectively. To vary the size of the Floquet Hamiltonian we increase the number of Floquet
+
+For these tests, the library performs two tasks: evaluates the Floquet Hamiltonian and use LAPACK to obtain the spectrum (only once for each matrix size). The Hamiltonian corresponds to a periodically driven Hubbard model (with near-neighbour tunnelling and on-site interaction) and the matrix dimension is given by the number of Floquet manifolds.
+
+Figure \ref{fig:performance}(b) shows the execution time required to evaluate a single time-step of the time-evolution operator ofdriven qubit with a noisy background. In this case we use a DRIVER subroutine and build a sparse representation of the multimode Hamiltonian. In contrast to the previous test, we observe that the matrix building and diagonalisation take about the same fraction of the total time. However, a direct comparison of the total times between these two examples is not straightforward since the structure of the Floquet matrix of the two problems is significantly different. These results give us a rough idea of the scaling of the execution time with the matrix size, as well as the possible performance bottlenecks. These tests were performed using a DELL XPS with an Intel Core i7 vPro @ 2.7 GHz and 8GB of RAM. The machine runs on Linux Mint 17.2 Rafaela, with gcc-4.9.4
+a
 
 \section{Default system types}
 \label{sec:InitOptions}
@@ -321,6 +340,13 @@ The corresponding derived type is initialised with the instruction:
 \end{verbatim}
 where the third argument is a \verb DOUBLE \verb PRECISION   variable equal to the double of the projection of the total angular momentum.
 
+The matrix representation of the angular momentum operators $s_i$ is build using \cite{sakurai1995modern}:
+\begin{eqnarray}
+\left\langle S, m'\right| S_x \left| S,m\right\rangle&=& \frac{1}{2} \left[\sqrt{(S-m)(S+m+1)}\delta_{m,m'+1} + \sqrt{(S+m)(S-m+1)}\delta_{m,m'-1} \right]  \label{eq:S_x}\\
+\left\langle S, m'\right| S_y \left| S,m\right\rangle&=& \frac{i}{2} \left[\sqrt{(S-m)(S+m+1)}\delta_{m,m'+1} - \sqrt{(S+m)(S-m+1)}\delta_{m,m'-1} \right]  \label{eq:S_y}\\
+\left\langle S, m'\right| S_z \left| S,m\right\rangle&=& m\delta_{m,m'} \label{eq:S_z} 
+\end{eqnarray}
+
 \subsection{Ground state Alkali atoms.}
 The effective model of an alkali atom consist of an electron with zero orbital angular momenta interacting with a static nucleus. These two particles interact via their magnetic moments, which define two manifolds of states corresponding to the total angular momenta $F=I\pm1/2$. The library can be used to study inter and intra manifold dynamics.
 
@@ -343,10 +369,12 @@ which assumes couplings of the form
 \begin{equation}
 V^{\ell,n} = \frac{\mu_B g_{I+1/2} B_x}{A} F_x e^{\phi_{\ell,x}} +  \frac{\mu_B g_{I+1/2} B_y}{A} F_y e^{\phi_{\ell,y}} + \frac{\mu_B g_{I+1/2} B_z}{A} F_z e^{\phi_{\ell,z}}
 \end{equation}
-where
+
+The atomic gyromagnetic factor is defined by:
 \begin{equation}
-g_{I\pm1/2} = 
+     g_F = g_J*(F*(F+1) - I*(I+1) +J*(J+1))/(2*F*(F+1)) + g_I*(F*(F+1) + I*(I+1) - J*(J+1))/(2*F*(F+1))!
 \end{equation}
+with $F=I \pm 1/2$.  The matrix representation in each case follows the same procedure as in the case of a spin system. 
 
 Finally, when both manifolds are of interest, we should use:
 \begin{verbatim}
@@ -356,6 +384,8 @@ which prepares the system to initialise couplings of the form:
 \begin{equation}
 V^{\ell,n} = \frac{\mu_B  B_x}{A} (g_J J_x + g_I I_x) e^{\phi_{\ell,x}} +  \frac{\mu_B B_y}{A} (g_J J_y + g_I I_y) e^{\phi_{\ell,y}} + \frac{\mu_B B_z}{A} (g_J J_z + g_I I_z) e^{\phi_{\ell,z}}
 \end{equation}
+
+In this case, the angular momentum operators are represented in the uncoupled basis $\left| I,J,m_I,m_J \right\rangle$, corresponding to a tensor multiplication of the matrices resulting from Eqs. (\ref{eq:S_x})-(\ref{eq:S_z}) representing $I_i$ and $J_i$.
 
 In all these cases, after invoking the initialisation routine \verb FLOQUET_INIT   and defining the parameters of the couplings using the derived data type \verb TYPE(MODES)::FIELDS, the matrix representation of each component of the Hamiltonian can be obtained with a single call to the subroutine:
 \begin{verbatim}
@@ -419,7 +449,10 @@ def multimodefloquetmatrix(id,modes_num,fields,info):
  
     return h_floquet_size
 \end{verbatim}
-The input parameter \verb mode_num  is an numpy array of integers that, as before, defines the number of driving mode and harmonics. Alos, the input parameter \verb info  is a numpy integer. \verb id  is an instance of the class \verb atom_c_T  and \verb fields  is an instance of the class \verb modes_c_T . This functions calls \verb openmmfC.multimodefloquetmatrix_c_python_  passing all parameters by reference. 
+The input parameter \verb mode_num  is an numpy array of integers that, as before, defines the number of driving mode and harmonics. Also, the input parameter \verb info  is a numpy integer. \verb id  is an instance of the class \verb atom_c_T  and \verb fields  is an instance of the class \verb modes_c_T . This functions calls: 
+
+\noindent
+\verb openmmfC.multimodefloquetmatrix_c_python_  passing all parameters by reference. 
 
 The ctypes wrappers rely on the equivalence between the data types in Fortran, C++ and Python, which should be observed rigourosly following the Table \ref{tb:datatypes}
 
@@ -427,9 +460,9 @@ The ctypes wrappers rely on the equivalence between the data types in Fortran, C
 \centering
 \begin{tabular}[t]{|c|c|c|c|}\firsthline
 \textbf{Fortran}          & \textbf{C++}    & \textbf{ctypes}          & \textbf{numpy} \\  \hline
-integer          & int    & $ctypes.c_int$    & numpy.int32 \\ \hline
-double precision & double & $ctypes.c_double$ & numpy.double \\ \hline
-complex*16 & std::<complex> & $c_dcmplx = ctypes.c_double*2$ & np.complex \\ \hline
+integer          & int    & ctypes.c\_int     & numpy.int32 \\ \hline
+double precision & double & ctypes.c\_double & numpy.double \\ \hline
+complex*16 & std::complex $<$double$>$& c\_dcmplx = ctypes.c\_double*2 & np.complex \\ \hline
 \end{tabular}
 \caption{\label{tb:datatypes} Equivalence between the numerical data types in Fortran, C++, Ctypes and numpy.}
 \end{table}

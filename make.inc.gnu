@@ -16,12 +16,13 @@ CFLAGS = -O3
 #  and desired compiler options for your machine. 
 GF         = gfortran
 GFFLAGS    =  -llapack -lblas -g 
-BARRYFLAGS =  -g -fPIC	# to generate object files that are boundled 
-                        # in a dynamic library
+
 
 #  Define LDFLAGS to the desired linker options for your machine.
 #
-LDFLAGS =
+LDFLAGS = -g -fPIC	# to generate object files that are boundled 
+                        # in a dynamic library
+
 
 #  The archiver and the flag(s) to use when building an archive
 #  (library).  If your system has no ranlib, set RANLIB = echo.
@@ -30,7 +31,7 @@ AR         = ar
 ARFLAGS    = urv
 RANLIB     = ranlib
 SHAREFLAGS = -shared -fPIC
-DYLIB_NAME = libmultimodefloquet.so
+DYLIB_NAME = libopenmmf.so
 
 #  Uncomment the next four command lines to include routines using the 
 #  MKL-intel library. Edited as needed for your system.

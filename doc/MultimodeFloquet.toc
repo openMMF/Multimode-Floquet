@@ -1,29 +1,29 @@
-\contentsline {section}{\numberline {1}Introduction}{2}
-\contentsline {section}{\numberline {2}How to build the library and compile the examples}{2}
-\contentsline {section}{\numberline {3}What does the library calculate and how? }{2}
-\contentsline {section}{\numberline {4}Use of the library}{3}
-\contentsline {subsection}{\numberline {4.1}Declaration of the Hamiltonian }{3}
-\contentsline {subsection}{\numberline {4.2}Hamiltonian components}{4}
-\contentsline {subsection}{\numberline {4.3}Multimode Floquet matrix and diagonalisation}{5}
-\contentsline {subsection}{\numberline {4.4}Time-evolution operator}{5}
-\contentsline {subsection}{\numberline {4.5}Micromotion operator}{5}
-\contentsline {subsection}{\numberline {4.6}Identifying the dressing modes}{6}
+\contentsline {section}{\numberline {1}How to build the library and compile the examples}{2}
+\contentsline {section}{\numberline {2}What does the library calculate and how? }{2}
+\contentsline {section}{\numberline {3}Use of the library}{3}
+\contentsline {subsection}{\numberline {3.1}Declaration of the Hamiltonian }{3}
+\contentsline {subsection}{\numberline {3.2}Hamiltonian components}{4}
+\contentsline {subsection}{\numberline {3.3}Multimode Floquet matrix and diagonalisation}{5}
+\contentsline {subsection}{\numberline {3.4}Time-evolution operator}{5}
+\contentsline {subsection}{\numberline {3.5}Micromotion operator}{5}
+\contentsline {subsection}{\numberline {3.6}Identifying the dressing modes}{6}
+\contentsline {section}{\numberline {4}Typical performance}{6}
 \contentsline {section}{\numberline {5}Default system types}{6}
 \contentsline {subsection}{\numberline {5.1}Qubit}{6}
-\contentsline {subsection}{\numberline {5.2}Spin of total angular momentum $S_z$}{6}
+\contentsline {subsection}{\numberline {5.2}Spin of total angular momentum $S_z$}{7}
 \contentsline {subsection}{\numberline {5.3}Ground state Alkali atoms.}{7}
-\contentsline {section}{\numberline {6}C++ wrappers}{7}
-\contentsline {section}{\numberline {7}Python wrappers}{7}
-\contentsline {section}{\numberline {8}Bugs and known limitations}{8}
-\contentsline {section}{\numberline {9}Acknowledgements}{8}
+\contentsline {section}{\numberline {6}C++ wrappers}{8}
+\contentsline {section}{\numberline {7}Python wrappers}{8}
+\contentsline {section}{\numberline {8}Bugs and known limitations}{9}
+\contentsline {section}{\numberline {9}Acknowledgements}{9}
 \contentsline {section}{\numberline {10}MODULES}{9}
 \contentsline {subsection}{\numberline {10.1}Physical Constants}{9}
 \contentsline {subsection}{\numberline {10.2}Arrays}{9}
-\contentsline {subsection}{\numberline {10.3}Atomic properties}{9}
-\contentsline {subsection}{\numberline {10.4}MKL}{10}
+\contentsline {subsection}{\numberline {10.3}Atomic properties}{10}
+\contentsline {subsection}{\numberline {10.4}MKL}{11}
 \contentsline {section}{\numberline {11}DERIVED TYPES (src/modes.f90)}{11}
-\contentsline {section}{\numberline {12}COMPUTATIONAL SUBROUTINES}{11}
+\contentsline {section}{\numberline {12}COMPUTATIONAL SUBROUTINES}{12}
 \contentsline {section}{\numberline {13}DRIVER SUBROUTINES}{17}
 \contentsline {subsection}{\numberline {13.1}Utility subroutines}{20}
 \contentsline {section}{\numberline {14}C++ Wrappers prototypes: src/MultimodeFloquet.h}{23}
-\contentsline {section}{\numberline {15}Python Wrappers prototypes}{24}
+\contentsline {section}{\numberline {15}Python Wrappers prototypes}{25}

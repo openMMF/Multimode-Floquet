@@ -17,13 +17,11 @@ CFLAGS = -O3
 GF         = gfortran
 GFFLAGS    =  -llapack -lblas -g 
 
-# to generate object files that will be  boundled in a dynamic library
-BARRYFLAGS =  -dynamiclib 
-
 
 #  Define LDFLAGS to the desired linker options for your machine.
 #
-LDFLAGS =
+# to generate object files that will be  boundled in a dynamic library
+LDFLAGS = -dynamiclib
 
 #  The archiver and the flag(s) to use when building an archive
 #  (library).  If your system has no ranlib, set RANLIB = echo.
@@ -31,10 +29,8 @@ LDFLAGS =
 AR         = ar
 ARFLAGS    = urv
 RANLIB     = ranlib
-SHAREFLAGS = -dynamiclib -llapack -lblas
-DYLIB_NAME = libmultimodefloquet.dylib
-
-
+SHAREFLAGS = -dynamiclib -llapack -lblas -g
+DYLIB_NAME = libopenmmf.dylib
 
 #====================================================================
 #=========== Set options to use the MKL-intel library ===============
