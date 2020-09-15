@@ -13,11 +13,6 @@
 \usepackage{enumerate}
 \usepackage{array}
 
-
-%\addtolength{\topmargin}{1.3cm}
-%\addtolength{\textheight}{-0.4cm}
-%\setlength{\hoffset}{0.5cm}
-
 \bibliographystyle{unsrt}
 
 \newcommand{\text}[1]{\textrm{\tiny{#1}}}
@@ -304,11 +299,17 @@ H_{Fermions}(t) &=&   (t+ \Delta t \cos(\omega t + \phi)) \sum_{i,\sigma} (f_{i,
 \end{eqnarray}
 and we use the parameters $t=1, u=0.5, \phi = 0.0, \omega = 1.0, \Delta t = 0.2$. To vary the size of the Floquet Hamiltonian we increase the number of Floquet manifolds. 
 
+\begin{figure}
+\centering
+\includegraphics[width=12cm]{openmmf_timing.ps}
+\caption{\label{fig:performance} (a) Execution time of a single iteration using OPENMMF. The red data shows results for the Fermionic model with L=5 sites and Nup=1 and Ndown= 2 particles with spin up and down, respectively. In blue, results of the Bosonic model with L=3 sites and N=7 particles. In both cases, the tunnelling and on-site parameters are set to t=1.0 u = 0.5. The driving originates from a harmonic modulation of the tunnelling with amplitude tdriving=0.2 and frequency w= 1.0. We vary the number of Floquet manifolds, which leads to the variation of the matrix size. (b) Execution time to evaluate a single time-step of the evolution of a driven qubit with a band-limited background noise.  The matrix size reflects the number of frequencies contributing to the noisy field. The solid line shows to total execution time. The dashed line shows the execution time to evaluate the Floquet Hamiltonian using the sparse representation. }
+\end{figure}
+
 For these tests, the library performs two tasks: evaluates the Floquet Hamiltonian and use LAPACK to obtain the spectrum (only once for each matrix size). The Hamiltonian corresponds to a periodically driven Hubbard model (with near-neighbour tunnelling and on-site interaction) and the matrix dimension is given by the number of Floquet manifolds.
 
 Figure \ref{fig:performance}(b) shows the execution time required to evaluate a single time-step of the time-evolution operator of driven qubit with a noisy background. The Hamiltonian of this system is:
 \begin{equation}
-H = \hbar \omega_0 S_z + \hbar \Omega S_x \cos (\omega t + \phi) + \sum_\ell \Delta_i \cos(\ell \omega/N t + \phi_i)
+H = \hbar \omega_0 S_z + \hbar \Omega S_x \cos (\omega t + \phi) + \sum_\ell^N \Delta_i \cos(\ell \omega/N t + \phi_i)
 \end{equation}
 with $N$ the number of frequencies contributing to the noisy field, $\Delta_i$ and $\phi_i$ random amplitudes and phases, respectively. With this, the noise frequency is limited up to the driving frequency $\omega$. The matrix size reflects the number of components of the noisy driving. 
 
