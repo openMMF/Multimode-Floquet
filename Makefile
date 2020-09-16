@@ -80,16 +80,16 @@ Example_lib_sp: ./examples/FORTRAN/main_qubit_SP.f90 ./examples/FORTRAN/main_Dre
 # ==== build C++ examples that require LAPACK ONLY
 ###############################################
 Example_lib_c: ./examples/CPP/main_qubit.cpp  ./examples/CPP/main_DressedQubit.cpp 
-	$(CPP)  -o ./examples/CPP/qubit  ./examples/CPP/main_qubit.cpp -I./include/ -L./lib/ -lopenmmf -lgfortran $(GFFLAGS) -L$(MKLLIBS) -I$(MKLINC)  $(MKLFLAGS)
-	$(CPP)  -o ./examples/CPP/dressedqubit  ./examples/CPP/main_DressedQubit.cpp -I./include/ -L./lib/ -lopenmmf -lgfortran $(GFFLAGS) -L$(MKLLIBS) -I$(MKLINC)  $(MKLFLAGS)
+	$(CPP)  -o ./examples/CPP/qubit  ./examples/CPP/main_qubit.cpp -I./include/ -L./lib/ -lopenmmf $(CPPFLAGS) $(GFFLAGS) -L$(MKLLIBS) -I$(MKLINC)  $(MKLFLAGS)
+	$(CPP)  -o ./examples/CPP/dressedqubit  ./examples/CPP/main_DressedQubit.cpp -I./include/ -L./lib/ -lopenmmf $(CPPFLAGS) $(GFFLAGS) -L$(MKLLIBS) -I$(MKLINC)  $(MKLFLAGS)
 
 
 ###############################################
 # ==== build FORTRAN examples that require MKL
 ###############################################
 Example_lib_c_sp: ./examples/CPP/main_qubit_sp.cpp ./examples/CPP/main_DressedQubit_SP.cpp
-	$(CPP)  -o  ./examples/CPP/qubit_sp         ./examples/CPP/main_qubit_sp.cpp        -I./include/ -L./lib/ -lopenmmf -lgfortran -L$(MKLLIBS) -I$(MKLINC)  $(MKLFLAGS)         
-	$(CPP)  -o  ./examples/CPP/dressedqubit_sp  ./examples/CPP/main_DressedQubit_SP.cpp -I./include/ -L./lib/ -lopenmmf -lgfortran -L$(MKLLIBS) -I$(MKLINC)  $(MKLFLAGS)
+	$(CPP)  -o  ./examples/CPP/qubit_sp         ./examples/CPP/main_qubit_sp.cpp        -I./include/ -L./lib/ -lopenmmf  $(CPPFLAGS) -L$(MKLLIBS) -I$(MKLINC)  $(MKLFLAGS)         
+	$(CPP)  -o  ./examples/CPP/dressedqubit_sp  ./examples/CPP/main_DressedQubit_SP.cpp -I./include/ -L./lib/ -lopenmmf  $(CPPFLAGS) -L$(MKLLIBS) -I$(MKLINC)  $(MKLFLAGS)
 
 ####################################
 # BUILD OBJECT FILES FOR CPP WRAPPER

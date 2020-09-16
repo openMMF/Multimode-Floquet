@@ -10,12 +10,12 @@ SHELL = /bin/sh
 #
 CC     = gcc
 CPP    = g++
-CFLAGS = -O3
+CPPLAGS = -O3 -lgfortran
 
 #  Modify the GF and GFFLAGS definitions to the desired compiler
 #  and desired compiler options for your machine. 
 GF         = gfortran
-GFFLAGS    =  -llapack -lblas -g 
+GFFLAGS    = -O3 -llapack -lblas -g 
 
 
 #  Define LDFLAGS to the desired linker options for your machine.
