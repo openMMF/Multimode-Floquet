@@ -167,8 +167,8 @@ PROGRAM MULTIMODEFLOQUET
 !!$        write(*,*) column(m)
 !!$     END DO
 
-     E_L = -100.0
-     E_R =  100.0
+     E_L =  -4.0*MAXVAL(ABS(VALUES))
+     E_R =   4.0*MAXVAL(ABS(VALUES))
      IF(r.eq.1) THEN
         ALLOCATE(E_FLOQUET(D_MULTIFLOQUET))
         ALLOCATE(U_F(D_MULTIFLOQUET,D_MULTIFLOQUET))

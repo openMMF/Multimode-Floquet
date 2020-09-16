@@ -46,12 +46,13 @@ lib:build/modes.o build/modes_C.o build/Modules.o build/Modules_release.o build/
 lib_lapack :build/modes.o build/modes_C.o  build/Modules.o build/Modules_release.o build/delta_kr.o build/Floquet.o \
  build/I_and_J_representations.o build/F_representation.o build/LapackEigenValues.o \
  build/util.o build/quick-sort-index-table.o build/VarCRSPacking.o \
- build/sparse_utils.o build/MultimodeHamiltonian.o \
+ build/sparse_utils.o build/MultimodeHamiltonian.o build/MultimodeHamiltonian_SP.o\
  build/MultimodeFloquetTE.o build/MultimodeFloquetTE_DRIVER.o build/MultimodeMicroMotion.o \
  build/MultimodeMicroMotionDressedBasis.o build/MultimodeMicroMotionDressedBasis_C.o \
  build/MultimodeTransitionAVG.o build/MultimodeDressedBasis.o \
  build/util_c.o build/Floquet_init_C.o \
- build/MultimodeHamiltonian_C.o build/LapackEigenValues_C.o build/MultimodeTransitionAVG_C.o \
+ build/MultimodeHamiltonian_C.o build/MultimodeHamiltonian_SP_C.o  \
+ build/LapackEigenValues_C.o build/MultimodeTransitionAVG_C.o \
  build/MultimodeMicroMotion_C.o build/MultimodeFloquetTE_DRIVER_C.o build/MultimodeFloquetTE_C.o \
  build/MultimodeDressedBasis_C.o 
 	$(AR) $(ARFLAGS) lib/libopenmmf.a build/*.o

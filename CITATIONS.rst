@@ -1,3 +1,7 @@
+===============================
+openmmf
+===============================
+
 Any publication for which one of the following libraries are used has to
 acknowledge the use of the openMMF library. 
 

@@ -1,3 +1,14 @@
+===============================
+openmmf
+===============================
+
+.. image:: https://img.shields.io/travis/gsinuco/shakenOL_Floquet.svg
+        :target: https://travis-ci.org/gsinuco/shakenOL_Floquet
+
+.. image:: https://img.shields.io/pypi/v/shakenOL_Floquet.svg
+        :target: https://pypi.python.org/pypi/shakenOL_Floquet
+
+
 Copyright German Sinuco 2018-2020
 Distributed under the MIT License; you can use, redistribute it and/or modify it under the terms of the license.
 
@@ -9,7 +20,7 @@ time-evolution operator of a time-dependent quantum system with discrete
 spectrum, where the time-dependence is given by a superposition of harmonic
 coupligs.
 
-HOW TO INSTALL
+* HOW TO INSTALL
 
 A simple Makefile is included in the distribution. As a requirement,
 your system should have the library LAPACK. 
@@ -37,4 +48,10 @@ Several examples are in the folders examples/FORTRAN and examples/CPP. In each
 directory, a Makefile takes care of creating executables.  
 
 
+* Free software: MIT license
+* Documentation: (COMING SOON!) https://openmmf.readthedocs.org.
 
+Features
+--------
+
+* TODO
