@@ -22,6 +22,8 @@ coupligs.
 
 * HOW TO INSTALL
 
+Make sure that the your  OS environmentis correctly setup in make.inc. 
+
 A simple Makefile is included in the distribution. As a requirement,
 your system should have the library LAPACK. 
 
@@ -41,10 +43,10 @@ However, if you only require the LAPACK dependent componets then use:
 make lib_lapack
 
 Both commands build all needed object files and move them to the local directory build/. Subsequently, these object files are
-collected in the library file lib/libmultimodefloquet.a, which is copied to folder lib/ . The Fortran modules
+collected in the library files lib/libopenmmf.a and lib/libopenmmf.so , which is copied to folder lib/ . The Fortran modules
 produced when compiling the sources are moved to the directory include/.
 
-Several examples are in the folders examples/FORTRAN and examples/CPP. In each 
+Several examples are in the folders examples/FORTRAN, examples/CPP and examples/PYTHON. In each 
 directory, a Makefile takes care of creating executables.  
 
 

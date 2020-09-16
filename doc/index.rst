@@ -14,7 +14,7 @@ Contents:
    readme
    installation
    usage
-   contributing
+..   contributing
    MultimodeFloquet_test
    authors
    history

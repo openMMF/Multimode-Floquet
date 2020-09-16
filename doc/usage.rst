@@ -2,6 +2,13 @@
 Usage
 ========
 
-To use ShakenOptic in a project::
+To use openmmf in a python project::
 
-    import ShakenOL_Floquet
+    make sure the path to libopenmmf.so is correctly set in 
+    the command:
+
+    openmmfC = ctypes.CDLL('$(PATH_TO_LIBOPENMMFSO/libopenmmf.so)')
+
+    then you can use the library using:
+
+    import openmmf as openmmf
