@@ -139,11 +139,11 @@ int main(){
 
     }
     fprintf(disco1,"\n");
-    delete(e_floquet);    
-    delete(U_F);
-    delete(p_avg);
-    delete(U_B2D);
-    delete(P_B2D);
+    delete[] e_floquet;    
+    delete[] U_F;
+    delete[] p_avg;
+    delete[] U_B2D;
+    delete[] P_B2D;
   
   }
   

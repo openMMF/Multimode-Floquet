@@ -220,6 +220,11 @@ build/MultimodeFloquet.o:src/MultimodeFloquet.f90
 clean:
 	rm build/*.o ./*mod  include/*.mod lib/*.a lib/*.so
 
+.PHONY: clean_all
+clean:
+	cd 
+	rm build/*.o ./*mod  include/*.mod lib/*.a lib/*.so 
+
 .PHONY: lib_msg
 lib_msg:
 	@echo "========================================================"

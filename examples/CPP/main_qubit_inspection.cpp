@@ -172,8 +172,8 @@ int main(){
       write_matrix_c_(p_avg,&d_bare);      
       
       }*/
-    delete(e_floquet);    
-    delete(U_F);
+    delete[] e_floquet;    
+    delete[] U_F;
   
   }
   

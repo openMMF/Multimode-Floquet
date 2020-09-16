@@ -228,8 +228,8 @@ int main(){
     }
     fprintf(disco0,"\n");
     fprintf(disco1,"\n");
-    delete(e_floquet);
-    delete(U_F);
+    delete[] e_floquet;
+    delete[] U_F;
   }
 
   return 0;
