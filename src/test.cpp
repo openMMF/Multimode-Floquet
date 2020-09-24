@@ -49,9 +49,9 @@ extern "C" {
     id->d_bare = 2;
     printf("\n%d  %d %s \n",id->d_bare, id->id_system, atomicspecie);
     
-  }
+   }
    
-  void floquetinit_c(atom_c * id, char *name,int *info){   
+   void floquetinit_c(atom_c * id, char *name,int *info){   
     /*  int floquetinit_c(int &i,char *name){//,int *info){   */
   //int floquetinit_c(int i,int *info){   
     int length_name,i;
@@ -63,7 +63,7 @@ extern "C" {
     //printf("%s\n",name);
     //name2 = name;
     //return i;   
- }
+   }
 
   //sethamiltoniancomponents_c_(id,ctypes.byref(nm),ctypes.byref(total_frequencies),modes_num.ctypes.data_as(POINTER(c_int)),fields,ctypes.byref(info))
 

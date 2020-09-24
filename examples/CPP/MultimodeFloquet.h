@@ -1,10 +1,26 @@
 //extern "C" 
 
+using namespace std;
+typedef std::complex<double> dcmplx;
+
 struct mode_c{
   double omega;
   dcmplx x,y,z;
   double phi_x,phi_y,phi_z;
   int N_Floquet;
+  dcmplx *V;
+  dcmplx *VALUES;
+  int *ROW,*COLUMN;
+};
+
+struct mode_c_f{
+  double omega;
+  dcmplx x,y,z;
+  double phi_x,phi_y,phi_z;
+  int N_Floquet;
+  dcmplx **V;
+  dcmplx *VALUES;
+  int *ROW,*COLUMN;
 };
 
 struct atom_c{
@@ -52,7 +68,8 @@ extern "C" {
   void multimodefloquettransformation_c_(int * h_floquet_size,int * nm,int * modes_num,dcmplx * U_F,double * e_floquet,int * d_bare,mode_c * fields,double * t1,dcmplx * U_B2D,int * info); 
   void multimodemicromotion_c_(atom_c *id,int * h_floquet_size,int * nm,int * modes_num,dcmplx * U_F,double * e_floquet,int * d_bare,mode_c * fields,double * t1,dcmplx * U_B2D,int * info); 
   void multimodetimeevolutionoperator_c_(int * h_floquet_size,int * nm,int * modes_num,dcmplx * U_F,double * e_floquet,int * d_bare,mode_c * fields,double * t1,double * t2,dcmplx * U_AUX,int * info);
-  void timeevolutionoperator_c_(atom_c *id, int *d_bare, int *nm, int *nf, int * modes_num, mode_c *field, double *t1, double *t2, dcmplx *U, int *info); 
+  //void timeevolutionoperator_c_(atom_c *id, int *d_bare, int *nm, int *nf, int * modes_num, mode_c *field, double *t1, double *t2, dcmplx *U, int *info); 
+  void timeevolutionoperator_c_(atom_c *id, int *d_bare, int *nm, int *nf, int * modes_num, double *t1, double *t2, dcmplx *U, int *info); 
 
   
     
@@ -81,7 +98,13 @@ extern "C" {
   // deallocate all arrays allocated with fortran
   void deallocateall_c_(int *id);
 
- 
+
+  // PASS ALLOCATABLE ARRAYS BETWEEN CPP STRUCTURES AND FORTRAN DERIVED TYPES
+  void c_storage_size_(int *my_size);
+  void c_opaque_alloc_f_(mode_c * field, int *d_bare);
+  void c_matrix_exposedin_f_(int *j,mode_c * c_obj,int *nm, int *d_bare);
+  void c_opaque_free_(mode_c * field);
+
 } 
 
 void floquetinit_c(atom_c * id, char *name,int *info){

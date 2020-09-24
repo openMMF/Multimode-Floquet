@@ -199,11 +199,12 @@ SUBROUTINE SETHAMILTONIANCOMPONENTS_C(ATOM__C,NM,NF,MODES_NUM,COUPLING_C,INFO)
   INTEGER,                     INTENT(INOUT) :: INFO
 
 
-  CALL COUPLINGINIT_C(ATOM__C%D_BARE,NF,ATOM__C,COUPLING_C,INFO) ! IN THIS SUBROUTINE WE USE THE C STRUCTURES ATOM__C AND COUPLING_C
-  !WRITE(*,*) NF
+  ! IN THIS SUBROUTINE WE USE THE C STRUCTURES ATOM__C AND COUPLING_C
   ! TO DEFINE AND INITIALISE THE GLOBAL FORTRAN TYPES ATOM_ AND COUPLING
   ! THESE TWO TYPES ARE THEN PASSED ON TO THE ALL OTHER ROUTINES
-  !write(*,*) info,nm,nf
+  ! COUPLINGINIT_C : modes_C.f90
+  CALL COUPLINGINIT_C(ATOM__C%D_BARE,NF,ATOM__C,COUPLING_C,INFO) 
+
   CALL SETHAMILTONIANCOMPONENTS(ATOM_,NM,NF,MODES_NUM,COUPLING,INFO)
   
 !  write(*,*)
@@ -212,3 +213,71 @@ SUBROUTINE SETHAMILTONIANCOMPONENTS_C(ATOM__C,NM,NF,MODES_NUM,COUPLING_C,INFO)
 END SUBROUTINE SETHAMILTONIANCOMPONENTS_C
 
 
+SUBROUTINE C_STORAGE_SIZE( my_size )
+  USE TYPES
+  IMPLICIT NONE
+  TYPE(MODE)     :: dummy_obj
+  integer(c_int) :: my_size
+
+  my_size =STORAGE_SIZE(dummy_obj,c_int)
+  my_size = my_size/8 !return size in bytes
+
+END SUBROUTINE C_STORAGE_SIZE
+
+SUBROUTINE C_OPAQUE_ALLOC_F(c_obj,n)
+  USE TYPES
+ IMPLICIT NONE
+ INTEGER(c_int), INTENT(IN) :: n
+ TYPE(MODE) :: c_obj
+ ALLOCATE(c_obj%V(n,n))
+END SUBROUTINE C_OPAQUE_ALLOC_F
+
+
+SUBROUTINE C_MATRIX_EXPOSEDIN_F(j,field,NF,DB)
+  USE TYPES
+  USE MODES_4F
+  IMPLICIT NONE
+  INTEGER, INTENT(IN):: j,NF,DB
+  INTEGER l
+  TYPE(MODE) :: field
+  write(*,*) "mode No. ", j
+  !write(*,*) field%X
+  !write(*,*) field%Y
+  !write(*,*) field%Z
+  !write(*,*) field%PHI_X
+  !write(*,*) field%PHI_Y
+  !write(*,*) field%PHI_Z
+  write(*,*) "N_floquet:", field%N_Floquet
+  !write(*,*) field%OMEGA
+  !write(*,*) field%V
+
+  IF(COUPLINGALLOCATED .EQV. .FALSE. ) THEN
+     ALLOCATE(COUPLING(NF))
+     COUPLINGALLOCATED = .TRUE.
+     DO l=1,NF
+        write(*,*) j,l,NF,DB
+        ALLOCATE(COUPLING(l)%V(DB,DB))
+     END DO
+     ALLOCATE(ATOM_%E_BARE(DB))
+  END IF
+
+  COUPLING(j)%OMEGA     = field%OMEGA
+  COUPLING(j)%X         = field%X
+  COUPLING(j)%Y         = field%Y
+  COUPLING(j)%Z         = field%Z
+  COUPLING(j)%phi_x     = field%phi_x
+  COUPLING(j)%phi_y     = field%phi_y
+  COUPLING(j)%phi_z     = field%phi_z
+  COUPLING(j)%V         = field%V
+  COUPLING(j)%N_Floquet = field%N_Floquet
+
+
+  
+END SUBROUTINE C_MATRIX_EXPOSEDIN_F
+
+SUBROUTINE C_OPAQUE_FREE(field)
+  USE TYPES 
+  IMPLICIT NONE
+  TYPE(MODE) :: field
+  DEALLOCATE(field%V)
+END SUBROUTINE C_OPAQUE_FREE
