@@ -105,7 +105,7 @@ void floquetinit_c(atom_c * id,char *name,char *manifold,int *info){
 void floquetinit_c(atom_c *id, char *name, double  *jtotal,int *info){
   
   int length_name;
-  
+  printf("me");
   length_name = strlen(name);
   floquetinit_spin_c_(id,&length_name,name,jtotal,info);
 

@@ -1,5 +1,7 @@
 #
-#  Top Level Makefile for LAPACK
+#  Top Level Makefile for OPENMMF 
+#
+#  A rip-off from LAPACK
 #  Version 3.4.1
 #  April 2012
 #

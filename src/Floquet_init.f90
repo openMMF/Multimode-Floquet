@@ -381,7 +381,6 @@ contains
     INTEGER  r,D_F2,P,r_,p_
     DOUBLE PRECISION, DIMENSION(:),ALLOCATABLE:: Energy
 
-    !write(*,*) atomicspecie,JTOTAL
     INFO = 4
     CALL SET_ATOMIC_PARAMETERS(ATOMICSPECIE,'B',JTOTAL,ID,INFO)
     !------ ALLOCATE NEEDED ARRAYS: Hamiltonian and Lapack

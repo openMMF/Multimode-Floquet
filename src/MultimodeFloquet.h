@@ -4,8 +4,13 @@ struct mode_c{
   double omega;
   dcmplx x,y,z;
   double phi_x,phi_y,phi_z;
+  dcmplx *V;
+  dcmplx *VALUES;
+  int *ROW, *COLUMN;
   int N_Floquet;
 };
+
+
 
 struct atom_c{
   int id_system;
@@ -105,7 +110,6 @@ void floquetinit_c(atom_c * id,char *name,char *manifold,int *info){
 void floquetinit_c(atom_c *id, char *name, double  *jtotal,int *info){
   
   int length_name;
-  
   length_name = strlen(name);
   floquetinit_spin_c_(id,&length_name,name,jtotal,info);
 

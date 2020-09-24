@@ -4,8 +4,8 @@ MODULE TYPES_C
      DOUBLE PRECISION :: OMEGA
      COMPLEX*16       :: X,Y,Z
      DOUBLE PRECISION :: phi_x,phi_y,phi_z
-     INTEGER          :: N_Floquet
-     !COMPLEX*16, DIMENSION(:,:), ALLOCATABLE :: V
+     INTEGER          :: N_Floquet,d_bare
+     !COMPLEX*16, DIMENSION(d_bare,d_bare), ALLOCATABLE :: V
      !COMPLEX*16, DIMENSION(:),   ALLOCATABLE :: VALUES
      !INTEGER,    DIMENSION(:),   ALLOCATABLE :: ROW,COLUMN
   END TYPE MODE_C
@@ -80,6 +80,7 @@ SUBROUTINE COUPLINGINIT_C(DB,NF,ATOM__C,COUPLING_C,INFO)
      COUPLING(r)%phi_x  = COUPLING_C(r)%phi_x
      COUPLING(r)%phi_y  = COUPLING_C(r)%phi_y
      COUPLING(r)%phi_z  = COUPLING_C(r)%phi_z
+     !COUPLING(r)%V      = COUPLING_C(r)%V
      COUPLING(r)%N_Floquet = COUPLING_C(r)%N_Floquet
   END DO
   
