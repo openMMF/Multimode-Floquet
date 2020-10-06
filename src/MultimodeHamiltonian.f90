@@ -37,7 +37,7 @@ SUBROUTINE MULTIMODEFLOQUETMATRIX(ATOM_,NM,NF,MODES_NUM,FIELD,INFO)
   DO n=2,NM
      FIELD_INDEX = 2+SUM(MODES_NUM(2:n-1))
      N_FLOQUET(n)=FIELD(FIELD_INDEX)%N_Floquet
- !    write(*,*) n,N_FLOQUET(n),field_index,modes_num(n),NM,NF,info,n
+     !write(*,*) "MultimodeHamiltonian.f90 ",FIELD_INDEX,n,N_FLOQUET(n),field_index,modes_num(n),NM,NF,info,n
      IF(modes_num(n).GT.N_FLOQUET(n)+1) THEN
         WRITE(*,*) "# TO BUILD THE EXTENDED HAMILTONIAN THE NUMBER OF FLOQUET MODES MUST BE DEFINED"
         WRITE(*,*) "# LARGER THAN THE NUMBER OF FIELD MODES"

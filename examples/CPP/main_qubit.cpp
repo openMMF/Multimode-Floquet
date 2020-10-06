@@ -1,7 +1,9 @@
 
 
 #include <iostream>
+#include <cstdlib>
 #include <complex>
+#include <ctime>
 #include <stdio.h>
 #include <math.h>
 #include <string.h>

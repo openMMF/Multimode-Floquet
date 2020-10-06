@@ -240,14 +240,14 @@ SUBROUTINE C_MATRIX_EXPOSEDIN_F(j,field,NF,DB)
   INTEGER, INTENT(IN):: j,NF,DB
   INTEGER l
   TYPE(MODE) :: field
-  write(*,*) "mode No. ", j
+  !write(*,*) "Floquet_init_C, mode No. ", j
   !write(*,*) field%X
   !write(*,*) field%Y
   !write(*,*) field%Z
   !write(*,*) field%PHI_X
   !write(*,*) field%PHI_Y
   !write(*,*) field%PHI_Z
-  write(*,*) "N_floquet:", field%N_Floquet
+  !write(*,*) "Floquet_init_C, N_floquet:", field%N_Floquet
   !write(*,*) field%OMEGA
   !write(*,*) field%V
 
@@ -255,24 +255,24 @@ SUBROUTINE C_MATRIX_EXPOSEDIN_F(j,field,NF,DB)
      ALLOCATE(COUPLING(NF))
      COUPLINGALLOCATED = .TRUE.
      DO l=1,NF
-        write(*,*) j,l,NF,DB
+        !write(*,*) j,l,NF,DB
         ALLOCATE(COUPLING(l)%V(DB,DB))
      END DO
      ALLOCATE(ATOM_%E_BARE(DB))
   END IF
 
-  COUPLING(j)%OMEGA     = field%OMEGA
-  COUPLING(j)%X         = field%X
-  COUPLING(j)%Y         = field%Y
-  COUPLING(j)%Z         = field%Z
-  COUPLING(j)%phi_x     = field%phi_x
-  COUPLING(j)%phi_y     = field%phi_y
-  COUPLING(j)%phi_z     = field%phi_z
-  COUPLING(j)%V         = field%V
-  COUPLING(j)%N_Floquet = field%N_Floquet
+  COUPLING(j+1)%OMEGA     = field%OMEGA
+  COUPLING(j+1)%X         = field%X
+  COUPLING(j+1)%Y         = field%Y
+  COUPLING(j+1)%Z         = field%Z
+  COUPLING(j+1)%phi_x     = field%phi_x
+  COUPLING(j+1)%phi_y     = field%phi_y
+  COUPLING(j+1)%phi_z     = field%phi_z
+  COUPLING(j+1)%V         = field%V
+  COUPLING(j+1)%N_Floquet = field%N_Floquet
 
+  !write(*,*) "Floquet_init_c.f90, j, COUPLING(j)%N_FLOQUET: ", j+1, COUPLING(j)%N_Floquet
 
-  
 END SUBROUTINE C_MATRIX_EXPOSEDIN_F
 
 SUBROUTINE C_OPAQUE_FREE(field)

@@ -1,17 +1,9 @@
+//extern "C" 
+
 
 
 #ifndef MULTIMODEFLOQUET_H
 #define MULTIMODEFLOQUET_H
-
-#include <iostream>
-#include <cstdlib>
-#include <complex> 
-#include <ctime>
-#include <stdio.h>
-#include <math.h>
-#include <string.h>
-
-extern "C" 
 
 
 using namespace std;
@@ -155,4 +147,4 @@ void matmul_c(int * op , dcmplx * a, int * ra, int * ca, dcmplx * b, int * rb, i
 
 void coupling_init(mode_c_f *fields,int *n,int *d,int *info);
 
-#endif  
+#endif /* NEWFILE_H */

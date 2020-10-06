@@ -38,9 +38,10 @@ SUBROUTINE TIMEEVOLUTIONOPERATOR(ID,D_BARE,NM,NF,MODES_NUM,FIELD,T1,T2,U,INFO)
     
     TOTAL_FREQUENCIES = SUM(MODES_NUM,1)
 
-    
-    IF(ID%id_system .NE. 6) CALL SETHAMILTONIANCOMPONENTS(ID,size(modes_num,1),total_frequencies,MODES_NUM,FIELD,INFO)
-    !if id%id_system == 6, then the system is not a spin and the hamiltonian couplings should be defined by hand.
+    !write(*,*)"multimodeFloquetTE_Driver.f90, id%id_system: ", id%id_system
+    IF((ID%id_system .NE. 6) .OR. (ID%id_system .NE.7)) &
+         & CALL SETHAMILTONIANCOMPONENTS(ID,size(modes_num,1),total_frequencies,MODES_NUM,FIELD,INFO)
+    !if id%id_system == 6 or 7, then the system is not a spin and the hamiltonian couplings should be defined by hand.
     
     !---- FIND THE MULTIMODE FLOQUET SPECTRUM 
     CALL MULTIMODEFLOQUETMATRIX(ID,size(modes_num,1),total_frequencies,MODES_NUM,FIELD,INFO)

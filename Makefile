@@ -26,8 +26,6 @@ all: lib Example_lib Example_lib_sp Example_lib_c Example_lib_c_sp  lib_msg
 endif
 
 
-	
-
 ###################################
 # build openmmf with lapack and MKL
 ###################################
@@ -38,7 +36,7 @@ lib:build/modes.o build/modes_C.o build/Modules.o build/Modules_release.o build/
  build/MultimodeFloquetTE.o build/MultimodeFloquetTE_DRIVER.o build/MultimodeMicroMotion.o \
  build/MultimodeMicroMotionDressedBasis.o build/MultimodeMicroMotionDressedBasis_C.o \
  build/MultimodeTransitionAVG.o build/MultimodeDressedBasis.o build/MultimodeDressedBasis_SP.o \
- build/util_c.o build/Floquet_init_C.o build/MultimodeHamiltonian_SP_C.o  \
+ build/util_c.o build/Floquet_init_C.o build/Coupling_init.o build/MultimodeHamiltonian_SP_C.o  \
  build/MultimodeHamiltonian_C.o build/LapackEigenValues_C.o build/MultimodeTransitionAVG_C.o \
  build/MultimodeMicroMotion_C.o build/MultimodeFloquetTE_DRIVER_C.o build/MultimodeFloquetTE_C.o \
  build/MultimodeDressedBasis_C.o build/MultimodeDressedBasis_SP_C.o build/MKLSparseEigenValues_C.o 
@@ -57,7 +55,7 @@ lib_lapack :build/modes.o build/modes_C.o  build/Modules.o build/Modules_release
  build/MultimodeFloquetTE.o build/MultimodeFloquetTE_DRIVER.o build/MultimodeMicroMotion.o \
  build/MultimodeMicroMotionDressedBasis.o build/MultimodeMicroMotionDressedBasis_C.o \
  build/MultimodeTransitionAVG.o build/MultimodeDressedBasis.o \
- build/util_c.o build/Floquet_init_C.o \
+ build/util_c.o build/Floquet_init_C.o build/Coupling_init.o \
  build/MultimodeHamiltonian_C.o build/MultimodeHamiltonian_SP_C.o  \
  build/LapackEigenValues_C.o build/MultimodeTransitionAVG_C.o \
  build/MultimodeMicroMotion_C.o build/MultimodeFloquetTE_DRIVER_C.o build/MultimodeFloquetTE_C.o \
@@ -108,6 +106,9 @@ build/modes_C.o: build/modes.o src/modes_C.f90
 
 build/Floquet_init_C.o: build/modes.o build/modes_C.o src/Floquet_init_C.f90
 	$(GF) $(LDFLAGS) -c -o $@  src/Floquet_init_C.f90  
+
+build/Coupling_init.o: src/Coupling_init.cpp
+	$(CPP) $(LDFLAGS) -c -o $@ src/Coupling_init.cpp
 
 build/MultimodeHamiltonian_SP_C.o: build/MultimodeHamiltonian_SP.o src/MultimodeHamiltonian_SP_C.f90
 	$(GF) $(LDFLAGS) -c -o $@  src/MultimodeHamiltonian_SP_C.f90 

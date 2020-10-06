@@ -84,7 +84,8 @@ int main(){
     t1= 0.0;
     for(r=1;r<=N_;r++){      
       t2 = r*32.0*4.0*atan(1.0)/N_;
-      timeevolutionoperator_c_(&id,&d_bare,&nm,&total_frequencies,modes_num,fields,&t1,&t2,U_AUX,&info);           
+      //timeevolutionoperator_c_(&id,&d_bare,&nm,&total_frequencies,modes_num,fields,&t1,&t2,U_AUX,&info);           
+      timeevolutionoperator_c_(&id,&d_bare,&nm,&total_frequencies,modes_num,&t1,&t2,U_AUX,&info);           
       for(l=0;l<d_bare*d_bare;l++) p_avg[l] = pow(abs(U_AUX[l]),2);
       fprintf(disco1,"%f %f %f \n",fields[1].omega,t2,p_avg[0]);
     }

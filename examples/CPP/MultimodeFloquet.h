@@ -1,4 +1,18 @@
-//extern "C" 
+
+
+#ifndef MULTIMODEFLOQUET_H
+#define MULTIMODEFLOQUET_H
+
+#include <iostream>
+#include <cstdlib>
+#include <complex> 
+#include <ctime>
+#include <stdio.h>
+#include <math.h>
+#include <string.h>
+
+extern "C" 
+
 
 using namespace std;
 typedef std::complex<double> dcmplx;
@@ -128,7 +142,7 @@ void floquetinit_c(atom_c * id,char *name,char *manifold,int *info){
 void floquetinit_c(atom_c *id, char *name, double  *jtotal,int *info){
   
   int length_name;
-  printf("me");
+  //printf("me");
   length_name = strlen(name);
   floquetinit_spin_c_(id,&length_name,name,jtotal,info);
 
@@ -138,3 +152,7 @@ void matmul_c(int * op , dcmplx * a, int * ra, int * ca, dcmplx * b, int * rb, i
   matmul_c_(op, a, ra, ca, b, rb, cb, c, info);
 }
 
+
+void coupling_init(mode_c_f *fields,int *n,int *d,int *info);
+
+#endif  
