@@ -45,5 +45,5 @@ DYLIB_NAME = libopenmmf.dylib
 #MKLINC = /opt/intel/compilers_and_libraries/linux/mkl/include	
 
 #=========== Set the MKL-intel libary flags ======================
-#MKLFLAGS   =  -lmkl_gf_lp64 -lmkl_sequential -lmkl_core
+#MKLFLAGS   = -lstdc++ -lmkl_gf_lp64 -lmkl_sequential -lmkl_core
 #====================================================================

@@ -57,11 +57,11 @@ extern "C" {
   
        
   // SET HAMILTONIAN OF SPIN-LIKE MODELS
-  void  sethamiltoniancomponents_c_(atom_c *id,int * nm, int * total_frequencies,int * modes_num,mode_c * fields,int * info);
+  void  sethamiltoniancomponents_c_(atom_c *id,int * nm, int * total_frequencies,int * modes_num,int * info);
   
   
   // BUILDING FLOQUET MATRIX OF GENERIC MODEL
-  void    multimodefloquetmatrix_c_       (atom_c *id,int * nm, int * total_frequencies,int * modes_num,mode_c * fields, int * info);
+  void    multimodefloquetmatrix_c_       (atom_c *id,int * nm, int * total_frequencies,int * modes_num, int * info);
   void get_h_floquet_c_(int * h, dcmplx * values, int* info);
   int     multimodefloquetmatrix_c_python_(atom_c *id,int * nm, int * total_frequencies,int * modes_num,mode_c * fields,int * info);
   void multimodefloquetmatrix_sp_c_       (atom_c *id,int * nm, int * total_frequencies,int * modes_num,mode_c * fields, int * info);
@@ -78,24 +78,23 @@ extern "C" {
   
   
   // CONTSRUCTION OF THE TIME-EVOLUTION OPERATOR
-  void         multimodetransitionavg_c_(int * h_floquet_size,int * nm,mode_c * fields,int * modes_num,dcmplx * U_F,double * e_floquet,int * d_bare,double * p_avg,int *info);
-  void multimodefloquettransformation_c_(int * h_floquet_size,int * nm,int * modes_num,dcmplx * U_F,double * e_floquet,int * d_bare,mode_c * fields,double * t1,dcmplx * U_B2D,int * info); 
-  void multimodemicromotion_c_(atom_c *id,int * h_floquet_size,int * nm,int * modes_num,dcmplx * U_F,double * e_floquet,int * d_bare,mode_c * fields,double * t1,dcmplx * U_B2D,int * info); 
-  void multimodetimeevolutionoperator_c_(int * h_floquet_size,int * nm,int * modes_num,dcmplx * U_F,double * e_floquet,int * d_bare,mode_c * fields,double * t1,double * t2,dcmplx * U_AUX,int * info);
-  //void timeevolutionoperator_c_(atom_c *id, int *d_bare, int *nm, int *nf, int * modes_num, mode_c *field, double *t1, double *t2, dcmplx *U, int *info); 
+  void         multimodetransitionavg_c_ (int * h_floquet_size,int * nm,int * modes_num,dcmplx * U_F,double * e_floquet,int * d_bare,double * p_avg,int *info);
+  void multimodefloquettransformation_c_ (int * h_floquet_size,int * nm,int * modes_num,dcmplx * U_F,double * e_floquet,int * d_bare,double * t1,dcmplx * U_B2D,int * info); 
+  void multimodemicromotion_c_(atom_c *id,int * h_floquet_size,int * nm,int * modes_num,dcmplx * U_F,double * e_floquet,int * d_bare,double * t1,dcmplx * U_B2D,int * info); 
+  void multimodetimeevolutionoperator_c_ (int * h_floquet_size,int * nm,int * modes_num,dcmplx * U_F,double * e_floquet,int * d_bare,double * t1,double * t2,dcmplx * U_AUX,int * info);
   void timeevolutionoperator_c_(atom_c *id, int *d_bare, int *nm, int *nf, int * modes_num, double *t1, double *t2, dcmplx *U, int *info); 
 
   
     
   // DEFINITION OF DRESSED BASIS
-  void            dressedbasis_c_(int * h_floquet_size,atom_c *id,int * nm, int * modes_num,mode_c * fields, dcmplx * U_FD, double * e_dressed,int * info); 
-  void  dressedbasis_subset_c_(atom_c *id , int * dressingfloquetdimension,int * dressingfields, int * nm, int * dressingfields_indices, int * modes_num,mode_c * fields, dcmplx * U_FD, double * e_dressed,int * info);
-  void  dressedbasis_subset_sp_c_(atom_c * id, int * dressingfloquetdimension,int * dressingfields,int * nm, int * dressingfields_indices, int * modes_num,mode_c * fields, dcmplx * U_FD, double * e_dressed,int * info);
-  void  dressedbasis_sp_c_(int h_floquet_size, atom_c *id, int * nm, int * modes_num, mode_c * fields, dcmplx * U_FD, double * e_dressed, int * info);
-  void micromotionfourierdressedbasis_c_(atom_c *id , int *DF, int * dressingfields_indices, int * nm, int * modes_num, int *nf, mode_c * fields,int * nd,dcmplx * U_FD, double *e_dressed,int * info);
+  void            dressedbasis_c_(int * h_floquet_size,atom_c *id,int * nm, int * modes_num, dcmplx * U_FD, double * e_dressed,int * info); 
+  void  dressedbasis_subset_c_(atom_c *id , int * dressingfloquetdimension,int * dressingfields, int * nm, int * dressingfields_indices, int * modes_num, dcmplx * U_FD, double * e_dressed,int * info);
+  void  dressedbasis_subset_sp_c_(atom_c * id, int * dressingfloquetdimension,int * dressingfields,int * nm, int * dressingfields_indices, int * modes_num, dcmplx * U_FD, double * e_dressed,int * info);
+  void  dressedbasis_sp_c_(int h_floquet_size, atom_c *id, int * nm, int * modes_num, dcmplx * U_FD, double * e_dressed, int * info);
+  void micromotionfourierdressedbasis_c_(atom_c *id , int *DF, int * dressingfields_indices, int * nm, int * modes_num, int *nf,int * nd,dcmplx * U_FD, double *e_dressed,int * info);
   //  void micromotionfourierdressedbasis_c_(atom_c *id , int * dressingfields_indices, int * modes_num,mode_c * fields,int * nd,dcmplx * U_FD, double *e_dressed,int * info);
   //void micromotionfourierdressedbasis_c_(atom_c *id , int * dressingfields_indices, int * nd,dcmplx * U_FD, double *e_dressed,int * info);
-  void micromotiondressedbasis_c_(atom_c *id , int * modes_num, int * dressingfields_indices, mode_c * fields, double T1, dcmplx * U, int * info);
+  void micromotiondressedbasis_c_(atom_c *id , int * modes_num, int * dressingfields_indices, double T1, dcmplx * U, int * info);
 
   
   // TODO: UTILITY FUNCTION: EXTRACT GLOBAL VARIABLES WITH SCOPE ONLY WITHIN FORTRAN

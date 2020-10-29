@@ -17,13 +17,9 @@ extern "C" int h_floquet_size;
 
 int main(){
 
-  // RANDOM SEED
-  std::srand(1);
-  double random_variable = 2.0*(std::rand()/RAND_MAX - 0.5);
-  //std::cout << "random_variable: " << random_variable << "\n";
-
   atom_c id;
   int info;
+
   char name[]     = "lattice";
   char manifold[] = "U";
   FILE *disco0,*disco1;
@@ -35,7 +31,7 @@ int main(){
 
   disco1 = fopen("lattice_timeevol_driver.dat","w+");
 
-
+  
   info   = 0;
   jtotal = 3.0;
   t1     = 2.0;
@@ -66,8 +62,7 @@ int main(){
       fields[r].V[l] = new dcmplx [d_bare];
     }
   }
-  
-  
+   
   fields[0].x    = 0.0;
   fields[0].y    = 0.0;
   fields[0].z    = 1.0;
@@ -95,6 +90,11 @@ int main(){
   fields[2].omega = 2.0;
   fields[2].N_Floquet = 3;
 
+  
+  // SETTING A SEED FOR THE PSEUDO-RANDOM GENERATION
+  std::srand(1);
+  double random_variable = 2.0*(std::rand()/RAND_MAX - 0.5);
+
   // FEED THE COUPLING MATRICES WITH RANDOM VALUES
   for(l=0;l<total_frequencies;l++){
     for(r=0;r<d_bare;r++){
@@ -107,7 +107,7 @@ int main(){
   coupling_init(fields,&total_frequencies,&d_bare,&info);
   
   
-  N_ = 1; //28;  
+  N_ = 128;  
   dcmplx * U_AUX = new dcmplx [d_bare*d_bare];
   double * p_avg =  new double [d_bare*d_bare];
   info = 0;
@@ -122,8 +122,7 @@ int main(){
     for(r=1;r<=N_;r++){      
       t2 = r*32.0*4.0*atan(1.0)/N_;
       timeevolutionoperator_c_(&id,&d_bare,&nm,&total_frequencies,modes_num,&t1,&t2,U_AUX,&info);           
-      //for(l=0;l<d_bare*d_bare;l++) p_avg[l] = pow(abs(U_AUX[l]),2);
-      //fprintf(disco1,"%f %f %f \n",fields[1].omega,t2,p_avg[0]);
+      fprintf(disco1,"%f %f %f \n",fields[1].omega,t2,abs(U_AUX[0]));
     }
     fprintf(disco1,"\n");
   }

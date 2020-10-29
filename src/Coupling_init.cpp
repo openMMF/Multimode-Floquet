@@ -26,15 +26,19 @@ void coupling_init(mode_c_f *fields,int *n,int *d,int *info){
 
   int r,s,counter,j;
   int my_size;
-  mode_c * field;
-  c_storage_size_(&my_size);
-  field = (mode_c *)malloc(my_size);
 
-  //std::cout << *d << " coupling_init \n";
+  c_storage_size_(&my_size);
+  mode_c * field;
+  field = (mode_c *)malloc(my_size);
+  field->V       = NULL;
+  field->VALUES  = NULL;
+  field->ROW     = NULL;
+  field->COLUMN  = NULL;
+  //std::cout << *d << " " << my_size <<  " coupling_init  \n";
   //THE FOLLOWING FUNCTION ALLOCATES
   // THE THE MEMORY SROTRAGE FOR 
   // THE ARRAY V THAT BELONGS TO 
-  // field
+  // field (see Floquet_init_C.f90)
   c_opaque_alloc_f_(field, d);
 
   // NOW WE COPY THE ARRAY OF OBJECTS
@@ -62,13 +66,18 @@ void coupling_init(mode_c_f *fields,int *n,int *d,int *info){
     }
     // HERE WE MAP EACH FIELD TO A GLOBAL DERIVED TYPE
     // COUPLING, DEFINED IN MODES_4F IN modes_C.f90
+    // THIS GLOBAL TYPE IS USE FOR ALL FUNCTIONS 
+    // OF THE C++/PYTHON INTERFACE
+    // c_matrix_exposein_f_ IS DECLARED IN Floquet_init_C.f90
     c_matrix_exposedin_f_(&j,field,n,d);  
     
 
   }
+  // DANGER: DEALLOCATION BREAKS THE CODE (WHY? TODO. 6 OCT. 2020)
+  // HOWEVER, IN FLOQUET_INIT_C.F90, C_OPAQUE_ALLOCATE_F NEEDS CONDITIONAL ALLOCATIONS
   // NOW, WE DEALLOCATE FIELD 
-  //  c_opaque_free_(field);
-
+  //c_opaque_free_(field);
+  //free(field);
   // WHEN THE USER MODIFIES ANY ELEMENT OF THE ARRAY FIELDS
   // SHE/HE SHOULD CALL THIS FUNCTION AGAIN
 }

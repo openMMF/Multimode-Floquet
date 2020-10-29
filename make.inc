@@ -35,11 +35,11 @@ DYLIB_NAME = libopenmmf.so
 ###
 #BUILD_MKL = yes
 #=========== Set the MKL-intel LIBRARY PATH ======================
-#MKLLIBS = /opt/intel/compilers_and_libraries/linux/mkl/lib/intel64
+#MKLLIBS = /mnt/sda5/intel/compilers_and_libraries/linux/mkl/lib/intel64
 
 #=========== Set the MKL-intel INCLUDE PATH ======================
-#MKLINC = /opt/intel/compilers_and_libraries/linux/mkl/include	
+#MKLINC = /mnt/sda5/intel/compilers_and_libraries/linux/mkl/include	
 
 #=========== Set the MKL-intel libary flags ======================
-#MKLFLAGS   =  -lmkl_gf_lp64 -lmkl_sequential -lmkl_core
+#MKLFLAGS   = -lstdc++ -lmkl_gf_lp64 -lmkl_sequential -lmkl_core
 

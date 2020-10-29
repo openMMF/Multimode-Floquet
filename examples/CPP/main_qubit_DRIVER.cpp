@@ -50,8 +50,15 @@ int main(){
     total_frequencies += modes_num[r];
   }
   
-  mode_c * fields = new mode_c [total_frequencies];
-  
+  mode_c_f * fields = new mode_c_f [total_frequencies];
+
+  // ALLOCATE MEMORY FOR THE COUPLING MATRICES
+  for(r=0;r<total_frequencies;r++){
+    fields[r].V = new dcmplx *[d_bare];
+    for(l=0;l<d_bare;l++){
+      fields[r].V[l] = new dcmplx [d_bare];
+    }
+  }
   
   fields[0].x    = 0.0;
   fields[0].y    = 0.0;
@@ -69,7 +76,9 @@ int main(){
   fields[1].phi_y = 0.0;
   fields[1].phi_z = 0.0;
   fields[1].omega = 1.0;
-  fields[1].N_Floquet = 8;
+  fields[1].N_Floquet = 5;
+
+  coupling_init(fields,&total_frequencies,&d_bare,&info);
 
   N_ = 128;  
   dcmplx * U_AUX = new dcmplx [d_bare*d_bare];
@@ -79,6 +88,8 @@ int main(){
     
     // --- SET DRIVING PARAMETERS 
     fields[1].omega = 0.2 + (m-1)*2.0/N_;
+    coupling_init(fields,&total_frequencies,&d_bare,&info);
+    sethamiltoniancomponents_c_(&id,&nm,&total_frequencies,modes_num,&info);
     
     //--- EVALUATE TIME-EVOLUTION OPERATOR IN THE BARE BASIS
     t1= 0.0;

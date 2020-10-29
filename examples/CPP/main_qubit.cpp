@@ -1,5 +1,3 @@
-
-
 #include <iostream>
 #include <cstdlib>
 #include <complex>
@@ -24,6 +22,7 @@ int main(){
   char manifold[] = "U";
   FILE *disco0,*disco1;
 
+  
   int r,m,l,N_;
   int d_bare,total_frequencies;
 
@@ -39,21 +38,30 @@ int main(){
   
   d_bare = id.d_bare;
 
-  dcmplx * U_AUX = new dcmplx [d_bare*d_bare];
+  printf("\n d_bare: %d\n",d_bare);
 
-  int nm = 2;
+  int nm = 3;
   int * modes_num = new int [nm];
 
   modes_num[0] = 1;
   modes_num[1] = 1;
+  modes_num[2] = 1;
+  
   
   total_frequencies = 0;
   for(r=0;r<nm;r++){
     total_frequencies += modes_num[r];
   }
   
-  mode_c * fields = new mode_c [total_frequencies];
+  mode_c_f * fields = new mode_c_f [total_frequencies];
     
+  // ALLOCATE MEMORY FOR THE COUPLING MATRICES
+  for(r=0;r<total_frequencies;r++){
+    fields[r].V = new dcmplx *[d_bare];
+    for(l=0;l<d_bare;l++){
+      fields[r].V[l] = new dcmplx [d_bare];
+    }
+  }
 
   fields[0].x     = 0.0;
   fields[0].y     = 0.0;
@@ -71,40 +79,61 @@ int main(){
   fields[1].phi_y = 0.0;
   fields[1].phi_z = 0.0;
   fields[1].omega = 1.0;
-  fields[1].N_Floquet = 8;
+  fields[1].N_Floquet = 3;
+
+
+  fields[2].x     = 2.0;
+  fields[2].y     = 1.0;
+  fields[2].z     = 1.0;
+  fields[2].phi_x = 0.0;
+  fields[2].phi_y = 0.0;
+  fields[2].phi_z = 0.0;
+  fields[2].omega = 1.0;
+  fields[2].N_Floquet = 3;
   
+  coupling_init(fields,&total_frequencies,&d_bare,&info);
+
   N_  = 128;
+  dcmplx * U_AUX = new dcmplx [d_bare*d_bare];
+ 
+  info = 0;
   for(m=1;m<N_;m++){
     
     // --- SET DRIVING PARAMETERS 
-    fields[1].omega = 0.2 + (m-1)*2.0/N_;
-    sethamiltoniancomponents_c_(&id,&nm,&total_frequencies,modes_num,fields,&info);
-    
+    fields[2].omega = 0.2 + (m-1)*2.0/N_;
+    coupling_init(fields,&total_frequencies,&d_bare,&info);
+    sethamiltoniancomponents_c_(&id,&nm,&total_frequencies,modes_num,&info);
+        
     //!--- FIND THE MULTIMODE FLOQUET SPECTRUM 
-    multimodefloquetmatrix_c_(&id,&nm,&total_frequencies,modes_num,fields,&info); // in this function we calculate the dimension of the multimode floquet hilbert space, 
+    multimodefloquetmatrix_c_(&id,&nm,&total_frequencies,modes_num,&info); // in this function we calculate the dimension of the multimode floquet hilbert space, 
                                                                                   // which is the value of the global variable h_floquet_size
-    
+      
 
-    //cout << "Floquet H" <<  H_F_[3] < "\n\n";
+    //printf(" m: %d , Floquet size: %d \n",m , h_floquet_size);
     double * e_floquet = new double [h_floquet_size];
-    dcmplx * U_F =  new dcmplx [h_floquet_size*h_floquet_size];
+    dcmplx * U_F       = new dcmplx [h_floquet_size*h_floquet_size];
     lapack_fulleigenvalues_c_(U_F,&h_floquet_size,e_floquet,&info);// here, the diagonalization is done with the internal (Fortran) Hamiltonian (H_FLOQUET)
                                                                    // U_F is the transformation that diagonalise the Hamiltonian
                                                                    // On the Fortran side, H_FLOQUET is deallocated after diagonalization. This is needed since
                                                                    // because the floquet hamiltonian is allocated again when running the subroutine
                                                                    // MULTIMODEFLOQUETMATRIX 
+    //printf("\n%d \n",m);
     //for(r=0;r<h_floquet_size;r++) printf("%15.5f  ",e_floquet[r]);
-    //--- EVALUATE THE AVERAGE TRANSITION PROBATILIBIES IN THE BARE BASIS
+    //printf("\n");
+    
+     //--- EVALUATE THE AVERAGE TRANSITION PROBATILIBIES IN THE BARE BASIS
     double * p_avg =  new double [d_bare*d_bare];
-    multimodetransitionavg_c_(&h_floquet_size,&nm,fields,modes_num,U_F,e_floquet,&d_bare,p_avg,&info);
-    fprintf(disco0,"%f %f \n",fields[1].omega,p_avg[0]);
+    multimodetransitionavg_c_(&h_floquet_size,&nm,modes_num,U_F,e_floquet,&d_bare,p_avg,&info);
+    fprintf(disco0,"%f %f \n",fields[2].omega,p_avg[0]);
+    
+    
 
 
     // !---  EVALUATE INSTANTANEOUS MULTIMODE FLOQUET TRANSFORMATION
     dcmplx * U_B2D = new dcmplx [d_bare*h_floquet_size];
     double * P_B2D = new double [d_bare*h_floquet_size];
     t1 = 0.0;
-    multimodefloquettransformation_c_(&h_floquet_size,&nm,modes_num,U_F,e_floquet,&d_bare,fields,&t1,U_B2D,&info); 
+    multimodefloquettransformation_c_(&h_floquet_size,&nm,modes_num,U_F,e_floquet,&d_bare,&t1,U_B2D,&info); 
     for(l=0;l<d_bare*h_floquet_size;l++) P_B2D[l] = pow(abs(U_B2D[l]),2);
     
     
@@ -113,18 +142,22 @@ int main(){
     for(r=1;r<N_;r++){      
 
       t2 = r*32.0*4.0*atan(1.0)/N_;
-      multimodetimeevolutionoperator_c_(&h_floquet_size,&nm,modes_num,U_F,e_floquet,&d_bare,fields,&t1,&t2,U_AUX,&info);
+      multimodetimeevolutionoperator_c_(&h_floquet_size,&nm,modes_num,U_F,e_floquet,&d_bare,&t1,&t2,U_AUX,&info);
       for(l=0;l<d_bare*d_bare;l++) p_avg[l] = pow(abs(U_AUX[l]),2);
-      fprintf(disco1,"%f %f %f \n",fields[1].omega,t2,p_avg[0]);
+      fprintf(disco1,"%f %f %f \n",fields[2].omega,t2,p_avg[0]);
       
     }
+    
     fprintf(disco1,"\n");
+     
     delete[] e_floquet;    
     delete[] U_F;
     delete[] p_avg;
-    delete[] U_B2D;
-    delete[] P_B2D;
+    //delete[] U_B2D;
+    //delete[] P_B2D;
+    
   }
+  delete[] U_AUX;
     
   return 0;
 
