@@ -13,7 +13,7 @@ import numpy as np
 from numpy.ctypeslib import ndpointer
 
 
-openmmfC = ctypes.CDLL('../lib/libopenmmf.so')
+openmmfC = ctypes.CDLL('../../lib/libopenmmf.so')
 c_dcmplx = ctypes.c_double*2
 
 #===================================================================
