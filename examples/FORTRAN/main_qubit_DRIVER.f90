@@ -64,9 +64,9 @@ PROGRAM MULTIMODEFLOQUET
   FIELDS(2)%phi_y = 0.0
   FIELDS(2)%phi_z = 0.0
   FIELDS(2)%omega = 1.0
-  FIELDS(2)%N_Floquet = 20
+  FIELDS(2)%N_Floquet = 8
 
-  N_ = 32!128
+  N_ = 128
   DO m=1,N_
 
      ! --- SET DRIVING PARAMETERS 

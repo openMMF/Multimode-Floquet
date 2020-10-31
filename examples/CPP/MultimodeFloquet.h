@@ -63,10 +63,10 @@ extern "C" {
   // BUILDING FLOQUET MATRIX OF GENERIC MODEL
   void    multimodefloquetmatrix_c_       (atom_c *id,int * nm, int * total_frequencies,int * modes_num, int * info);
   void get_h_floquet_c_(int * h, dcmplx * values, int* info);
-  int     multimodefloquetmatrix_c_python_(atom_c *id,int * nm, int * total_frequencies,int * modes_num,mode_c * fields,int * info);
-  void multimodefloquetmatrix_sp_c_       (atom_c *id,int * nm, int * total_frequencies,int * modes_num,mode_c * fields, int * info);
+  int     multimodefloquetmatrix_c_python_(atom_c *id,int * nm, int * total_frequencies,int * modes_num,int * info);
+  void multimodefloquetmatrix_sp_c_       (atom_c *id,int * nm, int * total_frequencies,int * modes_num, int * info);
   //int  multimodefloquetmatrix_python_sp_c_(atom_c *id,int * nm, int * total_frequencies,int * modes_num,mode_c * fields, int * info);
-  void multimodefloquetmatrix_python_sp_c_(atom_c *id,int * nm, int * total_frequencies,int * modes_num,mode_c * fields, int * h_f,int * info);
+  void multimodefloquetmatrix_python_sp_c_(atom_c *id,int * nm, int * total_frequencies,int * modes_num, int * h_f,int * info);
   void get_h_floquet_sp_c_(int * h_f, dcmplx * values, int * row_index, int * column, int * info);
   //void get_h_floquet_sp_c_(int * h_f, int * row_index, int * column, int * info);
 
@@ -141,9 +141,10 @@ void floquetinit_c(atom_c * id,char *name,char *manifold,int *info){
 void floquetinit_c(atom_c *id, char *name, double  *jtotal,int *info){
   
   int length_name;
-  //printf("me");
+  //printf("me \n");
   length_name = strlen(name);
   floquetinit_spin_c_(id,&length_name,name,jtotal,info);
+  //printf("info: %d \n",length_name);
 
 }
 

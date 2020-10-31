@@ -106,7 +106,7 @@ int main(){
     
     // --- SET DRIVING PARAMETERS 
     //fields[1].omega = 0.2 + (m-1)*1.0/128.0;
-    sethamiltoniancomponents_c_(&id,&nm,&total_frequencies,modes_num,fields,&info);
+    sethamiltoniancomponents_c_(&id,&nm,&total_frequencies,modes_num,&info);
     
     //!--- FIND THE MULTIMODE FLOQUET SPECTRUM 
     // here, the diagonalization is done with the internal arrays (in Fortran) values, row_index,column
@@ -114,7 +114,7 @@ int main(){
     // On the Fortran side, H_FLOQUET is deallocated after diagonalization. This is needed since
     // because the floquet hamiltonian is allocated again when running the subroutine
     // MULTIMODEFLOQUETMATRIX 
-    multimodefloquetmatrix_sp_c_(&id,&nm,&total_frequencies,modes_num,fields,&info);
+    multimodefloquetmatrix_sp_c_(&id,&nm,&total_frequencies,modes_num,&info);
     
     e_l = -40.0;
     e_r =  40.0;

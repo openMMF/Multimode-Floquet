@@ -187,6 +187,7 @@ SUBROUTINE SET_ATOMIC_PARAMETERS(ATOMICSPECIE,MANIFOLD,JTOTAL_,ID,INFO)
            ID%id_system = 3
         END IF
      END IF
+     !INFO = 0
   ELSE IF(INFO .EQ. 2) THEN
      ! HERE WE DEFINE THE PARAMETERS OF THE QUBIT HAMILTONIAN
      ! H = HBAR OMEGA_0 S_x + HBAR OMEGA_T S_x + HBAR OMEGA_RABI cos(omega_1 t + phi)
@@ -198,6 +199,7 @@ SUBROUTINE SET_ATOMIC_PARAMETERS(ATOMICSPECIE,MANIFOLD,JTOTAL_,ID,INFO)
      gF = 1.0
      Ftotal = 0.5
      ID%id_system = 4
+     !INFO = 0
   ELSE IF(INFO .EQ. 3) THEN
      ! HERE WE DEFINE THE PARRAMETES OF THE SPIN HAMILTONIAN
      ! H = HBAR OMEGA_0 S_x + HBAR OMEGA_T S_x + HBAR OMEGA_RABI cos(omega_1 t + phi)
@@ -209,16 +211,19 @@ SUBROUTINE SET_ATOMIC_PARAMETERS(ATOMICSPECIE,MANIFOLD,JTOTAL_,ID,INFO)
      gF     = 1.0
      Ftotal = JTOTAL
      ID%id_system = 5
+     !INFO = 0
      !write(*,*) JTOTAL,total_states_lsi
   ELSE IF(INFO .EQ. 4) THEN
      ! HERE WE DEFINE THE PARAMETES OF THE LATTICE HAMILTONIAN
      ID%id_system = 6     
      ID_name      = "unnamed"
+     !INFO = 0
   ELSE IF(INFO.EQ.5) THEN
      ID%id_system    = 7
      ID_name         = "lattice"
      IF(PRESENT(MANIFOLD)) PERIODIC        =  manifold ! boundary conditionss
      total_states_lsi = JTOTAL_   ! number of sites
+     INFO = 0
   END IF
   !WRITE(*,*) 'set_atomic_properties',JTOTAL,JTOTAL_,TOTAL_STATES_LSI
   ID%D_bare = total_states_lsi
@@ -383,6 +388,7 @@ contains
 
     INFO = 4
     CALL SET_ATOMIC_PARAMETERS(ATOMICSPECIE,'B',JTOTAL,ID,INFO)
+    !write(*,*) "Fortran info:",info
     !------ ALLOCATE NEEDED ARRAYS: Hamiltonian and Lapack
     ALLOCATE(Energy(TOTAL_STATES_LSI))
     ALLOCATE(H_IJ(Total_states_LSI,Total_states_LSI))

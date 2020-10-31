@@ -35,7 +35,7 @@ PROGRAM MULTIMODEFLOQUET
   INTEGER,    DIMENSION(:), ALLOCATABLE :: ROW_INDEX,COLUMN
   COMPLEX*16, DIMENSION(:), ALLOCATABLE :: VALUES
 
-  INTEGER M__,N__
+  INTEGER M__,N__,N_,M_
 
   OPEN(UNIT=3,file="qubit_bareoscillation_SP.dat", action="write")
   OPEN(UNIT=4,file="qubit_dressedoscillation_SP.dat", action="write")
@@ -81,7 +81,7 @@ PROGRAM MULTIMODEFLOQUET
   FIELDS(2)%phi_y     = 0.0
   FIELDS(2)%phi_z     = 0.0
   FIELDS(2)%omega     = 1.0
-  FIELDS(2)%N_Floquet = 2
+  FIELDS(2)%N_Floquet = 3
   
   FIELDS(3)%X         = 0.125*FIELDS(2)%X/2.0
   FIELDS(3)%Y         = 0.0
@@ -90,7 +90,7 @@ PROGRAM MULTIMODEFLOQUET
   FIELDS(3)%phi_y     = 0.0
   FIELDS(3)%phi_z     = 0.0
   FIELDS(3)%omega     = FIELDS(2)%X/2.0
-  FIELDS(3)%N_Floquet = 2
+  FIELDS(3)%N_Floquet = 3
 
   D_MULTIFLOQUET = ID%D_BARE
   DO r=1,TOTAL_FREQUENCIES
@@ -148,7 +148,7 @@ PROGRAM MULTIMODEFLOQUET
   ALLOCATE(U_F1_red(ID%D_BARE,ID%D_BARE))
   ALLOCATE(U_F2_red(ID%D_BARE,ID%D_BARE))
 
-  N__ = 64
+  N__ = 512
   M__ = 512
   DO r=1,N__,4
 
@@ -179,7 +179,7 @@ PROGRAM MULTIMODEFLOQUET
 
      T1 = 0.0
      DO m=1,M__,4
-        T2 = (m-1)*1600.0/128
+        T2 = (m-1)*6400.0/M__
         
         ! ===== EVALUATE TIME-EVOLUTION OPERATOR  IN THE BARE BASIS
         CALL MULTIMODETIMEEVOLUTINOPERATOR(SIZE(U_F,1),SIZE(MODES_NUM,1),MODES_NUM,U_F,E_FLOQUET,ID%D_BARE,FIELDS,T1,T2,U_AUX,INFO) 

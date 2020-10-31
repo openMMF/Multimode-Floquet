@@ -1,6 +1,8 @@
 //export LD_LIBRARY_PATH="/opt/intel/compilers_and_libraries_2017/linux/mkl/lib/intel64"; 
 #include <iostream>
+#include <cstdlib>
 #include <complex>
+#include <ctime>
 #include <stdio.h>
 #include <math.h>
 #include <string.h>
@@ -19,28 +21,25 @@ int main(){
   int jtotal;
   char name[]     = "qubit";
   char manifold[] = "U";
+  FILE *disco0,*disco1;
   char op[]="N";
 
-
-  int r,m,l,i,j,n_,m_;
+  int r,m,l,i,j;
   int d_bare,total_frequencies,sp;
 
   double t1,t2,e_l,e_r;
-
-  FILE *disco0;
-  FILE *disco1;
 
   disco0 = fopen("qubit_bareoscillation_SP.dat","w");
   disco1 = fopen("qubit_dressedoscillation_SP.dat","w");
 
   info   = 0;
   jtotal = 2;
+
   floquetinit_c(&id,name,&info);
 
   d_bare = id.d_bare;
 
-  dcmplx * U_AUX = new dcmplx [d_bare*d_bare];
-  double * P = new double [d_bare*d_bare];
+
 
   int nm = 3;
   int * modes_num = new int [nm];
@@ -48,14 +47,22 @@ int main(){
   modes_num[0] = 1;
   modes_num[1] = 1;
   modes_num[2] = 1;
+
   
   total_frequencies = 0;
   for(r=0;r<nm;r++){
     total_frequencies += modes_num[r];
   }
   
-  mode_c * fields = new mode_c [total_frequencies];
-  
+  mode_c_f * fields = new mode_c_f [total_frequencies];
+  //printf("total_frequencies %d \n",total_frequencies);
+  // ALLOCATE MEMORY FOR THE COUPLING MATRICES
+  for(r=0;r<total_frequencies;r++){
+    fields[r].V = new dcmplx *[d_bare];
+    for(l=0;l<d_bare;l++){
+      fields[r].V[l] = new dcmplx [d_bare];
+    }
+  }
   
   fields[0].x     = 0.0;
   fields[0].y     = 0.0;
@@ -73,7 +80,7 @@ int main(){
   fields[1].phi_y = 0.0;
   fields[1].phi_z = 0.0;
   fields[1].omega = 1.0;
-  fields[1].N_Floquet = 2;
+  fields[1].N_Floquet = 3;
 
   fields[2].x     = 0.125*fields[1].x/2.0;
   fields[2].y     = 0.0;
@@ -82,11 +89,11 @@ int main(){
   fields[2].phi_y = 0.0;
   fields[2].phi_z = 0.0;
   fields[2].omega = real(fields[1].x)/2.0;
-  fields[2].N_Floquet = 2;
+  fields[2].N_Floquet = 3;
 
   //printf("%i %i \n",d_bare,total_frequencies);
-
-  sethamiltoniancomponents_c_(&id,&nm,&total_frequencies,modes_num,fields,&info);
+  coupling_init(fields,&total_frequencies,&d_bare,&info);
+  sethamiltoniancomponents_c_(&id,&nm,&total_frequencies,modes_num,&info);
          
   // =================================================================================
   // ==== DEFINITION OF THE DRESSING FIELDS AND DRESSED BASIS
@@ -103,11 +110,12 @@ int main(){
     dressingfloquetdimension = dressingfloquetdimension*(2*fields[dressingfields_indices[m]].N_Floquet + 1);
   }
   dcmplx * U_FD = new dcmplx [dressingfloquetdimension*dressingfloquetdimension];
-
+  double * P_FD = new double [dressingfloquetdimension*dressingfloquetdimension];
   double * e_dressed = new double [dressingfloquetdimension];
   
-  dressedbasis_subset_sp_c_(&id,&dressingfloquetdimension,&dressingfields,&nm,dressingfields_indices,modes_num,fields, U_FD, e_dressed,&info);
+  dressedbasis_subset_sp_c_(&id,&dressingfloquetdimension,&dressingfields,&nm,dressingfields_indices,modes_num,U_FD, e_dressed,&info);
   
+
 
 
 
@@ -128,7 +136,7 @@ int main(){
     total_frequencies_ += modes_num_[r];
   }
   
-  mode_c * fields_ = new mode_c [total_frequencies_];
+  mode_c_f * fields_ = new mode_c_f [total_frequencies_];
     
   int field_index  = 0;
   int field_offset = 0;
@@ -153,21 +161,24 @@ int main(){
   dcmplx * U_F2_red = new dcmplx [d_bare*d_bare];
   dcmplx * U_T      = new dcmplx [d_bare*d_bare]; // U_aux
   
+  dcmplx * U_AUX = new dcmplx [d_bare*d_bare];
+  double * P = new double [d_bare*d_bare];
+
   // ! ========= FIND THE MULTIMODE FLOQUET SPECTRUM 
 
-
-  n_ = 64;
-  m_ = 512;
+  int n_ = 512;
+  int m_ = 512;
   for(r=0;r<n_;r+=4){
 
     // ====== SET THE DRESSING FREQUENCY
 
     fields[2].omega = real(fields[0].z) - real(fields[1].x) + 2.0*r*real(fields[1].x)/n_;     
-    sethamiltoniancomponents_c_(&id,&nm,&total_frequencies,modes_num,fields,&info); // every time a field parameter is modified, we should run this function
+    coupling_init(fields,&total_frequencies,&d_bare,&info);
+    sethamiltoniancomponents_c_(&id,&nm,&total_frequencies,modes_num,&info); // every time a field parameter is modified, we should run this function
 
     //!--- FIND THE MULTIMODE FLOQUET SPECTRUM 
     
-    multimodefloquetmatrix_sp_c_(&id,&nm,&total_frequencies,modes_num,fields,&info); // in this function we calculate the dimension 
+    multimodefloquetmatrix_sp_c_(&id,&nm,&total_frequencies,modes_num,&info); // in this function we calculate the dimension 
                                                                                      // of the multimode floquet hilbert space, 
 
     e_l = -40.0;
@@ -190,9 +201,9 @@ int main(){
     // ======= EVALUATE TIME-EVOLUTION OPERATOR IN THE BARE BASIS       
     t1 = 0.0;
     t2 = 0.0;
-    for(j=0;j<m_;j++){
+    for(j=0;j<m_;j+=4){
       t2 = j*6400.0/m_;
-      multimodetimeevolutionoperator_c_(&h_floquet_size,&nm,modes_num,U_F,e_floquet,&d_bare,fields,&t1,&t2,U_AUX,&info);	
+      multimodetimeevolutionoperator_c_(&h_floquet_size,&nm,modes_num,U_F,e_floquet,&d_bare,&t1,&t2,U_AUX,&info);	
 
       for(i=0;i<d_bare*d_bare;i++){
 	P[i] = abs(U_AUX[i])*abs(U_AUX[i]);
@@ -208,8 +219,8 @@ int main(){
       //       
       info =0  ;
       //multimodemicromotion_c_(&id,&dressingfloquetdimension,&nm_,modes_num_,U_FD,e_dressed,&d_bare,fields_,&t1,U_F1_red,&info); 
-      multimodemicromotion_c_(&id,&dressingfloquetdimension,&nm_,modes_num_,U_FD,e_dressed,&d_bare,fields_,&t1,U_F1_red,&info);
-      multimodemicromotion_c_(&id,&dressingfloquetdimension,&nm_,modes_num_,U_FD,e_dressed,&d_bare,fields_,&t2,U_F2_red,&info);
+      multimodemicromotion_c_(&id,&dressingfloquetdimension,&nm_,modes_num_,U_FD,e_dressed,&d_bare,&t1,U_F1_red,&info);
+      multimodemicromotion_c_(&id,&dressingfloquetdimension,&nm_,modes_num_,U_FD,e_dressed,&d_bare,&t2,U_F2_red,&info);
             
       //! ====== CALCULATE THE TIME-EVOLUTION OPERATOR IN THE DRESSED BASIS USING THE PREVIOUS ONE CALCULATED IN THE BARE BASIS
       i =4;

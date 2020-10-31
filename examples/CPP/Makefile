@@ -24,21 +24,22 @@ endif
 
 Example_lib_c: main_qubit.cpp main_DressedQubit.cpp 
 	$(CPP) -o qubit           main_qubit.cpp        -I$(MMFINC) -L$(MMFLIB) -lopenmmf -lgfortran $(GFFLAGS) -L$(MKLLIBS) -I$(MKLINC)  $(MKLFLAGS)
-	$(CPP) -o lattice         main_lattice_DRIVER.cpp -I$(MMFINC) -L$(MMFLIB) -lopenmmf -lgfortran $(GFFLAGS) -L$(MKLLIBS) -I$(MKLINC)  $(MKLFLAGS)
+	$(CPP) -o rndcoupling         main_RndCoupling_DRIVER.cpp -I$(MMFINC) -L$(MMFLIB) -lopenmmf -lgfortran $(GFFLAGS) -L$(MKLLIBS) -I$(MKLINC)  $(MKLFLAGS)
 	$(CPP) -o qubit_driver    main_qubit_DRIVER.cpp -I$(MMFINC) -L$(MMFLIB) -lopenmmf -lgfortran $(GFFLAGS) -L$(MKLLIBS) -I$(MKLINC)  $(MKLFLAGS)
 	$(CPP) -o dressedqubit    main_DressedQubit.cpp -I$(MMFINC) -L$(MMFLIB) -lopenmmf -lgfortran $(GFFLAGS) -L$(MKLLIBS) -I$(MKLINC)  $(MKLFLAGS)
 
 Example_lib_c_sp: main_qubit_sp.cpp main_DressedQubit_SP.cpp main_qubit_inspection.cpp
 	$(CPP) -o  qubit_sp          main_qubit_sp.cpp       -I$(MMFINC) -L$(MMFLIB) -lopenmmf -lgfortran -L$(MKLLIBS) -I$(MKLINC) $(GFFLAGS) $(MKLFLAGS)
 	$(CPP) -o  dressedqubit_sp  main_DressedQubit_SP.cpp -I$(MMFINC) -L$(MMFLIB) -lopenmmf -lgfortran -L$(MKLLIBS) -I$(MKLINC) $(GFFLAGS) $(MKLFLAGS)
-	$(CPP) -o  inspection_sp  main_qubit_inspection.cpp -I$(MMFINC) -L$(MMFLIB)  -lopenmmf -lgfortran -L$(MKLLIBS) -I$(MKLINC) $(GFFLAGS) $(MKLFLAGS)
+	$(CPP) -o shakenlattice     main_lattice.cpp -I$(MMFINC) -L$(MMFLIB) -lopenmmf -lgfortran $(GFFLAGS) -L$(MKLLIBS) -I$(MKLINC)  $(MKLFLAGS)
+#	$(CPP) -o  inspection_sp  main_qubit_inspection.cpp -I$(MMFINC) -L$(MMFLIB)  -lopenmmf -lgfortran -L$(MKLLIBS) -I$(MKLINC) $(GFFLAGS) $(MKLFLAGS)
 
 ############################
 # CLEAN
 ############################
 
 clean:
-	rm qubit dressedqubit qubit_sp dressedqubit_sp inspection_sp qubit_driver lattice
+	rm qubit dressedqubit qubit_sp dressedqubit_sp inspection_sp qubit_driver rndcoupling shakenlattice
 
 
 ############################
@@ -46,16 +47,15 @@ clean:
 ############################
 
 
-BUILD_DIR = ./build
+BUILD_DIR = ./
 TEST_DIR  = ./
 
-test_sources:= $(wildcard $(TEST_DIR)/*.cpp)
-test_executables:= $(patsubst $(TEST_DIR)/%.cpp, $(BUILD_DIR)/%, $(test_sources))
-run_executables:= $(patsubst $(TEST_DIR)/%.cpp, $(TEST_LIST)/%, $(test_sources))
+test_sources     := $(wildcard $(TEST_DIR)/*.cpp)
+test_executables := $(patsubst $(TEST_DIR)/%.cpp, $(BUILD_DIR)/%, $(test_sources))
+run_executables  := $(patsubst $(TEST_DIR)/%.cpp, $(TEST_LIST)/%, $(test_sources))
 
 $(BUILD_DIR)/%: $(TEST_DIR)/%.cpp
-	$(CPP) $< -o $@ -I$(MMFINC) -L$(MMFLIB) -lopenmmf -lgfortran -L$(MKLLIBS) -I$(MKLINC) $(GFFLAGS_SP) $(MKLFLAGS)
-
+	$(CPP) $< -o $@ -I$(MMFINC) -L$(MMFLIB) -lopenmmf -lgfortran $(GFFLAGS) -L$(MKLLIBS) -I$(MKLINC)  $(MKLFLAGS)
 
 $(TEST_LIST)/%: $(BUILD_DIR)/%
 	./$<

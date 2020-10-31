@@ -96,7 +96,7 @@ SUBROUTINE FLOQUETINIT_QUBIT_C(ID_C,length_name,ATOMICSPECIE,INFO)
     
     atomicspecie_F = atomicspecie(1:length_name)
     CALL FLOQUETINIT_SPIN(ATOM_,atomicspecie_F,jtotal,info)
-    
+
     ID_C%id_system = ATOM_%id_system
     ID_C%D_BARE    = ATOM_%D_BARE
 

@@ -1,3 +1,4 @@
+
 #include <iostream>
 #include <cstdlib>
 #include <complex>
@@ -154,6 +155,8 @@ int main(){
   
   //==== ALLOCATE ARRAYS FOR THE MICROMOTION OPERATORS IN THE EXTENDED AND ORIGINAL HILBERT SPACES.
    
+
+
   dcmplx * U_F1_red = new dcmplx [d_bare*d_bare];                   // selection of a single dressed manifold at time t1
   dcmplx * U_F2_red = new dcmplx [d_bare*d_bare];                   // selection of a single dressed manifold at time t2
   dcmplx * U_T      = new dcmplx [d_bare*d_bare]; // U_aux
@@ -198,7 +201,7 @@ int main(){
     t2 = 0.0;
     
     for(j=0;j<m_;j+=4){
-      t2 = j*1600/128;
+      t2 = j*6400/m_;
       multimodetimeevolutionoperator_c_(&h_floquet_size,&nm,modes_num,U_F,e_floquet,&d_bare,&t1,&t2,U_AUX,&info);
       m = 0;
       /*for(i=0;i<d_bare;i++){
@@ -225,7 +228,7 @@ int main(){
       */
       info =0;         
       multimodemicromotion_c_(&id,&dressingfloquetdimension,&nm_,modes_num_,U_FD,e_dressed,&d_bare,&t1,U_F1_red,&info);
-      //multimodemicromotion_c_(&id,&dressingfloquetdimension,&nm_,modes_num_,U_FD,e_dressed,&d_bare,&t2,U_F2_red,&info);
+      multimodemicromotion_c_(&id,&dressingfloquetdimension,&nm_,modes_num_,U_FD,e_dressed,&d_bare,&t2,U_F2_red,&info);
       /*m = 0;
      
 	for(i=0;i<d_bare;i++){
@@ -234,9 +237,9 @@ int main(){
 	m +=1;
 	}
 	printf("\n");
-      }
-      printf("\n");
-      
+      ?>}
+      pr?intf("\n");
+ ?     
       m = 0;
       for(i=0;i<d_bare;i++){
 	for(l=0;l<d_bare;l++){
@@ -262,7 +265,7 @@ int main(){
       */
       i =4;
       info = 0;
-      //matmul_c(&i,U_AUX,&d_bare,&d_bare,U_F1_red,&d_bare,&d_bare,U_T,&info);
+      matmul_c(&i,U_AUX,&d_bare,&d_bare,U_F1_red,&d_bare,&d_bare,U_T,&info);
       /*m = 0;
       for(i=0;i<d_bare;i++){
 	for(l=0;l<d_bare;l++){
@@ -274,7 +277,7 @@ int main(){
       printf("\n");
       */
       i = 2;
-      //matmul_c(&i,U_F2_red,&d_bare,&d_bare,U_T,&d_bare,&d_bare,U_AUX,&info);
+      matmul_c(&i,U_F2_red,&d_bare,&d_bare,U_T,&d_bare,&d_bare,U_AUX,&info);
       m = 0;
       /*
 	for(i=0;i<d_bare;i++){
@@ -285,15 +288,15 @@ int main(){
 	printf("\n");
       }
       printf("\n");
-      
+      */
       for(i=0;i<d_bare*d_bare;i++){
-      P[i] = abs(U_AUX[i])*abs(U_AUX[i]);
+	P[i] = abs(U_AUX[i])*abs(U_AUX[i]);
       }
       
       fprintf(disco1,"%8.3E  %f  %f  %f  %f  %f \n",fields[2].omega,t2,P[0],P[1],P[2],P[3]);
       //printf("%8.3E  %f  %f  %f  %f  %f \n",fields[2].omega,t2,P[0],P[1],P[2],P[3]);
       //write_matrix_c_(P,&d_bare);        
-      */
+      
     }
     fprintf(disco0,"\n");
     fprintf(disco1,"\n");
