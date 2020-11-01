@@ -66,8 +66,10 @@ field[2].N_Floquet = 2
 
 
 # SET THE HAMILTONIAN COMPONENTS    
-openmmf.sethamiltoniancomponents(id,modes_num,field,info)
+openmmf.sethamiltoniancomponents(id,modes_num,fields,info)
+#openmmf.deallocateall(id)
 
+#%%
 
 #  // =================================================================================
 #  // ==== DEFINITION OF THE DRESSING FIELDS AND DRESSED BASIS

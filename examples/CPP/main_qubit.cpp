@@ -156,6 +156,7 @@ int main(){
     
   }
   delete[] U_AUX;
+  delete[] fields;
     
   return 0;
 

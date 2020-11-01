@@ -42,7 +42,7 @@ lib:build/modes.o build/modes_C.o build/Modules.o build/Modules_release.o build/
  build/MultimodeDressedBasis_C.o build/MultimodeDressedBasis_SP_C.o build/MKLSparseEigenValues_C.o 
 	$(AR) -$(ARFLAGS) lib/libopenmmf.a build/*.o
 	$(RANLIB) lib/libopenmmf.a
-	$(GF) $(SHAREFLAGS) build/*.o -o lib/$(DYLIB_NAME)
+	$(GF) $(SHAREFLAGS) build/*.o -o lib/$(DYLIB_NAME) -lstdc++
 	mv *.mod ./include/
 
 ###################################
@@ -62,7 +62,7 @@ lib_lapack :build/modes.o build/modes_C.o  build/Modules.o build/Modules_release
  build/MultimodeDressedBasis_C.o 
 	$(AR) $(ARFLAGS) lib/libopenmmf.a build/*.o
 	$(RANLIB) lib/libopenmmf.a
-	$(GF) $(SHAREFLAGS) build/*.o -o lib/$(DYLIB_NAME)
+	$(GF) $(SHAREFLAGS) build/*.o -o lib/$(DYLIB_NAME) -lstdc++
 	mv *.mod ./include/
 
 

@@ -19,7 +19,7 @@ GFFLAGS    = -O3 -llapack -lblas -g -lstdc++
 
 #  Define LDFLAGS to the desired linker options for your machine.
 #
-LDFLAGS = -g -fPIC	
+LDFLAGS = -g -fPIC 
 
 #  The archiver and the flag(s) to use when building an archive
 #  (library).  If your system has no ranlib, set RANLIB = echo.
@@ -27,7 +27,7 @@ LDFLAGS = -g -fPIC
 AR         = ar
 ARFLAGS    = urv
 RANLIB     = ranlib
-SHAREFLAGS = -shared -fPIC
+SHAREFLAGS = -shared -fPIC 
 DYLIB_NAME = libopenmmf.so
 
 #  Uncomment the next four command lines to include routines using the 

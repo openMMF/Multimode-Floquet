@@ -41,6 +41,60 @@ class mode_c_T(ctypes.Structure):
                 ("N_Floquet", c_int)
             ]
 
+class mode_c_python(ctypes.Structure):
+# https://www.geeksforgeeks.org/python-modifying-tuple-contents-with-list/
+#    In Python, tuples are immutable and hence no changes are required in them once they are formed. This restriction makes their processing harder and hence certain operations on tuples are quite useful to have knowledge of. This article deals with modifying the second tuple element with the list given. Let’s discuss certain ways in which this can be done.
+
+
+    c_dcmplx = ctypes.c_double*2   
+    d_bare = 7
+
+    _fields_ = [
+                ("d_bare",    c_int),
+                ("omega",     c_double),
+                ("x",         c_dcmplx),
+                ("y",         c_dcmplx),
+                ("z",         c_dcmplx),            
+    #            ("phi_x",     c_double),
+                ("phi_y",     c_double),
+                ("phi_z",     c_double),
+                ("N_Floquet", c_int),
+                ("V",         c_double*d_bare)
+            ]
+    def __init__(self,d_bare):
+        self._d_bare_ = d_bare
+        self.d_bare_ = d_bare
+        print(d_bare)
+        self._fields_ = [
+                ("d_bare",    c_int),
+                ("omega",     c_double),
+                ("x",         c_dcmplx),
+                ("y",         c_dcmplx),
+                ("z",         c_dcmplx),            
+                ("phi_x",     c_double),
+                ("phi_y",     c_double),
+                ("phi_z",     c_double),
+                ("N_Floquet", c_int),
+                ("V",         c_double*d_bare)
+            ]
+
+    def update(self,d_bare):
+        print(self._fields_)
+        #self._fields_ = self._fields_ + ("V",c_double*d_bare)
+        self._fields_[8][1] = c_double*d_bare
+        #[
+        #        ("d_bare",    c_int),
+        #        ("omega",     c_double),
+        #        ("x",         c_dcmplx),
+        #        ("y",         c_dcmplx),
+        #        ("z",         c_dcmplx),            
+        #        ("phi_x",     c_double),
+        #        ("phi_y",     c_double),
+        #        ("phi_z",     c_double),
+        #        ("N_Floquet", c_int),
+        #        ("V",         c_double)
+        #    ]
+
 #===================================================================
 #   // GENERAL INIT SUBROUTINE
 #===================================================================
@@ -133,6 +187,13 @@ def floquetinit_(*argsv,info):
     
     return id,field
         
+def coupling_init(fields,n,d,info):
+    nm     = c_int(n)
+    d_bare = c_int(d)
+    info   = c_int(info)
+    fields_p = ctypes.pointer(fields)
+    openmmfC.couplinginit_c_(fields_p,ctypes.byref(nm),ctypes.byref(d_bare),ctypes.byref(info))
+
 #===================================================================
 #   EVALUATE THE HAMILTONIAN COMPONENTS OF PRE-DEFINED SYSTEMS. 
 #===================================================================
@@ -142,20 +203,20 @@ def sethamiltoniancomponents(id,modes_num,fields,info):
     total_frequencies = c_int(np.sum(modes_num))
     info = c_int(info)
     modes_num_p = modes_num.ctypes.data_as(POINTER(c_int))
-    fields_p = ctypes.pointer(fields)
-    openmmfC.sethamiltoniancomponents_c_(id_p,ctypes.byref(nm),ctypes.byref(total_frequencies),modes_num_p,fields_p,ctypes.byref(info))
+    #fields_p = ctypes.pointer(fields)
+    openmmfC.sethamiltoniancomponents_c_(id_p,ctypes.byref(nm),ctypes.byref(total_frequencies),modes_num_p,ctypes.byref(info))
 
 #===================================================================
 #   // BUILDING FLOQUET MATRIX OF GENERIC MODEL
 #===================================================================
-def multimodefloquetmatrix(id,modes_num,fields,info):
+def multimodefloquetmatrix(id,modes_num,info):
     id_p              = ctypes.pointer(id)
     nm                = c_int(modes_num.size)
     total_frequencies = c_int(np.sum(modes_num))    
     info              = c_int(info)
     modes_num_p       = modes_num.ctypes.data_as(POINTER(c_int))
-    fields_p          = ctypes.pointer(fields)
-    h_floquet_size =    openmmfC.multimodefloquetmatrix_c_python_(id_p,ctypes.byref(nm),ctypes.byref(total_frequencies),modes_num_p,fields_p,ctypes.byref(info))
+    #fields_p          = ctypes.pointer(fields)
+    h_floquet_size =    openmmfC.multimodefloquetmatrix_c_python_(id_p,ctypes.byref(nm),ctypes.byref(total_frequencies),modes_num_p,ctypes.byref(info))
     return h_floquet_size
 
 def get_h_floquet(h_floquet_size, info):
